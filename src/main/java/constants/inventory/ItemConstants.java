@@ -228,13 +228,16 @@ public final class ItemConstants {
     }
 
     // Widened past vanilla v83 (face 20000-21999, hair 30000-34999) to cover ported
-    // MapleLegends cosmetics. The two sets stay disjoint: ported faces occupy the
-    // 2xxxx and 5xxxx bands, ported hair the 3xxxx, 4xxxx and 6xxxx bands.
+    // MapleLegends cosmetics, but capped at what the client can actually draw: probing
+    // the stock v83 client showed hair renders only in 30000-39999 (40000 and 60000 draw
+    // nothing) and face only in 2xxxx (52000 crashes the client outright). Ported items
+    // are renumbered into these bands, so never widen past them — handing out an id the
+    // client cannot render leaves the character permanently un-loadable.
     public static boolean isFace(int itemId) {
-        return (itemId >= 20000 && itemId < 30000) || (itemId >= 50000 && itemId < 60000);
+        return itemId >= 20000 && itemId < 30000;
     }
 
     public static boolean isHair(int itemId) {
-        return (itemId >= 30000 && itemId < 50000) || (itemId >= 60000 && itemId < 70000);
+        return itemId >= 30000 && itemId < 40000;
     }
 }

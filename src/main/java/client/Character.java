@@ -6732,6 +6732,30 @@ public class Character extends AbstractCharacterObject {
         }
     }
 
+    /**
+     * A hair or face id the client cannot draw makes the character un-loadable: the
+     * client crashes while rendering the character list, so the player can never log in
+     * to fix it. Clamp on load rather than trusting whatever is in the row.
+     */
+    private static int sanitizeHair(int hair, String who) {
+        if (ItemConstants.isHair(hair)) {
+            return hair;
+        }
+        log.warn("Character {} has unrenderable hair {}, falling back to {}", who, hair, DEFAULT_HAIR);
+        return DEFAULT_HAIR;
+    }
+
+    private static int sanitizeFace(int face, String who) {
+        if (ItemConstants.isFace(face)) {
+            return face;
+        }
+        log.warn("Character {} has unrenderable face {}, falling back to {}", who, face, DEFAULT_FACE);
+        return DEFAULT_FACE;
+    }
+
+    private static final int DEFAULT_HAIR = 30000;
+    private static final int DEFAULT_FACE = 20000;
+
     public static Character loadCharacterEntryFromDB(ResultSet rs, List<Item> equipped) {
         Character ret = new Character();
 
@@ -6741,8 +6765,8 @@ public class Character extends AbstractCharacterObject {
             ret.name = rs.getString("name");
             ret.gender = rs.getInt("gender");
             ret.skinColor = SkinColor.getById(rs.getInt("skincolor"));
-            ret.face = rs.getInt("face");
-            ret.hair = rs.getInt("hair");
+            ret.face = sanitizeFace(rs.getInt("face"), ret.name);
+            ret.hair = sanitizeHair(rs.getInt("hair"), ret.name);
 
             // skipping pets, probably unneeded here
 
@@ -6895,8 +6919,8 @@ public class Character extends AbstractCharacterObject {
                     ret.matchcardwins = rs.getInt("matchcardwins");
                     ret.matchcardlosses = rs.getInt("matchcardlosses");
                     ret.matchcardties = rs.getInt("matchcardties");
-                    ret.hair = rs.getInt("hair");
-                    ret.face = rs.getInt("face");
+                    ret.hair = sanitizeHair(rs.getInt("hair"), ret.name);
+                    ret.face = sanitizeFace(rs.getInt("face"), ret.name);
                     ret.accountid = rs.getInt("accountid");
                     ret.mapid = rs.getInt("map");
                     ret.jailExpiration = rs.getLong("jailexpire");
