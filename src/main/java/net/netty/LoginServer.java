@@ -24,7 +24,8 @@ public class LoginServer extends AbstractServer {
                 .channel(NioServerSocketChannel.class)
                 .childHandler(new LoginServerInitializer());
 
-        this.channel = bootstrap.bind(port).syncUninterruptibly().channel();
+        // Local-play only: bind to loopback so the server is unreachable from other machines
+        this.channel = bootstrap.bind("127.0.0.1", port).syncUninterruptibly().channel();
     }
 
     @Override

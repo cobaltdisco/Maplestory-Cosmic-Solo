@@ -26,7 +26,8 @@ public class ChannelServer extends AbstractServer {
                 .channel(NioServerSocketChannel.class)
                 .childHandler(new ChannelServerInitializer(world, channel));
 
-        this.nettyChannel = bootstrap.bind(port).syncUninterruptibly().channel();
+        // Local-play only: bind to loopback so the server is unreachable from other machines
+        this.nettyChannel = bootstrap.bind("127.0.0.1", port).syncUninterruptibly().channel();
     }
 
     @Override
