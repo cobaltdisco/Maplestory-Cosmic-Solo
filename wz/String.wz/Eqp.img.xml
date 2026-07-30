@@ -8602,6 +8602,9 @@
       </imgdir>
     </imgdir>
     <imgdir name="Hair">
+      <imgdir name="40920">
+        <string name="name" value="Sarim Hair Mod - Black"/>
+      </imgdir>
       <imgdir name="30000">
         <string name="name" value="Black Toben"/>
       </imgdir>

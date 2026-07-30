@@ -227,11 +227,14 @@ public final class ItemConstants {
         return itemId >= 1140000 && itemId < 1143000;
     }
 
+    // Widened past vanilla v83 (face 20000-21999, hair 30000-34999) to cover ported
+    // MapleLegends cosmetics. The two sets stay disjoint: ported faces occupy the
+    // 2xxxx and 5xxxx bands, ported hair the 3xxxx, 4xxxx and 6xxxx bands.
     public static boolean isFace(int itemId) {
-        return itemId >= 20000 && itemId < 22000;
+        return (itemId >= 20000 && itemId < 30000) || (itemId >= 50000 && itemId < 60000);
     }
 
     public static boolean isHair(int itemId) {
-        return itemId >= 30000 && itemId < 35000;
+        return (itemId >= 30000 && itemId < 50000) || (itemId >= 60000 && itemId < 70000);
     }
 }
