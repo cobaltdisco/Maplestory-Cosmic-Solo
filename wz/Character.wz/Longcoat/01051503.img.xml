@@ -1,0 +1,894 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<imgdir name="01051503.img">
+  <imgdir name="info">
+    <canvas name="icon" width="37" height="33">
+      <vector name="origin" x="3" y="31"/>
+    </canvas>
+    <canvas name="iconRaw" width="37" height="32">
+      <vector name="origin" x="3" y="31"/>
+    </canvas>
+    <string name="islot" value="MaPn"/>
+    <string name="vslot" value="MaPn"/>
+    <int name="reqJob" value="0"/>
+    <int name="reqLevel" value="0"/>
+    <int name="reqSTR" value="0"/>
+    <int name="reqDEX" value="0"/>
+    <int name="reqINT" value="0"/>
+    <int name="reqLUK" value="0"/>
+    <int name="cash" value="1"/>
+    <int name="setItemID" value="622"/>
+  </imgdir>
+  <imgdir name="walk1">
+    <imgdir name="0">
+      <canvas name="mail" width="89" height="34">
+        <vector name="origin" x="26" y="11"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="1">
+      <canvas name="mail" width="105" height="36">
+        <vector name="origin" x="25" y="10"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="2">
+      <canvas name="mail" width="92" height="38">
+        <vector name="origin" x="21" y="11"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="3">
+      <canvas name="mail" width="85" height="36">
+        <vector name="origin" x="28" y="11"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+  <imgdir name="walk2">
+    <imgdir name="0">
+      <canvas name="mail" width="89" height="34">
+        <vector name="origin" x="26" y="11"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="1">
+      <canvas name="mail" width="105" height="36">
+        <vector name="origin" x="25" y="10"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="2">
+      <canvas name="mail" width="92" height="38">
+        <vector name="origin" x="21" y="11"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="3">
+      <canvas name="mail" width="85" height="36">
+        <vector name="origin" x="28" y="11"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+  <imgdir name="stand1">
+    <imgdir name="0">
+      <canvas name="mail" width="62" height="36">
+        <vector name="origin" x="25" y="10"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="1">
+      <canvas name="mail" width="60" height="35">
+        <vector name="origin" x="25" y="11"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="2">
+      <canvas name="mail" width="59" height="35">
+        <vector name="origin" x="26" y="10"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+  <imgdir name="stand2">
+    <imgdir name="0">
+      <canvas name="mail" width="62" height="36">
+        <vector name="origin" x="25" y="10"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="1">
+      <canvas name="mail" width="60" height="35">
+        <vector name="origin" x="25" y="11"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="2">
+      <canvas name="mail" width="59" height="35">
+        <vector name="origin" x="26" y="10"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+  <imgdir name="alert">
+    <imgdir name="0">
+      <canvas name="mail" width="68" height="33">
+        <vector name="origin" x="28" y="10"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="1">
+      <canvas name="mail" width="63" height="33">
+        <vector name="origin" x="29" y="10"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="2">
+      <canvas name="mail" width="66" height="34">
+        <vector name="origin" x="28" y="11"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+  <imgdir name="swingO1">
+    <imgdir name="0">
+      <canvas name="mail" width="61" height="33">
+        <vector name="origin" x="25" y="11"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="1">
+      <canvas name="mail" width="82" height="37">
+        <vector name="origin" x="39" y="11"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="2">
+      <canvas name="mail" width="93" height="47">
+        <vector name="origin" x="31" y="27"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChest"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+  <imgdir name="swingO2">
+    <imgdir name="0">
+      <canvas name="mail" width="65" height="39">
+        <vector name="origin" x="31" y="11"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="1">
+      <canvas name="mail" width="76" height="34">
+        <vector name="origin" x="30" y="13"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="2">
+      <canvas name="mail" width="81" height="29">
+        <vector name="origin" x="25" y="12"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+  <imgdir name="swingO3">
+    <imgdir name="0">
+      <canvas name="mail" width="72" height="31">
+        <vector name="origin" x="25" y="11"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="1">
+      <canvas name="mail" width="74" height="35">
+        <vector name="origin" x="21" y="13"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="2">
+      <canvas name="mail" width="92" height="34">
+        <vector name="origin" x="49" y="11"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+  <imgdir name="swingOF">
+    <imgdir name="0">
+      <canvas name="mail" width="76" height="33">
+        <vector name="origin" x="41" y="11"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="1">
+      <canvas name="mail" width="92" height="41">
+        <vector name="origin" x="54" y="11"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="backMailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="2">
+      <canvas name="mail" width="87" height="41">
+        <vector name="origin" x="45" y="12"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="3">
+      <canvas name="mail" width="106" height="42">
+        <vector name="origin" x="42" y="23"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+  <imgdir name="swingT1">
+    <imgdir name="0">
+      <canvas name="mail" width="70" height="33">
+        <vector name="origin" x="32" y="10"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="1">
+      <canvas name="mail" width="71" height="38">
+        <vector name="origin" x="28" y="13"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="2">
+      <canvas name="mail" width="92" height="53">
+        <vector name="origin" x="33" y="27"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+  <imgdir name="swingT2">
+    <imgdir name="0">
+      <canvas name="mail" width="68" height="33">
+        <vector name="origin" x="30" y="11"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="1">
+      <canvas name="mail" width="76" height="34">
+        <vector name="origin" x="32" y="11"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="2">
+      <canvas name="mail" width="94" height="62">
+        <vector name="origin" x="33" y="38"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+  <imgdir name="swingT3">
+    <imgdir name="0">
+      <canvas name="mail" width="81" height="35">
+        <vector name="origin" x="40" y="11"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="1">
+      <canvas name="mail" width="67" height="28">
+        <vector name="origin" x="22" y="9"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="2">
+      <canvas name="mail" width="86" height="61">
+        <vector name="origin" x="33" y="40"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+  <imgdir name="swingTF">
+    <imgdir name="0">
+      <canvas name="mail" width="66" height="36">
+        <vector name="origin" x="34" y="9"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="backMailChest"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="1">
+      <canvas name="mail" width="79" height="42">
+        <vector name="origin" x="35" y="13"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="2">
+      <canvas name="mail" width="80" height="41">
+        <vector name="origin" x="27" y="12"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="3">
+      <canvas name="mail" width="81" height="62">
+        <vector name="origin" x="34" y="40"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+  <imgdir name="swingP1">
+    <imgdir name="0">
+      <canvas name="mail" width="66" height="36">
+        <vector name="origin" x="32" y="11"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="1">
+      <canvas name="mail" width="75" height="32">
+        <vector name="origin" x="27" y="14"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="2">
+      <canvas name="mail" width="81" height="53">
+        <vector name="origin" x="32" y="31"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+  <imgdir name="swingP2">
+    <imgdir name="0">
+      <canvas name="mail" width="66" height="34">
+        <vector name="origin" x="30" y="10"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="1">
+      <canvas name="mail" width="73" height="40">
+        <vector name="origin" x="27" y="20"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="2">
+      <canvas name="mail" width="85" height="43">
+        <vector name="origin" x="35" y="24"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+  <imgdir name="swingPF">
+    <imgdir name="0">
+      <canvas name="mail" width="82" height="34">
+        <vector name="origin" x="31" y="13"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="1">
+      <canvas name="mail" width="79" height="35">
+        <vector name="origin" x="34" y="15"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="2">
+      <canvas name="mail" width="59" height="65">
+        <vector name="origin" x="24" y="13"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="3">
+      <canvas name="mail" width="83" height="60">
+        <vector name="origin" x="37" y="33"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+  <imgdir name="stabO1">
+    <imgdir name="0">
+      <canvas name="mail" width="69" height="32">
+        <vector name="origin" x="38" y="12"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="1">
+      <canvas name="mail" width="83" height="41">
+        <vector name="origin" x="28" y="24"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+  <imgdir name="stabO2">
+    <imgdir name="0">
+      <canvas name="mail" width="71" height="33">
+        <vector name="origin" x="31" y="12"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="1">
+      <canvas name="mail" width="89" height="34">
+        <vector name="origin" x="33" y="15"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+  <imgdir name="stabOF">
+    <imgdir name="0">
+      <canvas name="mail" width="70" height="31">
+        <vector name="origin" x="30" y="13"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="1">
+      <canvas name="mail" width="75" height="33">
+        <vector name="origin" x="30" y="10"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="2">
+      <canvas name="mail" width="91" height="43">
+        <vector name="origin" x="34" y="24"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+  <imgdir name="stabT1">
+    <imgdir name="0">
+      <canvas name="mail" width="76" height="34">
+        <vector name="origin" x="37" y="13"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="1">
+      <canvas name="mail" width="73" height="36">
+        <vector name="origin" x="29" y="11"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="2">
+      <canvas name="mail" width="87" height="36">
+        <vector name="origin" x="32" y="20"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+  <imgdir name="stabT2">
+    <imgdir name="0">
+      <canvas name="mail" width="73" height="35">
+        <vector name="origin" x="34" y="14"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="1">
+      <canvas name="mail" width="66" height="34">
+        <vector name="origin" x="28" y="13"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="2">
+      <canvas name="mail" width="88" height="47">
+        <vector name="origin" x="30" y="26"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+  <imgdir name="stabTF">
+    <imgdir name="0">
+      <uol name="mail" value="../../swingPF/0/mail"/>
+    </imgdir>
+    <imgdir name="1">
+      <uol name="mail" value="../../swingPF/1/mail"/>
+    </imgdir>
+    <imgdir name="2">
+      <canvas name="mail" width="61" height="55">
+        <vector name="origin" x="26" y="13"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="pantsOverShoesBelowMailChest"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="3">
+      <uol name="mail" value="../../stabT1/2/mail"/>
+    </imgdir>
+  </imgdir>
+  <imgdir name="shoot1">
+    <imgdir name="0">
+      <canvas name="mail" width="65" height="34">
+        <vector name="origin" x="30" y="11"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="1">
+      <canvas name="mail" width="74" height="33">
+        <vector name="origin" x="41" y="11"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="2">
+      <canvas name="mail" width="80" height="35">
+        <vector name="origin" x="39" y="11"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+  <imgdir name="shoot2">
+    <imgdir name="0">
+      <canvas name="mail" width="65" height="34">
+        <vector name="origin" x="30" y="12"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="1">
+      <canvas name="mail" width="79" height="33">
+        <vector name="origin" x="36" y="12"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="2">
+      <canvas name="mail" width="73" height="32">
+        <vector name="origin" x="38" y="12"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="3">
+      <canvas name="mail" width="70" height="34">
+        <vector name="origin" x="28" y="12"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="4">
+      <canvas name="mail" width="66" height="34">
+        <vector name="origin" x="33" y="12"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+  <imgdir name="shootF">
+    <imgdir name="0">
+      <canvas name="mail" width="70" height="33">
+        <vector name="origin" x="40" y="11"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="1">
+      <canvas name="mail" width="71" height="34">
+        <vector name="origin" x="43" y="12"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="2">
+      <uol name="mail" value="../1/mail"/>
+    </imgdir>
+  </imgdir>
+  <imgdir name="proneStab">
+    <imgdir name="0">
+      <canvas name="mail" width="61" height="46">
+        <vector name="origin" x="24" y="38"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="1">
+      <canvas name="mail" width="60" height="47">
+        <vector name="origin" x="24" y="40"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+  <imgdir name="prone">
+    <imgdir name="0">
+      <uol name="mail" value="../../proneStab/0/mail"/>
+    </imgdir>
+  </imgdir>
+  <imgdir name="heal">
+    <imgdir name="0">
+      <uol name="mail" value="../../alert/1/mail"/>
+    </imgdir>
+    <imgdir name="1">
+      <uol name="mail" value="../../swingO2/1/mail"/>
+    </imgdir>
+    <imgdir name="2">
+      <uol name="mail" value="../../swingO2/0/mail"/>
+    </imgdir>
+  </imgdir>
+  <imgdir name="fly">
+    <imgdir name="0">
+      <canvas name="mail" width="64" height="38">
+        <vector name="origin" x="22" y="13"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="1">
+      <canvas name="mail" width="52" height="38">
+        <vector name="origin" x="15" y="13"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+  <imgdir name="jump">
+    <imgdir name="0">
+      <canvas name="mail" width="78" height="47">
+        <vector name="origin" x="27" y="12"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+  <imgdir name="sit">
+    <imgdir name="0">
+      <canvas name="mail" width="66" height="36">
+        <vector name="origin" x="31" y="11"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="mailChestOverPants"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+  <imgdir name="ladder">
+    <imgdir name="0">
+      <canvas name="mail" width="55" height="36">
+        <vector name="origin" x="27" y="7"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="backPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="1">
+      <canvas name="mail" width="54" height="36">
+        <vector name="origin" x="28" y="7"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="backPants"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+  <imgdir name="rope">
+    <imgdir name="0">
+      <canvas name="mail" width="54" height="40">
+        <vector name="origin" x="26" y="7"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="backPants"/>
+      </canvas>
+    </imgdir>
+    <imgdir name="1">
+      <canvas name="mail" width="55" height="34">
+        <vector name="origin" x="27" y="8"/>
+        <imgdir name="map">
+          <vector name="navel" x="0" y="0"/>
+        </imgdir>
+        <string name="z" value="backPants"/>
+      </canvas>
+    </imgdir>
+  </imgdir>
+</imgdir>

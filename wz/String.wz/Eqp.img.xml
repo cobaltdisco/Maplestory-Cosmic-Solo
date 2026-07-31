@@ -12208,9 +12208,6 @@
       <imgdir name="1042367">
         <string name="name" value="Devil Bear T-Shirt"/>
       </imgdir>
-      <imgdir name="1042375">
-        <string name="name" value="Strawberry Training Shirt"/>
-      </imgdir>
       <imgdir name="1042376">
         <string name="name" value="Snazzy Bunny Outfit"/>
       </imgdir>
@@ -63597,9 +63594,6 @@
       <imgdir name="1051497">
         <string name="name" value="Rose Princess"/>
       </imgdir>
-      <imgdir name="1051498">
-        <string name="name" value="Black Girl Scout"/>
-      </imgdir>
       <imgdir name="1051499">
         <string name="name" value="Nanbit Hangah"/>
       </imgdir>
@@ -64875,15 +64869,6 @@
       <imgdir name="1053095">
         <string name="name" value="Bichon Outfit"/>
       </imgdir>
-      <imgdir name="1053096">
-        <string name="name" value="Roundy Round Fairy Outfit"/>
-      </imgdir>
-      <imgdir name="1053097">
-        <string name="name" value="Sweet Penguin Doll Outfit"/>
-      </imgdir>
-      <imgdir name="1053098">
-        <string name="name" value="Fresh Penguin Doll Outfit"/>
-      </imgdir>
       <imgdir name="1053102">
         <string name="name" value="Suspender K"/>
       </imgdir>
@@ -64895,9 +64880,6 @@
       </imgdir>
       <imgdir name="1053107">
         <string name="name" value="Priscilla&apos;s Dress"/>
-      </imgdir>
-      <imgdir name="1053108">
-        <string name="name" value="Longcoat 1053108"/>
       </imgdir>
       <imgdir name="1053109">
         <string name="name" value="Winter Bunny Coat (Teal)"/>
@@ -64920,12 +64902,6 @@
       <imgdir name="1053119">
         <string name="name" value="Festive Lovers Outfit (F)"/>
       </imgdir>
-      <imgdir name="1053120">
-        <string name="name" value="Fried Chicken God&apos;s Garb (M)"/>
-      </imgdir>
-      <imgdir name="1053121">
-        <string name="name" value="Fried Chicken God&apos;s Garb (F)"/>
-      </imgdir>
       <imgdir name="1053126">
         <string name="name" value="Polka Dot Heart Dress (F)"/>
       </imgdir>
@@ -64934,9 +64910,6 @@
       </imgdir>
       <imgdir name="1053130">
         <string name="name" value="Polar Explorer Winter Clothes"/>
-      </imgdir>
-      <imgdir name="1053133">
-        <string name="name" value="Yellow Chick Clothes (M)"/>
       </imgdir>
       <imgdir name="1053134">
         <string name="name" value="Yellow Chick Clothes (F)"/>
@@ -64947,29 +64920,14 @@
       <imgdir name="1053146">
         <string name="name" value="Heart Fur Coat"/>
       </imgdir>
-      <imgdir name="1053147">
-        <string name="name" value="White M-Forcer"/>
-      </imgdir>
-      <imgdir name="1053158">
-        <string name="name" value="Eastern Inspiration"/>
-      </imgdir>
       <imgdir name="1053159">
         <string name="name" value="Starlit Dreams Robe"/>
       </imgdir>
       <imgdir name="1053165">
         <string name="name" value="Froggy Raincoat"/>
       </imgdir>
-      <imgdir name="1053166">
-        <string name="name" value="Elizabethan Dress"/>
-      </imgdir>
-      <imgdir name="1053167">
-        <string name="name" value="Napoleonic Uniform"/>
-      </imgdir>
       <imgdir name="1053180">
         <string name="name" value="Dango Set Outfit"/>
-      </imgdir>
-      <imgdir name="1053186">
-        <string name="name" value="Pink Elephant Outfit"/>
       </imgdir>
       <imgdir name="1053187">
         <string name="name" value="Maple Galaxy Space Suit"/>
@@ -65039,9 +64997,6 @@
       </imgdir>
       <imgdir name="1053232">
         <string name="name" value="Sensible Denim (Blue)"/>
-      </imgdir>
-      <imgdir name="1053234">
-        <string name="name" value="Longcoat 1053234"/>
       </imgdir>
       <imgdir name="1053239">
         <string name="name" value="Aspiring Aubergine"/>
@@ -72987,30 +72942,6 @@
       </imgdir>
       <imgdir name="1073157">
         <string name="name" value="Red Cloud Shoes"/>
-      </imgdir>
-      <imgdir name="1073158">
-        <string name="name" value="Shoes 1073158"/>
-      </imgdir>
-      <imgdir name="1073159">
-        <string name="name" value="Shoes 1073159"/>
-      </imgdir>
-      <imgdir name="1073160">
-        <string name="name" value="Shoes 1073160"/>
-      </imgdir>
-      <imgdir name="1073161">
-        <string name="name" value="Shoes 1073161"/>
-      </imgdir>
-      <imgdir name="1073162">
-        <string name="name" value="Shoes 1073162"/>
-      </imgdir>
-      <imgdir name="1073163">
-        <string name="name" value="Star Sky Flower"/>
-      </imgdir>
-      <imgdir name="1073164">
-        <string name="name" value="Shoes 1073164"/>
-      </imgdir>
-      <imgdir name="1073165">
-        <string name="name" value="Shoes 1073165"/>
       </imgdir>
       <imgdir name="1073167">
         <string name="name" value="Dark Musician Shoes"/>

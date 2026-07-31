@@ -1832,6 +1832,13 @@ public class ItemInformationProvider {
         }
 
         String islot = getEquipmentSlot(id);
+        if (islot == null) {
+            // No wz entry on the server side. Say so plainly instead of falling through to the
+            // packet-edit autoban path, which would blame the player for our missing data.
+            chr.dropMessage(5, "This item has no server-side data and cannot be equipped.");
+            log.warn("Chr {} tried to equip {}, which has no entry under wz/Character.wz", chr.getName(), id);
+            return false;
+        }
         if (!EquipSlot.getFromTextSlot(islot).isAllowed(dst, isCash(id))) {
             equip.wear(false);
             String itemName = ItemInformationProvider.getInstance().getName(equip.getItemId());

@@ -59,7 +59,9 @@ public enum EquipSlot {
     }
 
     public static EquipSlot getFromTextSlot(String slot) {
-        if (!slot.isEmpty()) {
+        // getEquipmentSlot() returns null for an item with no server-side wz data; without this
+        // guard the NPE escapes the packet handler and the client never gets enableActions().
+        if (slot != null && !slot.isEmpty()) {
             for (EquipSlot c : values()) {
                 if (c.getName() != null) {
                     if (c.getName().equals(slot)) {

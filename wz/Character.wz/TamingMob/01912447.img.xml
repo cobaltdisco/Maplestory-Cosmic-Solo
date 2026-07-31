@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<imgdir name="01912447.img">
+  <imgdir name="info">
+    <canvas name="icon" width="32" height="32">
+      <vector name="origin" x="0" y="32"/>
+    </canvas>
+    <canvas name="iconRaw" width="32" height="32">
+      <vector name="origin" x="0" y="32"/>
+    </canvas>
+    <string name="islot" value="Sd"/>
+    <string name="vslot" value="Sd"/>
+    <int name="cash" value="1"/>
+  </imgdir>
+  <imgdir name="1902447">
+    <imgdir name="fly">
+      <uol name="0" value="../walk1/0"/>
+      <uol name="1" value="../walk1/1"/>
+      <uol name="2" value="../walk1/2"/>
+      <uol name="3" value="../walk1/3"/>
+      <uol name="4" value="../walk1/4"/>
+      <uol name="5" value="../walk1/5"/>
+      <uol name="6" value="../walk1/6"/>
+    </imgdir>
+    <imgdir name="jump">
+      <imgdir name="0">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="53" y="121"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-43"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+    </imgdir>
+    <imgdir name="ladder">
+      <imgdir name="0">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="92"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-38"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="1">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="91"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-37"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="2">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="92"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-38"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="3">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="93"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-39"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="4">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="92"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-38"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="5">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="91"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-37"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="6">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="92"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-38"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+    </imgdir>
+    <imgdir name="prone">
+      <imgdir name="0">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="87"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-33"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+    </imgdir>
+    <imgdir name="stand1">
+      <imgdir name="0">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="92"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-38"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="1">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="95"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-37"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="2">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="97"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-36"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="3">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="100"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-37"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="4">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="104"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-38"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="5">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="48" y="107"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-37"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="6">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="110"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-36"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="7">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="49" y="110"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-35"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="8">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="113"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-36"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="9">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="97"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-37"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+    </imgdir>
+    <imgdir name="tired">
+      <imgdir name="0">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="87"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-33"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+    </imgdir>
+    <imgdir name="walk1">
+      <imgdir name="0">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="92"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-38"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="1">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="91"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-37"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="2">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="92"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-38"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="3">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="93"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-39"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="4">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="92"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-38"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="5">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="91"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-37"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="6">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="92"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-38"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+    </imgdir>
+    <imgdir name="walk2">
+      <imgdir name="0">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="92"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-38"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="1">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="91"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-37"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="2">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="92"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-38"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="3">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="93"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-39"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="4">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="92"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-38"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="5">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="91"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-37"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="6">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="92"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-38"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+    </imgdir>
+    <imgdir name="stand2">
+      <imgdir name="9">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="97"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-37"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="8">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="113"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-36"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="7">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="49" y="110"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-35"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="6">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="110"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-36"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="5">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="48" y="107"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-37"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="4">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="104"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-38"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="3">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="100"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-37"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="2">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="97"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-36"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="1">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="95"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-37"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="0">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="92"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-38"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+    </imgdir>
+    <imgdir name="rope">
+      <imgdir name="6">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="92"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-38"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="5">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="91"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-37"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="4">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="92"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-38"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="3">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="93"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-39"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="2">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="92"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-38"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="1">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="91"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-37"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+      <imgdir name="0">
+        <canvas name="0" width="1" height="1">
+          <vector name="origin" x="45" y="92"/>
+          <imgdir name="map">
+            <vector name="navel" x="25" y="-38"/>
+          </imgdir>
+          <string name="z" value="tamingMobFront"/>
+        </canvas>
+      </imgdir>
+    </imgdir>
+  </imgdir>
+</imgdir>
