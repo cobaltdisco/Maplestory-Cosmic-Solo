@@ -29723,10 +29723,7 @@
         <string name="name" value="Face 29999"/>
       </imgdir>
       <imgdir name="25000">
-        <string name="name" value="PORT PROBE face 25000"/>
-      </imgdir>
-      <imgdir name="52000">
-        <string name="name" value="PORT PROBE face 52000"/>
+        <string name="name" value="Boing Face (Black)"/>
       </imgdir>
       <imgdir name="20000">
         <string name="name" value="Motivated Look (Black)"/>
@@ -57755,16 +57752,7 @@
         <string name="name" value="PORT TEST in-range control"/>
       </imgdir>
       <imgdir name="34500">
-        <string name="name" value="PORT PROBE hair 34500"/>
-      </imgdir>
-      <imgdir name="39999">
-        <string name="name" value="PORT PROBE hair 39999"/>
-      </imgdir>
-      <imgdir name="40000">
-        <string name="name" value="PORT PROBE hair 40000"/>
-      </imgdir>
-      <imgdir name="60000">
-        <string name="name" value="PORT PROBE hair 60000"/>
+        <string name="name" value="Orange Pale Moonlit Hair"/>
       </imgdir>
       <imgdir name="30000">
         <string name="name" value="Black Toben"/>
