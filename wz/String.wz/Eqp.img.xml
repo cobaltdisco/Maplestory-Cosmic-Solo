@@ -2,6 +2,42 @@
 <imgdir name="Eqp.img">
   <imgdir name="Eqp">
     <imgdir name="Accessory">
+      <imgdir name="1012310">
+        <string name="name" value="Valentine&apos;s Day Sweet Chocolate"/>
+      </imgdir>
+      <imgdir name="1012429">
+        <string name="name" value="Round Eyes-And-Mouth Face Accessory"/>
+      </imgdir>
+      <imgdir name="1012462">
+        <string name="name" value="Ghost Bride&apos;s Shining Dark Eyes"/>
+      </imgdir>
+      <imgdir name="1012576">
+        <string name="name" value="Weird Orange Mushroom Face Accessory"/>
+      </imgdir>
+      <imgdir name="1012586">
+        <string name="name" value="Musical Note Face Paint (Purple)"/>
+      </imgdir>
+      <imgdir name="1012587">
+        <string name="name" value="Musical Note Face Paint (White)"/>
+      </imgdir>
+      <imgdir name="1012661">
+        <string name="name" value="One-Eyed Grim Reaper Face Accessory"/>
+      </imgdir>
+      <imgdir name="1012695">
+        <string name="name" value="Blue Dark Furrytail Cat&apos;s Eye Makeup"/>
+      </imgdir>
+      <imgdir name="1012696">
+        <string name="name" value="Violet Dark Furrytail Cat&apos;s Eye Makeup"/>
+      </imgdir>
+      <imgdir name="1022269">
+        <string name="name" value="Chained Princess Face Accessory"/>
+      </imgdir>
+      <imgdir name="1122431">
+        <string name="name" value="Retro World Champion Dodger Pendant"/>
+      </imgdir>
+      <imgdir name="1122432">
+        <string name="name" value="Retro World Champion Jumper Pendant"/>
+      </imgdir>
       <imgdir name="1010007">
         <string name="name" value="Cold Make-up"/>
       </imgdir>
@@ -95,9 +131,6 @@
       <imgdir name="1012309">
         <string name="name" value="Blood Mask"/>
       </imgdir>
-      <imgdir name="1012310">
-        <string name="name" value="Valentine&apos;s Day Sweet Chocolat?…"/>
-      </imgdir>
       <imgdir name="1012314">
         <string name="name" value="Dual Blade Mask"/>
       </imgdir>
@@ -154,9 +187,6 @@
       </imgdir>
       <imgdir name="1012428">
         <string name="name" value="Thick Eyebrows Face Accessory"/>
-      </imgdir>
-      <imgdir name="1012429">
-        <string name="name" value="Round Eyes-And-Mouth Face Acce?????…"/>
       </imgdir>
       <imgdir name="1012430">
         <string name="name" value="Bear Nose Face Accessory"/>
@@ -229,9 +259,6 @@
       </imgdir>
       <imgdir name="1012461">
         <string name="name" value="Pimples"/>
-      </imgdir>
-      <imgdir name="1012462">
-        <string name="name" value="Ghost Bride&apos;s Shining Dark Eye?…"/>
       </imgdir>
       <imgdir name="1012466">
         <string name="name" value="RED Face Paint"/>
@@ -452,9 +479,6 @@
       <imgdir name="1012575">
         <string name="name" value="Weird Pepe Face Accessory"/>
       </imgdir>
-      <imgdir name="1012576">
-        <string name="name" value="Weird Orange Mushroom Face Acc??????…"/>
-      </imgdir>
       <imgdir name="1012577">
         <string name="name" value="Weird Slime Face Accessory"/>
       </imgdir>
@@ -463,12 +487,6 @@
       </imgdir>
       <imgdir name="1012585">
         <string name="name" value="Musical Note Face Paint (Red)"/>
-      </imgdir>
-      <imgdir name="1012586">
-        <string name="name" value="Musical Note Face Paint (Purpl??…"/>
-      </imgdir>
-      <imgdir name="1012587">
-        <string name="name" value="Musical Note Face Paint (White?…"/>
       </imgdir>
       <imgdir name="1012589">
         <string name="name" value="So Sleepy"/>
@@ -569,9 +587,6 @@
       <imgdir name="1012645">
         <string name="name" value="Skeleton Surgeon Mask"/>
       </imgdir>
-      <imgdir name="1012661">
-        <string name="name" value="One-Eyed Grim Reaper Face Acce?????…"/>
-      </imgdir>
       <imgdir name="1012669">
         <string name="name" value="Lavender Doll"/>
       </imgdir>
@@ -595,12 +610,6 @@
       </imgdir>
       <imgdir name="1012694">
         <string name="name" value="Whistle"/>
-      </imgdir>
-      <imgdir name="1012695">
-        <string name="name" value="Blue Dark Furrytail Cat&apos;s Eye ??????…"/>
-      </imgdir>
-      <imgdir name="1012696">
-        <string name="name" value="Violet Dark Furrytail Cat&apos;s Ey????????…"/>
       </imgdir>
       <imgdir name="1012701">
         <string name="name" value="Megumin Eye Patch"/>
@@ -836,9 +845,6 @@
       <imgdir name="1022266">
         <string name="name" value="Strange Uncle Glasses"/>
       </imgdir>
-      <imgdir name="1022269">
-        <string name="name" value="Chained Princess Face Accessor?…"/>
-      </imgdir>
       <imgdir name="1022270">
         <string name="name" value="Oversized Sunglasses"/>
       </imgdir>
@@ -1051,12 +1057,6 @@
       </imgdir>
       <imgdir name="1122367">
         <string name="name" value="Grim Snowflake Pendant"/>
-      </imgdir>
-      <imgdir name="1122431">
-        <string name="name" value="Retro World Champion Dodger Pe?????…"/>
-      </imgdir>
-      <imgdir name="1122432">
-        <string name="name" value="Retro World Champion Jumper Pe?????…"/>
       </imgdir>
       <imgdir name="1122433">
         <string name="name" value="Retro Hero"/>
@@ -2616,6 +2616,75 @@
       </imgdir>
     </imgdir>
     <imgdir name="Cap">
+      <imgdir name="1004107">
+        <string name="name" value="Nature Guardian’s Crown"/>
+      </imgdir>
+      <imgdir name="1004113">
+        <string name="name" value="Ghost Bride&apos;s Antique Wedding Veil"/>
+      </imgdir>
+      <imgdir name="1004166">
+        <string name="name" value="Black Butterfly Ribbon Headband"/>
+      </imgdir>
+      <imgdir name="1004212">
+        <string name="name" value="[[FROZEN CONTENT]] Frozen Dressy Ribbon"/>
+      </imgdir>
+      <imgdir name="1004580">
+        <string name="name" value="Yeonhwa School Sapphire Ornament"/>
+      </imgdir>
+      <imgdir name="1004589">
+        <string name="name" value="Jay&apos;s Sterilized Kitty Eye Patch"/>
+      </imgdir>
+      <imgdir name="1004728">
+        <string name="name" value="Lady Moon Bunny&apos;s Rice Drop Soup"/>
+      </imgdir>
+      <imgdir name="1004729">
+        <string name="name" value="Wee Moon Bunny&apos;s Rice Drop Soup"/>
+      </imgdir>
+      <imgdir name="1004825">
+        <string name="name" value="Time-Traveling Anniversary Headband"/>
+      </imgdir>
+      <imgdir name="1005027">
+        <string name="name" value="Puppy Love Samurai Pink Hairband"/>
+      </imgdir>
+      <imgdir name="1005285">
+        <string name="name" value="Neckerchief Fascinator (Purple)"/>
+      </imgdir>
+      <imgdir name="1005375">
+        <string name="name" value="Superstar Pink Bean Horned Headphones"/>
+      </imgdir>
+      <imgdir name="1005391">
+        <string name="name" value="Great Golden Dragon Knight Crown"/>
+      </imgdir>
+      <imgdir name="1005413">
+        <string name="name" value="Purrfect White Tiger Pajama Hood"/>
+      </imgdir>
+      <imgdir name="1005414">
+        <string name="name" value="Petite Checkered Pastel Purple Hat"/>
+      </imgdir>
+      <imgdir name="1005415">
+        <string name="name" value="Petite Polka Dot Pastel Violet Hat"/>
+      </imgdir>
+      <imgdir name="1005440">
+        <string name="name" value="Cherry Blossom Bunny Hairpin (Day)"/>
+      </imgdir>
+      <imgdir name="1005441">
+        <string name="name" value="Cherry Blossom Fox Hairpin (Night)"/>
+      </imgdir>
+      <imgdir name="1005490">
+        <string name="name" value="Accessory 1005490"/>
+      </imgdir>
+      <imgdir name="1005521">
+        <string name="name" value="Navy Kindergarten Back-to-School Hat"/>
+      </imgdir>
+      <imgdir name="1005522">
+        <string name="name" value="Yellow Kindergarten Back-to-School Hat"/>
+      </imgdir>
+      <imgdir name="1006278">
+        <string name="name" value="Time to Brush Your Teeth Sleep Hat"/>
+      </imgdir>
+      <imgdir name="1006279">
+        <string name="name" value="Time to Brush Your Teeth Eye Mask"/>
+      </imgdir>
       <imgdir name="1000024">
         <string name="name" value="Oriental Bridegroom Hat"/>
       </imgdir>
@@ -4419,9 +4488,6 @@
       <imgdir name="1004106">
         <string name="name" value="Guardian Head Band"/>
       </imgdir>
-      <imgdir name="1004107">
-        <string name="name" value="Nature Guardian????????…"/>
-      </imgdir>
       <imgdir name="1004108">
         <string name="name" value="Fancy Magician Hat"/>
       </imgdir>
@@ -4433,9 +4499,6 @@
       </imgdir>
       <imgdir name="1004112">
         <string name="name" value="Cap 1004112"/>
-      </imgdir>
-      <imgdir name="1004113">
-        <string name="name" value="Ghost Bride&apos;s Antique Wedding ????…"/>
       </imgdir>
       <imgdir name="1004114">
         <string name="name" value="Cap 1004114"/>
@@ -4524,9 +4587,6 @@
       <imgdir name="1004165">
         <string name="name" value="Spring Rose"/>
       </imgdir>
-      <imgdir name="1004166">
-        <string name="name" value="Black Butterfly Ribbon Headban?…"/>
-      </imgdir>
       <imgdir name="1004167">
         <string name="name" value="Dinosaur Snapback"/>
       </imgdir>
@@ -4610,9 +4670,6 @@
       </imgdir>
       <imgdir name="1004211">
         <string name="name" value="Baby Earmuffs"/>
-      </imgdir>
-      <imgdir name="1004212">
-        <string name="name" value="[[FROZEN CONTENT]] Frozen Dres?????????…"/>
       </imgdir>
       <imgdir name="1004213">
         <string name="name" value="Hula Feather Decoration"/>
@@ -5145,9 +5202,6 @@
       <imgdir name="1004579">
         <string name="name" value="Pure Sheep Hat"/>
       </imgdir>
-      <imgdir name="1004580">
-        <string name="name" value="Yeonhwa School Sapphire Orname??…"/>
-      </imgdir>
       <imgdir name="1004581">
         <string name="name" value="Dango Dango Hat"/>
       </imgdir>
@@ -5165,9 +5219,6 @@
       </imgdir>
       <imgdir name="1004588">
         <string name="name" value="Cap 1004588"/>
-      </imgdir>
-      <imgdir name="1004589">
-        <string name="name" value="Jay&apos;s Sterilized Kitty Eye Pat??…"/>
       </imgdir>
       <imgdir name="1004590">
         <string name="name" value="Blueberry Jewel Pin"/>
@@ -5415,12 +5466,6 @@
       <imgdir name="1004727">
         <string name="name" value="Shade&apos;s Game of Yut"/>
       </imgdir>
-      <imgdir name="1004728">
-        <string name="name" value="Lady Moon Bunny&apos;s Rice Drop So??…"/>
-      </imgdir>
-      <imgdir name="1004729">
-        <string name="name" value="Wee Moon Bunny&apos;s Rice Drop Sou?…"/>
-      </imgdir>
       <imgdir name="1004730">
         <string name="name" value="Hungry Moon Bunny"/>
       </imgdir>
@@ -5582,9 +5627,6 @@
       </imgdir>
       <imgdir name="1004824">
         <string name="name" value="Well-Liked Barrette"/>
-      </imgdir>
-      <imgdir name="1004825">
-        <string name="name" value="Time-Traveling Anniversary Hea?????…"/>
       </imgdir>
       <imgdir name="1004826">
         <string name="name" value="Straw Cat Hat"/>
@@ -6060,9 +6102,6 @@
       <imgdir name="1005026">
         <string name="name" value="Puppy Love Samurai Hairband"/>
       </imgdir>
-      <imgdir name="1005027">
-        <string name="name" value="Puppy Love Samurai Pink Hairba??…"/>
-      </imgdir>
       <imgdir name="1005032">
         <string name="name" value="Cap 1005032"/>
       </imgdir>
@@ -6306,9 +6345,6 @@
       <imgdir name="1005284">
         <string name="name" value="Neckerchief Fascinator (Navy)"/>
       </imgdir>
-      <imgdir name="1005285">
-        <string name="name" value="Neckerchief Fascinator (Purple?…"/>
-      </imgdir>
       <imgdir name="1005286">
         <string name="name" value="Neckerchief Fascinator (Red)"/>
       </imgdir>
@@ -6375,9 +6411,6 @@
       <imgdir name="1005369">
         <string name="name" value="Twinkling Morning Star"/>
       </imgdir>
-      <imgdir name="1005375">
-        <string name="name" value="Superstar Pink Bean Horned Hea???????…"/>
-      </imgdir>
       <imgdir name="1005380">
         <string name="name" value="Summer Breeze Floral Crown"/>
       </imgdir>
@@ -6389,9 +6422,6 @@
       </imgdir>
       <imgdir name="1005387">
         <string name="name" value="Plump Lemons"/>
-      </imgdir>
-      <imgdir name="1005391">
-        <string name="name" value="Great Golden Dragon Knight Cro??…"/>
       </imgdir>
       <imgdir name="1005393">
         <string name="name" value="Havoc Horns"/>
@@ -6426,15 +6456,6 @@
       <imgdir name="1005412">
         <string name="name" value="Baby Bear Fedora"/>
       </imgdir>
-      <imgdir name="1005413">
-        <string name="name" value="Purrfect White Tiger Pajama Ho??…"/>
-      </imgdir>
-      <imgdir name="1005414">
-        <string name="name" value="Petite Checkered Pastel Purple????…"/>
-      </imgdir>
-      <imgdir name="1005415">
-        <string name="name" value="Petite Polka Dot Pastel Violet????…"/>
-      </imgdir>
       <imgdir name="1005416">
         <string name="name" value="Snowbunny Hat"/>
       </imgdir>
@@ -6464,12 +6485,6 @@
       </imgdir>
       <imgdir name="1005439">
         <string name="name" value="Halloween Festival Hat"/>
-      </imgdir>
-      <imgdir name="1005440">
-        <string name="name" value="Cherry Blossom Bunny Hairpin (????…"/>
-      </imgdir>
-      <imgdir name="1005441">
-        <string name="name" value="Cherry Blossom Fox Hairpin (Ni????…"/>
       </imgdir>
       <imgdir name="1005442">
         <string name="name" value="Ice Cream Lover Hat (M)"/>
@@ -6537,9 +6552,6 @@
       <imgdir name="1005487">
         <string name="name" value="Retro Maid Beret"/>
       </imgdir>
-      <imgdir name="1005490">
-        <string name="name" value="Accessory 1005490"/>
-      </imgdir>
       <imgdir name="1005501">
         <string name="name" value="Winter Plush Hat"/>
       </imgdir>
@@ -6557,12 +6569,6 @@
       </imgdir>
       <imgdir name="1005514">
         <string name="name" value="Love Mouse Hat"/>
-      </imgdir>
-      <imgdir name="1005521">
-        <string name="name" value="Navy Kindergarten Back-to-Scho??????…"/>
-      </imgdir>
-      <imgdir name="1005522">
-        <string name="name" value="Yellow Kindergarten Back-to-Sc????????…"/>
       </imgdir>
       <imgdir name="1005529">
         <string name="name" value="Lovely Pompom Pin"/>
@@ -7082,12 +7088,6 @@
       </imgdir>
       <imgdir name="1006251">
         <string name="name" value="Red Cap"/>
-      </imgdir>
-      <imgdir name="1006278">
-        <string name="name" value="Time to Brush Your Teeth Sleep????…"/>
-      </imgdir>
-      <imgdir name="1006279">
-        <string name="name" value="Time to Brush Your Teeth Eye M???…"/>
       </imgdir>
       <imgdir name="1006280">
         <string name="name" value="Hysteric Bear Hairband (M)"/>
@@ -9928,6 +9928,24 @@
       </imgdir>
     </imgdir>
     <imgdir name="Cape">
+      <imgdir name="1102486">
+        <string name="name" value="BasilMarket Billionaire Balloon"/>
+      </imgdir>
+      <imgdir name="1102592">
+        <string name="name" value="Battle Monster Consolation Cape"/>
+      </imgdir>
+      <imgdir name="1102847">
+        <string name="name" value="Yeonhwa School Guardian Soul Fire"/>
+      </imgdir>
+      <imgdir name="1103207">
+        <string name="name" value="Great Golden Dragon Knight Cape"/>
+      </imgdir>
+      <imgdir name="1103524">
+        <string name="name" value="Full of Joy Maplemas Decoration"/>
+      </imgdir>
+      <imgdir name="1103537">
+        <string name="name" value="Shining Winter Tree Effect Cape"/>
+      </imgdir>
       <imgdir name="1100000">
         <string name="name" value="Napoleon Cape"/>
       </imgdir>
@@ -10339,9 +10357,6 @@
       <imgdir name="1102466">
         <string name="name" value="Flying Nobilitas"/>
       </imgdir>
-      <imgdir name="1102486">
-        <string name="name" value="BasilMarket Billionaire Balloo?…"/>
-      </imgdir>
       <imgdir name="1102487">
         <string name="name" value="Luminous Cherubim"/>
       </imgdir>
@@ -10440,9 +10455,6 @@
       </imgdir>
       <imgdir name="1102591">
         <string name="name" value="Battle Monster Victory Cape"/>
-      </imgdir>
-      <imgdir name="1102592">
-        <string name="name" value="Battle Monster Consolation Cap?…"/>
       </imgdir>
       <imgdir name="1102593">
         <string name="name" value="Floaty Baseball"/>
@@ -10759,9 +10771,6 @@
       <imgdir name="1102845">
         <string name="name" value="Blue Panda"/>
       </imgdir>
-      <imgdir name="1102847">
-        <string name="name" value="Yeonhwa School Guardian Soul F???…"/>
-      </imgdir>
       <imgdir name="1102848">
         <string name="name" value="Gravity"/>
       </imgdir>
@@ -11071,9 +11080,6 @@
       <imgdir name="1103204">
         <string name="name" value="Pink Jelly Bag"/>
       </imgdir>
-      <imgdir name="1103207">
-        <string name="name" value="Great Golden Dragon Knight Cap?…"/>
-      </imgdir>
       <imgdir name="1103215">
         <string name="name" value="Stargazer Cape"/>
       </imgdir>
@@ -11203,17 +11209,11 @@
       <imgdir name="1103519">
         <string name="name" value="Proof of Insignificant Magic"/>
       </imgdir>
-      <imgdir name="1103524">
-        <string name="name" value="Full of Joy Maplemas Decoratio?…"/>
-      </imgdir>
       <imgdir name="1103525">
         <string name="name" value="Full of Hope Twinkle Tree"/>
       </imgdir>
       <imgdir name="1103534">
         <string name="name" value="Meow Candy Star Tail"/>
-      </imgdir>
-      <imgdir name="1103537">
-        <string name="name" value="Shining Winter Tree Effect Cap?…"/>
       </imgdir>
       <imgdir name="1103539">
         <string name="name" value="Dark Bunny Cape"/>
@@ -11794,6 +11794,9 @@
       </imgdir>
     </imgdir>
     <imgdir name="Coat">
+      <imgdir name="1040195">
+        <string name="name" value="Sleeveless Purple Mustache Shirt (M)"/>
+      </imgdir>
       <imgdir name="1040139">
         <string name="name" value="Island Beads (M)"/>
       </imgdir>
@@ -11808,9 +11811,6 @@
       </imgdir>
       <imgdir name="1040194">
         <string name="name" value="Guys Pineapple Tank top"/>
-      </imgdir>
-      <imgdir name="1040195">
-        <string name="name" value="Sleeveless Purple Mustache Shi??????…"/>
       </imgdir>
       <imgdir name="1040196">
         <string name="name" value="Smile Seed Top"/>
@@ -13642,6 +13642,417 @@
       </imgdir>
     </imgdir>
     <imgdir name="Face">
+      <imgdir name="20551">
+        <string name="name" value="Nine-Tailed Fox Face (Sapphire)"/>
+      </imgdir>
+      <imgdir name="20565">
+        <string name="name" value="Charismatic Dual Blade(Sapphire)"/>
+      </imgdir>
+      <imgdir name="20597">
+        <string name="name" value="Caterpillar Brow Face (Sapphire)"/>
+      </imgdir>
+      <imgdir name="20679">
+        <string name="name" value="Enticing Toothy Smirk Cattertons Face"/>
+      </imgdir>
+      <imgdir name="20751">
+        <string name="name" value="Nine-Tailed Fox Face (Amethyst)"/>
+      </imgdir>
+      <imgdir name="20765">
+        <string name="name" value="Charismatic Dual Blade(Amethyst)"/>
+      </imgdir>
+      <imgdir name="20797">
+        <string name="name" value="Caterpillar Brow Face (Amethyst)"/>
+      </imgdir>
+      <imgdir name="20928">
+        <string name="name" value="Enticing Toothy Smirk Cattertons Face"/>
+      </imgdir>
+      <imgdir name="20968">
+        <string name="name" value="Enticing Toothy Smirk Cattertons Face"/>
+      </imgdir>
+      <imgdir name="21095">
+        <string name="name" value="Exceptional Explorer Face(Black)"/>
+      </imgdir>
+      <imgdir name="21195">
+        <string name="name" value="Exceptional Explorer Face(Blue)"/>
+      </imgdir>
+      <imgdir name="21267">
+        <string name="name" value="Enticing Toothy Smirk Cattertons Face"/>
+      </imgdir>
+      <imgdir name="21395">
+        <string name="name" value="Exceptional Explorer Face (Green)"/>
+      </imgdir>
+      <imgdir name="21399">
+        <string name="name" value="Yellow-eyed Futuroid (F) (Green)"/>
+      </imgdir>
+      <imgdir name="21450">
+        <string name="name" value="Beautiful Otherworld Face (Hazel)"/>
+      </imgdir>
+      <imgdir name="21495">
+        <string name="name" value="Exceptional Explorer Face (Hazel)"/>
+      </imgdir>
+      <imgdir name="21499">
+        <string name="name" value="Green-eyed Futuroid (F) (Hazel)"/>
+      </imgdir>
+      <imgdir name="21549">
+        <string name="name" value="Nine-Tailed Fox Face (Sapphire)"/>
+      </imgdir>
+      <imgdir name="21550">
+        <string name="name" value="Beautiful Otherworld Face (Sapphire)"/>
+      </imgdir>
+      <imgdir name="21561">
+        <string name="name" value="Captivating Dual Blade (Sapphire)"/>
+      </imgdir>
+      <imgdir name="21574">
+        <string name="name" value="Intelligent Nova Face (Sapphire)"/>
+      </imgdir>
+      <imgdir name="21594">
+        <string name="name" value="Gentle Explorer Face (Sapphire)"/>
+      </imgdir>
+      <imgdir name="21595">
+        <string name="name" value="Exceptional Explorer Face (Sapphire)"/>
+      </imgdir>
+      <imgdir name="21599">
+        <string name="name" value="Blue-eyed Futuroid (F) (Sapphire)"/>
+      </imgdir>
+      <imgdir name="21650">
+        <string name="name" value="Beautiful Otherworld Face (Violet)"/>
+      </imgdir>
+      <imgdir name="21661">
+        <string name="name" value="Captivating Dual Blade (Violet)"/>
+      </imgdir>
+      <imgdir name="21695">
+        <string name="name" value="Exceptional Explorer Face (Violet)"/>
+      </imgdir>
+      <imgdir name="21699">
+        <string name="name" value="Purple-eyed Futuroid (F) (Violet)"/>
+      </imgdir>
+      <imgdir name="21749">
+        <string name="name" value="Nine-Tailed Fox Face (Amethyst)"/>
+      </imgdir>
+      <imgdir name="21761">
+        <string name="name" value="Captivating Dual Blade (Amethyst)"/>
+      </imgdir>
+      <imgdir name="21774">
+        <string name="name" value="Intelligent Nova Face (Amethyst)"/>
+      </imgdir>
+      <imgdir name="21794">
+        <string name="name" value="Gentle Explorer Face (Amethyst)"/>
+      </imgdir>
+      <imgdir name="21795">
+        <string name="name" value="Exceptional Explorer Face (Amethyst)"/>
+      </imgdir>
+      <imgdir name="21799">
+        <string name="name" value="Brown-eyed Futuroid (F) (Amethyst)"/>
+      </imgdir>
+      <imgdir name="21895">
+        <string name="name" value="Exceptional Explorer Face (White)"/>
+      </imgdir>
+      <imgdir name="21899">
+        <string name="name" value="White-eyed Futuroid (F) (White)"/>
+      </imgdir>
+      <imgdir name="21910">
+        <string name="name" value="Enticing Toothy Smirk Cattertons Face"/>
+      </imgdir>
+      <imgdir name="21950">
+        <string name="name" value="Enticing Toothy Smirk Cattertons Face"/>
+      </imgdir>
+      <imgdir name="21990">
+        <string name="name" value="Enticing Toothy Smirk Cattertons Face"/>
+      </imgdir>
+      <imgdir name="22030">
+        <string name="name" value="Enticing Toothy Smirk Cattertons Face"/>
+      </imgdir>
+      <imgdir name="22070">
+        <string name="name" value="Enticing Toothy Smirk Cattertons Face"/>
+      </imgdir>
+      <imgdir name="22110">
+        <string name="name" value="Enticing Toothy Smirk Cattertons Face"/>
+      </imgdir>
+      <imgdir name="22146">
+        <string name="name" value="Enticing Toothy Smirk Cattertons Face"/>
+      </imgdir>
+      <imgdir name="22182">
+        <string name="name" value="Enticing Toothy Smirk Cattertons Face"/>
+      </imgdir>
+      <imgdir name="22218">
+        <string name="name" value="Enticing Toothy Smirk Cattertons Face"/>
+      </imgdir>
+      <imgdir name="22254">
+        <string name="name" value="Enticing Toothy Smirk Cattertons Face"/>
+      </imgdir>
+      <imgdir name="22290">
+        <string name="name" value="Enticing Toothy Smirk Cattertons Face"/>
+      </imgdir>
+      <imgdir name="22326">
+        <string name="name" value="Enticing Toothy Smirk Cattertons Face"/>
+      </imgdir>
+      <imgdir name="22362">
+        <string name="name" value="Enticing Toothy Smirk Cattertons Face"/>
+      </imgdir>
+      <imgdir name="22398">
+        <string name="name" value="Enticing Toothy Smirk Cattertons Face"/>
+      </imgdir>
+      <imgdir name="23013">
+        <string name="name" value="Beast Tamer Male Face 1 (Black)"/>
+      </imgdir>
+      <imgdir name="23014">
+        <string name="name" value="Beast Tamer Male Face 2 (Black)"/>
+      </imgdir>
+      <imgdir name="23092">
+        <string name="name" value="Disinterested Heterochromia Face (Black)"/>
+      </imgdir>
+      <imgdir name="23192">
+        <string name="name" value="Disinterested Heterochromia Face (Blue)"/>
+      </imgdir>
+      <imgdir name="23292">
+        <string name="name" value="Disinterested Heterochromia Face (Red)"/>
+      </imgdir>
+      <imgdir name="23304">
+        <string name="name" value="Yellow-eyed Futuroid (M) (Green)"/>
+      </imgdir>
+      <imgdir name="23313">
+        <string name="name" value="Beast Tamer Male Face 1 (Green)"/>
+      </imgdir>
+      <imgdir name="23314">
+        <string name="name" value="Beast Tamer Male Face 2 (Green)"/>
+      </imgdir>
+      <imgdir name="23392">
+        <string name="name" value="Disinterested Heterochromia Face (Green)"/>
+      </imgdir>
+      <imgdir name="23404">
+        <string name="name" value="Green-eyed Futuroid (M) (Hazel)"/>
+      </imgdir>
+      <imgdir name="23413">
+        <string name="name" value="Beast Tamer Male Face 1 (Hazel)"/>
+      </imgdir>
+      <imgdir name="23414">
+        <string name="name" value="Beast Tamer Male Face 2 (Hazel)"/>
+      </imgdir>
+      <imgdir name="23492">
+        <string name="name" value="Disinterested Heterochromia Face (Hazel)"/>
+      </imgdir>
+      <imgdir name="23500">
+        <string name="name" value="Vibrant Explorer Face (Sapphire)"/>
+      </imgdir>
+      <imgdir name="23504">
+        <string name="name" value="Blue-eyed Futuroid (M) (Sapphire)"/>
+      </imgdir>
+      <imgdir name="23513">
+        <string name="name" value="Beast Tamer Male Face 1 (Sapphire)"/>
+      </imgdir>
+      <imgdir name="23514">
+        <string name="name" value="Beast Tamer Male Face 2 (Sapphire)"/>
+      </imgdir>
+      <imgdir name="23520">
+        <string name="name" value="Sapphire Dewy-Eyed Face (Sapphire)"/>
+      </imgdir>
+      <imgdir name="23561">
+        <string name="name" value="Friendly Friend Face (Sapphire)"/>
+      </imgdir>
+      <imgdir name="23592">
+        <string name="name" value="Disinterested Heterochromia Face (Sapphire)"/>
+      </imgdir>
+      <imgdir name="23596">
+        <string name="name" value="Polearm Warrior Face (Sapphire)"/>
+      </imgdir>
+      <imgdir name="23604">
+        <string name="name" value="Purple-eyed Futuroid (M) (Violet)"/>
+      </imgdir>
+      <imgdir name="23613">
+        <string name="name" value="Beast Tamer Male Face 1 (Violet)"/>
+      </imgdir>
+      <imgdir name="23614">
+        <string name="name" value="Beast Tamer Male Face 2 (Violet)"/>
+      </imgdir>
+      <imgdir name="23692">
+        <string name="name" value="Disinterested Heterochromia Face (Violet)"/>
+      </imgdir>
+      <imgdir name="23700">
+        <string name="name" value="Vibrant Explorer Face (Amethyst)"/>
+      </imgdir>
+      <imgdir name="23704">
+        <string name="name" value="Brown-eyed Futuroid (M) (Amethyst)"/>
+      </imgdir>
+      <imgdir name="23713">
+        <string name="name" value="Beast Tamer Male Face 1 (Amethyst)"/>
+      </imgdir>
+      <imgdir name="23714">
+        <string name="name" value="Beast Tamer Male Face 2 (Amethyst)"/>
+      </imgdir>
+      <imgdir name="23720">
+        <string name="name" value="Amethyst Dewy-Eyed Face (Amethyst)"/>
+      </imgdir>
+      <imgdir name="23761">
+        <string name="name" value="Friendly Friend Face (Amethyst)"/>
+      </imgdir>
+      <imgdir name="23792">
+        <string name="name" value="Disinterested Heterochromia Face (Amethyst)"/>
+      </imgdir>
+      <imgdir name="23796">
+        <string name="name" value="Polearm Warrior Face (Amethyst)"/>
+      </imgdir>
+      <imgdir name="23804">
+        <string name="name" value="White-eyed Futuroid (M) (White)"/>
+      </imgdir>
+      <imgdir name="23813">
+        <string name="name" value="Beast Tamer Male Face 1 (White)"/>
+      </imgdir>
+      <imgdir name="23814">
+        <string name="name" value="Beast Tamer Male Face 2 (White)"/>
+      </imgdir>
+      <imgdir name="23892">
+        <string name="name" value="Disinterested Heterochromia Face (White)"/>
+      </imgdir>
+      <imgdir name="24009">
+        <string name="name" value="Beast Tamer Female Face 1 (Black)"/>
+      </imgdir>
+      <imgdir name="24010">
+        <string name="name" value="Beast Tamer Female Face 2 (Black)"/>
+      </imgdir>
+      <imgdir name="24087">
+        <string name="name" value="Sleepy Heterochromia Face (Black)"/>
+      </imgdir>
+      <imgdir name="24109">
+        <string name="name" value="Beast Tamer Female Face 1 (Blue)"/>
+      </imgdir>
+      <imgdir name="24110">
+        <string name="name" value="Beast Tamer Female Face 2 (Blue)"/>
+      </imgdir>
+      <imgdir name="24187">
+        <string name="name" value="Sleepy Heterochromia Face (Blue)"/>
+      </imgdir>
+      <imgdir name="24287">
+        <string name="name" value="Sleepy Heterochromia Face (Red)"/>
+      </imgdir>
+      <imgdir name="24309">
+        <string name="name" value="Beast Tamer Female Face 1 (Green)"/>
+      </imgdir>
+      <imgdir name="24310">
+        <string name="name" value="Beast Tamer Female Face 2 (Green)"/>
+      </imgdir>
+      <imgdir name="24387">
+        <string name="name" value="Sleepy Heterochromia Face (Green)"/>
+      </imgdir>
+      <imgdir name="24409">
+        <string name="name" value="Beast Tamer Female Face 1 (Hazel)"/>
+      </imgdir>
+      <imgdir name="24410">
+        <string name="name" value="Beast Tamer Female Face 2 (Hazel)"/>
+      </imgdir>
+      <imgdir name="24487">
+        <string name="name" value="Sleepy Heterochromia Face (Hazel)"/>
+      </imgdir>
+      <imgdir name="24509">
+        <string name="name" value="Beast Tamer Female Face 1 (Sapphire)"/>
+      </imgdir>
+      <imgdir name="24510">
+        <string name="name" value="Beast Tamer Female Face 2 (Sapphire)"/>
+      </imgdir>
+      <imgdir name="24516">
+        <string name="name" value="Sapphire Dewy-Eyed Face (Sapphire) "/>
+      </imgdir>
+      <imgdir name="24525">
+        <string name="name" value="Disease Control STAR (Sapphire) "/>
+      </imgdir>
+      <imgdir name="24559">
+        <string name="name" value="Friendly Friend Face (Sapphire)"/>
+      </imgdir>
+      <imgdir name="24568">
+        <string name="name" value="Raised Eyebrows Face (Sapphire)"/>
+      </imgdir>
+      <imgdir name="24585">
+        <string name="name" value="Polearm Warrior Face (Sapphire)"/>
+      </imgdir>
+      <imgdir name="24587">
+        <string name="name" value="Sleepy Heterochromia Face (Sapphire)"/>
+      </imgdir>
+      <imgdir name="24609">
+        <string name="name" value="Beast Tamer Female Face 1 (Violet)"/>
+      </imgdir>
+      <imgdir name="24610">
+        <string name="name" value="Beast Tamer Female Face 2 (Violet)"/>
+      </imgdir>
+      <imgdir name="24687">
+        <string name="name" value="Sleepy Heterochromia Face (Violet)"/>
+      </imgdir>
+      <imgdir name="24709">
+        <string name="name" value="Beast Tamer Female Face 1 (Amethyst)"/>
+      </imgdir>
+      <imgdir name="24710">
+        <string name="name" value="Beast Tamer Female Face 2 (Amethyst)"/>
+      </imgdir>
+      <imgdir name="24716">
+        <string name="name" value="Amethyst Dewy-Eyed Face (Amethyst)"/>
+      </imgdir>
+      <imgdir name="24725">
+        <string name="name" value="Disease Control STAR (Amethyst)"/>
+      </imgdir>
+      <imgdir name="24759">
+        <string name="name" value="Friendly Friend Face (Amethyst)"/>
+      </imgdir>
+      <imgdir name="24768">
+        <string name="name" value="Raised Eyebrows Face (Amethyst)"/>
+      </imgdir>
+      <imgdir name="24785">
+        <string name="name" value="Polearm Warrior Face (Amethyst)"/>
+      </imgdir>
+      <imgdir name="24787">
+        <string name="name" value="Sleepy Heterochromia Face (Amethyst)"/>
+      </imgdir>
+      <imgdir name="24809">
+        <string name="name" value="Beast Tamer Female Face 1 (White)"/>
+      </imgdir>
+      <imgdir name="24810">
+        <string name="name" value="Beast Tamer Female Face 2 (White)"/>
+      </imgdir>
+      <imgdir name="25357">
+        <string name="name" value="Fresh Spring Water Face (Green)"/>
+      </imgdir>
+      <imgdir name="25457">
+        <string name="name" value="Fresh Spring Water Face (Brown)"/>
+      </imgdir>
+      <imgdir name="25507">
+        <string name="name" value="Starlight Falling Face (Sapphire)"/>
+      </imgdir>
+      <imgdir name="25557">
+        <string name="name" value="Fresh Spring Water Face (Sapphire)"/>
+      </imgdir>
+      <imgdir name="25607">
+        <string name="name" value="Starlight Falling Face (Violet)"/>
+      </imgdir>
+      <imgdir name="25657">
+        <string name="name" value="Fresh Spring Water Face (Purple)"/>
+      </imgdir>
+      <imgdir name="25707">
+        <string name="name" value="Starlight Falling Face (Amethyst)"/>
+      </imgdir>
+      <imgdir name="25857">
+        <string name="name" value="Fresh Spring Water Face (White)"/>
+      </imgdir>
+      <imgdir name="26361">
+        <string name="name" value="Fresh Spring Water Face (Green)"/>
+      </imgdir>
+      <imgdir name="26461">
+        <string name="name" value="Fresh Spring Water Face (Brown)"/>
+      </imgdir>
+      <imgdir name="26504">
+        <string name="name" value="Starlight Falling Face (Sapphire)"/>
+      </imgdir>
+      <imgdir name="26561">
+        <string name="name" value="Fresh Spring Water Face (Sapphire)"/>
+      </imgdir>
+      <imgdir name="26604">
+        <string name="name" value="Starlight Falling Face (Violet)"/>
+      </imgdir>
+      <imgdir name="26661">
+        <string name="name" value="Fresh Spring Water Face (Purple)"/>
+      </imgdir>
+      <imgdir name="26704">
+        <string name="name" value="Starlight Falling Face (Amethyst)"/>
+      </imgdir>
+      <imgdir name="26861">
+        <string name="name" value="Fresh Spring Water Face (White)"/>
+      </imgdir>
       <imgdir name="20030">
         <string name="name" value="Arrogant Face (Black)"/>
       </imgdir>
@@ -14719,9 +15130,6 @@
       <imgdir name="20550">
         <string name="name" value="Confused Look (Sapphire)"/>
       </imgdir>
-      <imgdir name="20551">
-        <string name="name" value="Nine-Tailed Fox Face (Sapphire?…"/>
-      </imgdir>
       <imgdir name="20552">
         <string name="name" value="Look of Evil (Sapphire)"/>
       </imgdir>
@@ -14760,9 +15168,6 @@
       </imgdir>
       <imgdir name="20564">
         <string name="name" value="Intelligent Eyes (Sapphire)"/>
-      </imgdir>
-      <imgdir name="20565">
-        <string name="name" value="Charismatic Dual Blade(Sapphir??…"/>
       </imgdir>
       <imgdir name="20566">
         <string name="name" value="Sulky Look (Male) (Sapphire)"/>
@@ -14856,9 +15261,6 @@
       </imgdir>
       <imgdir name="20596">
         <string name="name" value="Face 20596"/>
-      </imgdir>
-      <imgdir name="20597">
-        <string name="name" value="Caterpillar Brow Face (Sapphir??…"/>
       </imgdir>
       <imgdir name="20598">
         <string name="name" value="Hoi Poi Face (Sapphire)"/>
@@ -15007,9 +15409,6 @@
       <imgdir name="20678">
         <string name="name" value="Kenji Face (Violet)"/>
       </imgdir>
-      <imgdir name="20679">
-        <string name="name" value="Enticing Toothy Smirk Catterto???????…"/>
-      </imgdir>
       <imgdir name="20680">
         <string name="name" value="Starlight Eyes (Violet)"/>
       </imgdir>
@@ -15127,9 +15526,6 @@
       <imgdir name="20750">
         <string name="name" value="Confused Look (Amethyst)"/>
       </imgdir>
-      <imgdir name="20751">
-        <string name="name" value="Nine-Tailed Fox Face (Amethyst?…"/>
-      </imgdir>
       <imgdir name="20752">
         <string name="name" value="Look of Evil (Amethyst)"/>
       </imgdir>
@@ -15168,9 +15564,6 @@
       </imgdir>
       <imgdir name="20764">
         <string name="name" value="Intelligent Eyes (Amethyst)"/>
-      </imgdir>
-      <imgdir name="20765">
-        <string name="name" value="Charismatic Dual Blade(Amethys??…"/>
       </imgdir>
       <imgdir name="20766">
         <string name="name" value="Sulky Look (Male) (Amethyst)"/>
@@ -15264,9 +15657,6 @@
       </imgdir>
       <imgdir name="20796">
         <string name="name" value="Face 20796"/>
-      </imgdir>
-      <imgdir name="20797">
-        <string name="name" value="Caterpillar Brow Face (Amethys??…"/>
       </imgdir>
       <imgdir name="20798">
         <string name="name" value="Hoi Poi Face (Amethyst)"/>
@@ -15580,9 +15970,6 @@
       <imgdir name="20927">
         <string name="name" value="Lara Face"/>
       </imgdir>
-      <imgdir name="20928">
-        <string name="name" value="Enticing Toothy Smirk Catterto???????…"/>
-      </imgdir>
       <imgdir name="20929">
         <string name="name" value="Round Ink Face"/>
       </imgdir>
@@ -15699,9 +16086,6 @@
       </imgdir>
       <imgdir name="20967">
         <string name="name" value="Lara Face"/>
-      </imgdir>
-      <imgdir name="20968">
-        <string name="name" value="Enticing Toothy Smirk Catterto???????…"/>
       </imgdir>
       <imgdir name="20969">
         <string name="name" value="Round Ink Face"/>
@@ -15994,9 +16378,6 @@
       <imgdir name="21094">
         <string name="name" value="Gentle Explorer Face(Black)"/>
       </imgdir>
-      <imgdir name="21095">
-        <string name="name" value="Exceptional Explorer Face(Blac??…"/>
-      </imgdir>
       <imgdir name="21096">
         <string name="name" value="Enlightened Face (Black)"/>
       </imgdir>
@@ -16207,9 +16588,6 @@
       <imgdir name="21194">
         <string name="name" value="Gentle Explorer Face(Blue)"/>
       </imgdir>
-      <imgdir name="21195">
-        <string name="name" value="Exceptional Explorer Face(Blue?…"/>
-      </imgdir>
       <imgdir name="21196">
         <string name="name" value="Enlightened Face (Blue)"/>
       </imgdir>
@@ -16335,9 +16713,6 @@
       </imgdir>
       <imgdir name="21266">
         <string name="name" value="Lara Face"/>
-      </imgdir>
-      <imgdir name="21267">
-        <string name="name" value="Enticing Toothy Smirk Catterto???????…"/>
       </imgdir>
       <imgdir name="21268">
         <string name="name" value="Kanna (Red)"/>
@@ -16633,9 +17008,6 @@
       <imgdir name="21394">
         <string name="name" value="Gentle Explorer Face (Green)"/>
       </imgdir>
-      <imgdir name="21395">
-        <string name="name" value="Exceptional Explorer Face (Gre???…"/>
-      </imgdir>
       <imgdir name="21396">
         <string name="name" value="Enlightened Face (Green)"/>
       </imgdir>
@@ -16644,9 +17016,6 @@
       </imgdir>
       <imgdir name="21398">
         <string name="name" value="Olivia Face (Green)"/>
-      </imgdir>
-      <imgdir name="21399">
-        <string name="name" value="Yellow-eyed Futuroid (F) (Gree??…"/>
       </imgdir>
       <imgdir name="21415">
         <string name="name" value="Smokey Eyes (Hazel)"/>
@@ -16710,9 +17079,6 @@
       </imgdir>
       <imgdir name="21449">
         <string name="name" value="Nine-Tailed Fox Face (Hazel)"/>
-      </imgdir>
-      <imgdir name="21450">
-        <string name="name" value="Beautiful Otherworld Face (Haz???…"/>
       </imgdir>
       <imgdir name="21451">
         <string name="name" value="Crow Face (Hazel)"/>
@@ -16846,9 +17212,6 @@
       <imgdir name="21494">
         <string name="name" value="Gentle Explorer Face (Hazel)"/>
       </imgdir>
-      <imgdir name="21495">
-        <string name="name" value="Exceptional Explorer Face (Haz???…"/>
-      </imgdir>
       <imgdir name="21496">
         <string name="name" value="Enlightened Face (Hazel)"/>
       </imgdir>
@@ -16857,9 +17220,6 @@
       </imgdir>
       <imgdir name="21498">
         <string name="name" value="Olivia Face (Hazel)"/>
-      </imgdir>
-      <imgdir name="21499">
-        <string name="name" value="Green-eyed Futuroid (F) (Hazel?…"/>
       </imgdir>
       <imgdir name="21515">
         <string name="name" value="Smokey Eyes (Sapphire)"/>
@@ -16921,12 +17281,6 @@
       <imgdir name="21548">
         <string name="name" value="Confused Look (Sapphire)"/>
       </imgdir>
-      <imgdir name="21549">
-        <string name="name" value="Nine-Tailed Fox Face (Sapphire?…"/>
-      </imgdir>
-      <imgdir name="21550">
-        <string name="name" value="Beautiful Otherworld Face (Sap??????…"/>
-      </imgdir>
       <imgdir name="21551">
         <string name="name" value="Crow Face (Sapphire)"/>
       </imgdir>
@@ -16956,9 +17310,6 @@
       </imgdir>
       <imgdir name="21560">
         <string name="name" value="Intelligent Eyes (Sapphire)"/>
-      </imgdir>
-      <imgdir name="21561">
-        <string name="name" value="Captivating Dual Blade (Sapphi???…"/>
       </imgdir>
       <imgdir name="21562">
         <string name="name" value="Sulky Face (Female) (Sapphire)"/>
@@ -16995,9 +17346,6 @@
       </imgdir>
       <imgdir name="21573">
         <string name="name" value="Angelic Buster Face (Sapphire)"/>
-      </imgdir>
-      <imgdir name="21574">
-        <string name="name" value="Intelligent Nova Face (Sapphir??…"/>
       </imgdir>
       <imgdir name="21575">
         <string name="name" value="Adorable Nova Face (Sapphire)"/>
@@ -17056,12 +17404,6 @@
       <imgdir name="21593">
         <string name="name" value="Bling Bling Face (Sapphire)"/>
       </imgdir>
-      <imgdir name="21594">
-        <string name="name" value="Gentle Explorer Face (Sapphire?…"/>
-      </imgdir>
-      <imgdir name="21595">
-        <string name="name" value="Exceptional Explorer Face (Sap??????…"/>
-      </imgdir>
       <imgdir name="21596">
         <string name="name" value="Enlightened Face (Sapphire)"/>
       </imgdir>
@@ -17070,9 +17412,6 @@
       </imgdir>
       <imgdir name="21598">
         <string name="name" value="Olivia Face (Sapphire)"/>
-      </imgdir>
-      <imgdir name="21599">
-        <string name="name" value="Blue-eyed Futuroid (F) (Sapphi???…"/>
       </imgdir>
       <imgdir name="21615">
         <string name="name" value="Smokey Eyes (Violet)"/>
@@ -17137,9 +17476,6 @@
       <imgdir name="21649">
         <string name="name" value="Nine-Tailed Fox Face (Violet)"/>
       </imgdir>
-      <imgdir name="21650">
-        <string name="name" value="Beautiful Otherworld Face (Vio????…"/>
-      </imgdir>
       <imgdir name="21651">
         <string name="name" value="Crow Face (Violet)"/>
       </imgdir>
@@ -17169,9 +17505,6 @@
       </imgdir>
       <imgdir name="21660">
         <string name="name" value="Intelligent Eyes (Violet)"/>
-      </imgdir>
-      <imgdir name="21661">
-        <string name="name" value="Captivating Dual Blade (Violet?…"/>
       </imgdir>
       <imgdir name="21662">
         <string name="name" value="Sulky Face (Female) (Violet)"/>
@@ -17272,9 +17605,6 @@
       <imgdir name="21694">
         <string name="name" value="Gentle Explorer Face (Violet)"/>
       </imgdir>
-      <imgdir name="21695">
-        <string name="name" value="Exceptional Explorer Face (Vio????…"/>
-      </imgdir>
       <imgdir name="21696">
         <string name="name" value="Enlightened Face (Violet)"/>
       </imgdir>
@@ -17283,9 +17613,6 @@
       </imgdir>
       <imgdir name="21698">
         <string name="name" value="Olivia Face (Violet)"/>
-      </imgdir>
-      <imgdir name="21699">
-        <string name="name" value="Purple-eyed Futuroid (F) (Viol???…"/>
       </imgdir>
       <imgdir name="21715">
         <string name="name" value="Smokey Eyes (Amethyst)"/>
@@ -17347,9 +17674,6 @@
       <imgdir name="21748">
         <string name="name" value="Confused Look (Amethyst)"/>
       </imgdir>
-      <imgdir name="21749">
-        <string name="name" value="Nine-Tailed Fox Face (Amethyst?…"/>
-      </imgdir>
       <imgdir name="21750">
         <string name="name" value="Beautiful Otherworld Face"/>
       </imgdir>
@@ -17382,9 +17706,6 @@
       </imgdir>
       <imgdir name="21760">
         <string name="name" value="Intelligent Eyes (Amethyst)"/>
-      </imgdir>
-      <imgdir name="21761">
-        <string name="name" value="Captivating Dual Blade (Amethy???…"/>
       </imgdir>
       <imgdir name="21762">
         <string name="name" value="Sulky Face (Female) (Amethyst)"/>
@@ -17421,9 +17742,6 @@
       </imgdir>
       <imgdir name="21773">
         <string name="name" value="Angelic Buster Face (Amethyst)"/>
-      </imgdir>
-      <imgdir name="21774">
-        <string name="name" value="Intelligent Nova Face (Amethys??…"/>
       </imgdir>
       <imgdir name="21775">
         <string name="name" value="Adorable Nova Face (Amethyst)"/>
@@ -17482,12 +17800,6 @@
       <imgdir name="21793">
         <string name="name" value="Bling Bling Face (Amethyst)"/>
       </imgdir>
-      <imgdir name="21794">
-        <string name="name" value="Gentle Explorer Face (Amethyst?…"/>
-      </imgdir>
-      <imgdir name="21795">
-        <string name="name" value="Exceptional Explorer Face (Ame??????…"/>
-      </imgdir>
       <imgdir name="21796">
         <string name="name" value="Enlightened Face (Amethyst)"/>
       </imgdir>
@@ -17496,9 +17808,6 @@
       </imgdir>
       <imgdir name="21798">
         <string name="name" value="Olivia Face (Amethyst)"/>
-      </imgdir>
-      <imgdir name="21799">
-        <string name="name" value="Brown-eyed Futuroid (F) (Ameth????…"/>
       </imgdir>
       <imgdir name="21815">
         <string name="name" value="Smokey Eyes (White)"/>
@@ -17707,9 +18016,6 @@
       <imgdir name="21894">
         <string name="name" value="Gentle Explorer Face (White)"/>
       </imgdir>
-      <imgdir name="21895">
-        <string name="name" value="Exceptional Explorer Face (Whi???…"/>
-      </imgdir>
       <imgdir name="21896">
         <string name="name" value="Enlightened Face (White)"/>
       </imgdir>
@@ -17718,9 +18024,6 @@
       </imgdir>
       <imgdir name="21898">
         <string name="name" value="Olivia Face (White)"/>
-      </imgdir>
-      <imgdir name="21899">
-        <string name="name" value="White-eyed Futuroid (F) (White?…"/>
       </imgdir>
       <imgdir name="21900">
         <string name="name" value="Reluctant Listening Face"/>
@@ -17751,9 +18054,6 @@
       </imgdir>
       <imgdir name="21909">
         <string name="name" value="Lara Face"/>
-      </imgdir>
-      <imgdir name="21910">
-        <string name="name" value="Enticing Toothy Smirk Catterto???????…"/>
       </imgdir>
       <imgdir name="21911">
         <string name="name" value="Round Ink Face"/>
@@ -17872,9 +18172,6 @@
       <imgdir name="21949">
         <string name="name" value="Lara Face"/>
       </imgdir>
-      <imgdir name="21950">
-        <string name="name" value="Enticing Toothy Smirk Catterto???????…"/>
-      </imgdir>
       <imgdir name="21951">
         <string name="name" value="Round Ink Face"/>
       </imgdir>
@@ -17991,9 +18288,6 @@
       </imgdir>
       <imgdir name="21989">
         <string name="name" value="Lara Face"/>
-      </imgdir>
-      <imgdir name="21990">
-        <string name="name" value="Enticing Toothy Smirk Catterto???????…"/>
       </imgdir>
       <imgdir name="21991">
         <string name="name" value="Round Ink Face"/>
@@ -18112,9 +18406,6 @@
       <imgdir name="22029">
         <string name="name" value="Lara Face"/>
       </imgdir>
-      <imgdir name="22030">
-        <string name="name" value="Enticing Toothy Smirk Catterto???????…"/>
-      </imgdir>
       <imgdir name="22031">
         <string name="name" value="Round Ink Face"/>
       </imgdir>
@@ -18231,9 +18522,6 @@
       </imgdir>
       <imgdir name="22069">
         <string name="name" value="Lara Face"/>
-      </imgdir>
-      <imgdir name="22070">
-        <string name="name" value="Enticing Toothy Smirk Catterto???????…"/>
       </imgdir>
       <imgdir name="22071">
         <string name="name" value="Round Ink Face"/>
@@ -18352,9 +18640,6 @@
       <imgdir name="22109">
         <string name="name" value="Lara Face"/>
       </imgdir>
-      <imgdir name="22110">
-        <string name="name" value="Enticing Toothy Smirk Catterto???????…"/>
-      </imgdir>
       <imgdir name="22111">
         <string name="name" value="Round Ink Face"/>
       </imgdir>
@@ -18459,9 +18744,6 @@
       </imgdir>
       <imgdir name="22145">
         <string name="name" value="Lara Face"/>
-      </imgdir>
-      <imgdir name="22146">
-        <string name="name" value="Enticing Toothy Smirk Catterto???????…"/>
       </imgdir>
       <imgdir name="22147">
         <string name="name" value="Round Ink Face"/>
@@ -18568,9 +18850,6 @@
       <imgdir name="22181">
         <string name="name" value="Lara Face"/>
       </imgdir>
-      <imgdir name="22182">
-        <string name="name" value="Enticing Toothy Smirk Catterto???????…"/>
-      </imgdir>
       <imgdir name="22183">
         <string name="name" value="Round Ink Face"/>
       </imgdir>
@@ -18675,9 +18954,6 @@
       </imgdir>
       <imgdir name="22217">
         <string name="name" value="Lara Face"/>
-      </imgdir>
-      <imgdir name="22218">
-        <string name="name" value="Enticing Toothy Smirk Catterto???????…"/>
       </imgdir>
       <imgdir name="22219">
         <string name="name" value="Round Ink Face"/>
@@ -18784,9 +19060,6 @@
       <imgdir name="22253">
         <string name="name" value="Lara Face"/>
       </imgdir>
-      <imgdir name="22254">
-        <string name="name" value="Enticing Toothy Smirk Catterto???????…"/>
-      </imgdir>
       <imgdir name="22255">
         <string name="name" value="Round Ink Face"/>
       </imgdir>
@@ -18891,9 +19164,6 @@
       </imgdir>
       <imgdir name="22289">
         <string name="name" value="Lara Face"/>
-      </imgdir>
-      <imgdir name="22290">
-        <string name="name" value="Enticing Toothy Smirk Catterto???????…"/>
       </imgdir>
       <imgdir name="22291">
         <string name="name" value="Round Ink Face"/>
@@ -19000,9 +19270,6 @@
       <imgdir name="22325">
         <string name="name" value="Lara Face"/>
       </imgdir>
-      <imgdir name="22326">
-        <string name="name" value="Enticing Toothy Smirk Catterto???????…"/>
-      </imgdir>
       <imgdir name="22327">
         <string name="name" value="Round Ink Face"/>
       </imgdir>
@@ -19108,9 +19375,6 @@
       <imgdir name="22361">
         <string name="name" value="Lara Face"/>
       </imgdir>
-      <imgdir name="22362">
-        <string name="name" value="Enticing Toothy Smirk Catterto???????…"/>
-      </imgdir>
       <imgdir name="22363">
         <string name="name" value="Round Ink Face"/>
       </imgdir>
@@ -19215,9 +19479,6 @@
       </imgdir>
       <imgdir name="22397">
         <string name="name" value="Lara Face"/>
-      </imgdir>
-      <imgdir name="22398">
-        <string name="name" value="Enticing Toothy Smirk Catterto???????…"/>
       </imgdir>
       <imgdir name="22399">
         <string name="name" value="Round Ink Face"/>
@@ -20914,12 +21175,6 @@
       <imgdir name="23012">
         <string name="name" value="Calm Face"/>
       </imgdir>
-      <imgdir name="23013">
-        <string name="name" value="Beast Tamer Male Face 1 (Black?…"/>
-      </imgdir>
-      <imgdir name="23014">
-        <string name="name" value="Beast Tamer Male Face 2 (Black?…"/>
-      </imgdir>
       <imgdir name="23015">
         <string name="name" value="Oscar Face (Black)"/>
       </imgdir>
@@ -21144,9 +21399,6 @@
       </imgdir>
       <imgdir name="23091">
         <string name="name" value="Heartless Face (Black)"/>
-      </imgdir>
-      <imgdir name="23092">
-        <string name="name" value="Disinterested Heterochromia Fa??????????…"/>
       </imgdir>
       <imgdir name="23093">
         <string name="name" value="Face 23093"/>
@@ -21439,9 +21691,6 @@
       <imgdir name="23191">
         <string name="name" value="Heartless Face (Blue)"/>
       </imgdir>
-      <imgdir name="23192">
-        <string name="name" value="Disinterested Heterochromia Fa?????????…"/>
-      </imgdir>
       <imgdir name="23193">
         <string name="name" value="Face 23193"/>
       </imgdir>
@@ -21733,9 +21982,6 @@
       <imgdir name="23291">
         <string name="name" value="Heartless Face (Red)"/>
       </imgdir>
-      <imgdir name="23292">
-        <string name="name" value="Disinterested Heterochromia Fa????????…"/>
-      </imgdir>
       <imgdir name="23293">
         <string name="name" value="Face 23293"/>
       </imgdir>
@@ -21769,9 +22015,6 @@
       <imgdir name="23303">
         <string name="name" value="Rondo Face (Green)"/>
       </imgdir>
-      <imgdir name="23304">
-        <string name="name" value="Yellow-eyed Futuroid (M) (Gree??…"/>
-      </imgdir>
       <imgdir name="23305">
         <string name="name" value="Oliver Face (Green)"/>
       </imgdir>
@@ -21795,12 +22038,6 @@
       </imgdir>
       <imgdir name="23312">
         <string name="name" value="Calm Face (Green)"/>
-      </imgdir>
-      <imgdir name="23313">
-        <string name="name" value="Beast Tamer Male Face 1 (Green?…"/>
-      </imgdir>
-      <imgdir name="23314">
-        <string name="name" value="Beast Tamer Male Face 2 (Green?…"/>
       </imgdir>
       <imgdir name="23315">
         <string name="name" value="Oscar Face (Green)"/>
@@ -22027,9 +22264,6 @@
       <imgdir name="23391">
         <string name="name" value="Heartless Face (Green)"/>
       </imgdir>
-      <imgdir name="23392">
-        <string name="name" value="Disinterested Heterochromia Fa??????????…"/>
-      </imgdir>
       <imgdir name="23393">
         <string name="name" value="Face 23393"/>
       </imgdir>
@@ -22063,9 +22297,6 @@
       <imgdir name="23403">
         <string name="name" value="Rondo Face (Hazel)"/>
       </imgdir>
-      <imgdir name="23404">
-        <string name="name" value="Green-eyed Futuroid (M) (Hazel?…"/>
-      </imgdir>
       <imgdir name="23405">
         <string name="name" value="Oliver Face (Hazel)"/>
       </imgdir>
@@ -22089,12 +22320,6 @@
       </imgdir>
       <imgdir name="23412">
         <string name="name" value="Calm Face (Hazel)"/>
-      </imgdir>
-      <imgdir name="23413">
-        <string name="name" value="Beast Tamer Male Face 1 (Hazel?…"/>
-      </imgdir>
-      <imgdir name="23414">
-        <string name="name" value="Beast Tamer Male Face 2 (Hazel?…"/>
       </imgdir>
       <imgdir name="23415">
         <string name="name" value="Oscar Face (Hazel)"/>
@@ -22321,9 +22546,6 @@
       <imgdir name="23491">
         <string name="name" value="Heartless Face (Hazel)"/>
       </imgdir>
-      <imgdir name="23492">
-        <string name="name" value="Disinterested Heterochromia Fa??????????…"/>
-      </imgdir>
       <imgdir name="23493">
         <string name="name" value="Face 23493"/>
       </imgdir>
@@ -22345,9 +22567,6 @@
       <imgdir name="23499">
         <string name="name" value="He Who Awakened Face"/>
       </imgdir>
-      <imgdir name="23500">
-        <string name="name" value="Vibrant Explorer Face (Sapphir??…"/>
-      </imgdir>
       <imgdir name="23501">
         <string name="name" value="Brave Explorer Face (Sapphire)"/>
       </imgdir>
@@ -22356,9 +22575,6 @@
       </imgdir>
       <imgdir name="23503">
         <string name="name" value="Rondo Face (Sapphire)"/>
-      </imgdir>
-      <imgdir name="23504">
-        <string name="name" value="Blue-eyed Futuroid (M) (Sapphi???…"/>
       </imgdir>
       <imgdir name="23505">
         <string name="name" value="Oliver Face (Sapphire)"/>
@@ -22384,12 +22600,6 @@
       <imgdir name="23512">
         <string name="name" value="Calm Face (Sapphire)"/>
       </imgdir>
-      <imgdir name="23513">
-        <string name="name" value="Beast Tamer Male Face 1 (Sapph????…"/>
-      </imgdir>
-      <imgdir name="23514">
-        <string name="name" value="Beast Tamer Male Face 2 (Sapph????…"/>
-      </imgdir>
       <imgdir name="23515">
         <string name="name" value="Oscar Face (Sapphire)"/>
       </imgdir>
@@ -22404,9 +22614,6 @@
       </imgdir>
       <imgdir name="23519">
         <string name="name" value="Big Man Face (Sapphire)"/>
-      </imgdir>
-      <imgdir name="23520">
-        <string name="name" value="Sapphire Dewy-Eyed Face (Sapph????…"/>
       </imgdir>
       <imgdir name="23521">
         <string name="name" value="Adorkable Giggle (Cyan)"/>
@@ -22522,9 +22729,6 @@
       <imgdir name="23560">
         <string name="name" value="Elwin Face (Sapphire)"/>
       </imgdir>
-      <imgdir name="23561">
-        <string name="name" value="Friendly Friend Face (Sapphire?…"/>
-      </imgdir>
       <imgdir name="23562">
         <string name="name" value="Furtive Smile Face (Sapphire)"/>
       </imgdir>
@@ -22615,9 +22819,6 @@
       <imgdir name="23591">
         <string name="name" value="Heartless Face (Sapphire)"/>
       </imgdir>
-      <imgdir name="23592">
-        <string name="name" value="Disinterested Heterochromia Fa?????????????…"/>
-      </imgdir>
       <imgdir name="23593">
         <string name="name" value="Face 23593"/>
       </imgdir>
@@ -22626,9 +22827,6 @@
       </imgdir>
       <imgdir name="23595">
         <string name="name" value="Bellicose Face (Sapphire)"/>
-      </imgdir>
-      <imgdir name="23596">
-        <string name="name" value="Polearm Warrior Face (Sapphire?…"/>
       </imgdir>
       <imgdir name="23597">
         <string name="name" value="Elf King Face (Sapphire)"/>
@@ -22650,9 +22848,6 @@
       </imgdir>
       <imgdir name="23603">
         <string name="name" value="Rondo Face (Violet)"/>
-      </imgdir>
-      <imgdir name="23604">
-        <string name="name" value="Purple-eyed Futuroid (M) (Viol???…"/>
       </imgdir>
       <imgdir name="23605">
         <string name="name" value="Oliver Face (Violet)"/>
@@ -22677,12 +22872,6 @@
       </imgdir>
       <imgdir name="23612">
         <string name="name" value="Calm Face (Violet)"/>
-      </imgdir>
-      <imgdir name="23613">
-        <string name="name" value="Beast Tamer Male Face 1 (Viole??…"/>
-      </imgdir>
-      <imgdir name="23614">
-        <string name="name" value="Beast Tamer Male Face 2 (Viole??…"/>
       </imgdir>
       <imgdir name="23615">
         <string name="name" value="Oscar Face (Violet)"/>
@@ -22909,9 +23098,6 @@
       <imgdir name="23691">
         <string name="name" value="Heartless Face (Violet)"/>
       </imgdir>
-      <imgdir name="23692">
-        <string name="name" value="Disinterested Heterochromia Fa???????????…"/>
-      </imgdir>
       <imgdir name="23693">
         <string name="name" value="Face 23693"/>
       </imgdir>
@@ -22933,9 +23119,6 @@
       <imgdir name="23699">
         <string name="name" value="He Who Awakened Face"/>
       </imgdir>
-      <imgdir name="23700">
-        <string name="name" value="Vibrant Explorer Face (Amethys??…"/>
-      </imgdir>
       <imgdir name="23701">
         <string name="name" value="Brave Explorer Face (Amethyst)"/>
       </imgdir>
@@ -22944,9 +23127,6 @@
       </imgdir>
       <imgdir name="23703">
         <string name="name" value="Rondo Face (Amethyst)"/>
-      </imgdir>
-      <imgdir name="23704">
-        <string name="name" value="Brown-eyed Futuroid (M) (Ameth????…"/>
       </imgdir>
       <imgdir name="23705">
         <string name="name" value="Oliver Face (Amethyst)"/>
@@ -22972,12 +23152,6 @@
       <imgdir name="23712">
         <string name="name" value="Calm Face (Amethyst)"/>
       </imgdir>
-      <imgdir name="23713">
-        <string name="name" value="Beast Tamer Male Face 1 (Ameth????…"/>
-      </imgdir>
-      <imgdir name="23714">
-        <string name="name" value="Beast Tamer Male Face 2 (Ameth????…"/>
-      </imgdir>
       <imgdir name="23715">
         <string name="name" value="Oscar Face (Amethyst)"/>
       </imgdir>
@@ -22992,9 +23166,6 @@
       </imgdir>
       <imgdir name="23719">
         <string name="name" value="Big Man Face (Amethyst)"/>
-      </imgdir>
-      <imgdir name="23720">
-        <string name="name" value="Amethyst Dewy-Eyed Face (Ameth????…"/>
       </imgdir>
       <imgdir name="23721">
         <string name="name" value="Adorkable Giggle (Pink)"/>
@@ -23110,9 +23281,6 @@
       <imgdir name="23760">
         <string name="name" value="Elwin Face (Amethyst)"/>
       </imgdir>
-      <imgdir name="23761">
-        <string name="name" value="Friendly Friend Face (Amethyst?…"/>
-      </imgdir>
       <imgdir name="23762">
         <string name="name" value="Furtive Smile Face (Amethyst)"/>
       </imgdir>
@@ -23203,9 +23371,6 @@
       <imgdir name="23791">
         <string name="name" value="Heartless Face (Amethyst)"/>
       </imgdir>
-      <imgdir name="23792">
-        <string name="name" value="Disinterested Heterochromia Fa?????????????…"/>
-      </imgdir>
       <imgdir name="23793">
         <string name="name" value="Face 23793"/>
       </imgdir>
@@ -23214,9 +23379,6 @@
       </imgdir>
       <imgdir name="23795">
         <string name="name" value="Bellicose Face (Amethyst)"/>
-      </imgdir>
-      <imgdir name="23796">
-        <string name="name" value="Polearm Warrior Face (Amethyst?…"/>
       </imgdir>
       <imgdir name="23797">
         <string name="name" value="Elf King Face (Amethyst)"/>
@@ -23238,9 +23400,6 @@
       </imgdir>
       <imgdir name="23803">
         <string name="name" value="Rondo Face (White)"/>
-      </imgdir>
-      <imgdir name="23804">
-        <string name="name" value="White-eyed Futuroid (M) (White?…"/>
       </imgdir>
       <imgdir name="23805">
         <string name="name" value="Oliver Face (White)"/>
@@ -23265,12 +23424,6 @@
       </imgdir>
       <imgdir name="23812">
         <string name="name" value="Calm Face (White)"/>
-      </imgdir>
-      <imgdir name="23813">
-        <string name="name" value="Beast Tamer Male Face 1 (White?…"/>
-      </imgdir>
-      <imgdir name="23814">
-        <string name="name" value="Beast Tamer Male Face 2 (White?…"/>
       </imgdir>
       <imgdir name="23815">
         <string name="name" value="Face 23815"/>
@@ -23470,9 +23623,6 @@
       <imgdir name="23891">
         <string name="name" value="Heartless Face (Amethyst)"/>
       </imgdir>
-      <imgdir name="23892">
-        <string name="name" value="Disinterested Heterochromia Fa??????????…"/>
-      </imgdir>
       <imgdir name="23894">
         <string name="name" value="Louie Face (White)"/>
       </imgdir>
@@ -23514,12 +23664,6 @@
       </imgdir>
       <imgdir name="24008">
         <string name="name" value="Tranquil Face (Black)"/>
-      </imgdir>
-      <imgdir name="24009">
-        <string name="name" value="Beast Tamer Female Face 1 (Bla???…"/>
-      </imgdir>
-      <imgdir name="24010">
-        <string name="name" value="Beast Tamer Female Face 2 (Bla???…"/>
       </imgdir>
       <imgdir name="24011">
         <string name="name" value="Sugar-sweet Face (Black)"/>
@@ -23743,9 +23887,6 @@
       <imgdir name="24086">
         <string name="name" value="Heartless Face (Black)"/>
       </imgdir>
-      <imgdir name="24087">
-        <string name="name" value="Sleepy Heterochromia Face (Bla???…"/>
-      </imgdir>
       <imgdir name="24088">
         <string name="name" value="Sweetheart Face (Black)"/>
       </imgdir>
@@ -23805,12 +23946,6 @@
       </imgdir>
       <imgdir name="24108">
         <string name="name" value="Tranquil Face (Blue)"/>
-      </imgdir>
-      <imgdir name="24109">
-        <string name="name" value="Beast Tamer Female Face 1 (Blu??…"/>
-      </imgdir>
-      <imgdir name="24110">
-        <string name="name" value="Beast Tamer Female Face 2 (Blu??…"/>
       </imgdir>
       <imgdir name="24111">
         <string name="name" value="Sugar-sweet Face (Blue)"/>
@@ -24030,9 +24165,6 @@
       </imgdir>
       <imgdir name="24186">
         <string name="name" value="Heartless Face (Blue)"/>
-      </imgdir>
-      <imgdir name="24187">
-        <string name="name" value="Sleepy Heterochromia Face (Blu??…"/>
       </imgdir>
       <imgdir name="24188">
         <string name="name" value="Sweetheart Face (Blue)"/>
@@ -24319,9 +24451,6 @@
       <imgdir name="24286">
         <string name="name" value="Heartless Face (Red)"/>
       </imgdir>
-      <imgdir name="24287">
-        <string name="name" value="Sleepy Heterochromia Face (Red?…"/>
-      </imgdir>
       <imgdir name="24288">
         <string name="name" value="Sweetheart Face (Red)"/>
       </imgdir>
@@ -24381,12 +24510,6 @@
       </imgdir>
       <imgdir name="24308">
         <string name="name" value="Tranquil Face (Green)"/>
-      </imgdir>
-      <imgdir name="24309">
-        <string name="name" value="Beast Tamer Female Face 1 (Gre???…"/>
-      </imgdir>
-      <imgdir name="24310">
-        <string name="name" value="Beast Tamer Female Face 2 (Gre???…"/>
       </imgdir>
       <imgdir name="24311">
         <string name="name" value="Sugar-sweet Face (Green)"/>
@@ -24607,9 +24730,6 @@
       <imgdir name="24386">
         <string name="name" value="Heartless Face (Green)"/>
       </imgdir>
-      <imgdir name="24387">
-        <string name="name" value="Sleepy Heterochromia Face (Gre???…"/>
-      </imgdir>
       <imgdir name="24388">
         <string name="name" value="Sweetheart Face (Green)"/>
       </imgdir>
@@ -24669,12 +24789,6 @@
       </imgdir>
       <imgdir name="24408">
         <string name="name" value="Tranquil Face (Hazel)"/>
-      </imgdir>
-      <imgdir name="24409">
-        <string name="name" value="Beast Tamer Female Face 1 (Haz???…"/>
-      </imgdir>
-      <imgdir name="24410">
-        <string name="name" value="Beast Tamer Female Face 2 (Haz???…"/>
       </imgdir>
       <imgdir name="24411">
         <string name="name" value="Sugar-sweet Face (Hazel)"/>
@@ -24895,9 +25009,6 @@
       <imgdir name="24486">
         <string name="name" value="Heartless Face (Hazel)"/>
       </imgdir>
-      <imgdir name="24487">
-        <string name="name" value="Sleepy Heterochromia Face (Haz???…"/>
-      </imgdir>
       <imgdir name="24488">
         <string name="name" value="Sweetheart Face (Hazel)"/>
       </imgdir>
@@ -24958,12 +25069,6 @@
       <imgdir name="24508">
         <string name="name" value="Tranquil Face (Sapphire) "/>
       </imgdir>
-      <imgdir name="24509">
-        <string name="name" value="Beast Tamer Female Face 1 (Sap??????…"/>
-      </imgdir>
-      <imgdir name="24510">
-        <string name="name" value="Beast Tamer Female Face 2 (Sap??????…"/>
-      </imgdir>
       <imgdir name="24511">
         <string name="name" value="Sugar-sweet Face (Sapphire) "/>
       </imgdir>
@@ -24978,9 +25083,6 @@
       </imgdir>
       <imgdir name="24515">
         <string name="name" value="Big Lady Face (Sapphire) "/>
-      </imgdir>
-      <imgdir name="24516">
-        <string name="name" value="Sapphire Dewy-Eyed Face (Sapph?????…"/>
       </imgdir>
       <imgdir name="24517">
         <string name="name" value="Adorkable Giggle (Cyan)"/>
@@ -25005,9 +25107,6 @@
       </imgdir>
       <imgdir name="24524">
         <string name="name" value="Serene Face (Sapphire)"/>
-      </imgdir>
-      <imgdir name="24525">
-        <string name="name" value="Disease Control STAR (Sapphire??…"/>
       </imgdir>
       <imgdir name="24526">
         <string name="name" value="Sweet Face (Sapphire) "/>
@@ -25102,9 +25201,6 @@
       <imgdir name="24558">
         <string name="name" value="Lily Face (Sapphire) "/>
       </imgdir>
-      <imgdir name="24559">
-        <string name="name" value="Friendly Friend Face (Sapphire?…"/>
-      </imgdir>
       <imgdir name="24560">
         <string name="name" value="Soulful Face (Sapphire)"/>
       </imgdir>
@@ -25125,9 +25221,6 @@
       </imgdir>
       <imgdir name="24567">
         <string name="name" value="Alluring Face (Sapphire)"/>
-      </imgdir>
-      <imgdir name="24568">
-        <string name="name" value="Raised Eyebrows Face (Sapphire?…"/>
       </imgdir>
       <imgdir name="24569">
         <string name="name" value="Sapphire Heartbreaker Face"/>
@@ -25177,14 +25270,8 @@
       <imgdir name="24584">
         <string name="name" value="Elf Queen Face (Sapphire)"/>
       </imgdir>
-      <imgdir name="24585">
-        <string name="name" value="Polearm Warrior Face (Sapphire?…"/>
-      </imgdir>
       <imgdir name="24586">
         <string name="name" value="Heartless Face (Sapphire)"/>
-      </imgdir>
-      <imgdir name="24587">
-        <string name="name" value="Sleepy Heterochromia Face (Sap??????…"/>
       </imgdir>
       <imgdir name="24588">
         <string name="name" value="Sweetheart Face (Sapphire)"/>
@@ -25245,12 +25332,6 @@
       </imgdir>
       <imgdir name="24608">
         <string name="name" value="Tranquil Face (Violet)"/>
-      </imgdir>
-      <imgdir name="24609">
-        <string name="name" value="Beast Tamer Female Face 1 (Vio????…"/>
-      </imgdir>
-      <imgdir name="24610">
-        <string name="name" value="Beast Tamer Female Face 2 (Vio????…"/>
       </imgdir>
       <imgdir name="24611">
         <string name="name" value="Sugar-sweet Face (Violet)"/>
@@ -25471,9 +25552,6 @@
       <imgdir name="24686">
         <string name="name" value="Heartless Face (Violet)"/>
       </imgdir>
-      <imgdir name="24687">
-        <string name="name" value="Sleepy Heterochromia Face (Vio????…"/>
-      </imgdir>
       <imgdir name="24688">
         <string name="name" value="Sweetheart Face (Violet)"/>
       </imgdir>
@@ -25534,12 +25612,6 @@
       <imgdir name="24708">
         <string name="name" value="Tranquil Face (Amethyst)"/>
       </imgdir>
-      <imgdir name="24709">
-        <string name="name" value="Beast Tamer Female Face 1 (Ame??????…"/>
-      </imgdir>
-      <imgdir name="24710">
-        <string name="name" value="Beast Tamer Female Face 2 (Ame??????…"/>
-      </imgdir>
       <imgdir name="24711">
         <string name="name" value="Sugar-sweet Face (Amethyst)"/>
       </imgdir>
@@ -25554,9 +25626,6 @@
       </imgdir>
       <imgdir name="24715">
         <string name="name" value="Big Lady Face (Amethyst)"/>
-      </imgdir>
-      <imgdir name="24716">
-        <string name="name" value="Amethyst Dewy-Eyed Face (Ameth????…"/>
       </imgdir>
       <imgdir name="24717">
         <string name="name" value="Adorkable Giggle (Pink)"/>
@@ -25581,9 +25650,6 @@
       </imgdir>
       <imgdir name="24724">
         <string name="name" value="Serene Face (Amethyst)"/>
-      </imgdir>
-      <imgdir name="24725">
-        <string name="name" value="Disease Control STAR (Amethyst?…"/>
       </imgdir>
       <imgdir name="24726">
         <string name="name" value="Sweet Face (Amethyst)"/>
@@ -25678,9 +25744,6 @@
       <imgdir name="24758">
         <string name="name" value="Lily Face (Amethyst)"/>
       </imgdir>
-      <imgdir name="24759">
-        <string name="name" value="Friendly Friend Face (Amethyst?…"/>
-      </imgdir>
       <imgdir name="24760">
         <string name="name" value="Soulful Face (Amethyst)"/>
       </imgdir>
@@ -25701,9 +25764,6 @@
       </imgdir>
       <imgdir name="24767">
         <string name="name" value="Alluring Face (Amethyst)"/>
-      </imgdir>
-      <imgdir name="24768">
-        <string name="name" value="Raised Eyebrows Face (Amethyst?…"/>
       </imgdir>
       <imgdir name="24769">
         <string name="name" value="Amethyst Heartbreaker Face"/>
@@ -25753,14 +25813,8 @@
       <imgdir name="24784">
         <string name="name" value="Elf Queen Face (Amethyst)"/>
       </imgdir>
-      <imgdir name="24785">
-        <string name="name" value="Polearm Warrior Face (Amethyst?…"/>
-      </imgdir>
       <imgdir name="24786">
         <string name="name" value="Heartless Face (Amethyst)"/>
-      </imgdir>
-      <imgdir name="24787">
-        <string name="name" value="Sleepy Heterochromia Face (Ame??????…"/>
       </imgdir>
       <imgdir name="24788">
         <string name="name" value="Sweetheart Face (Amethyst)"/>
@@ -25821,12 +25875,6 @@
       </imgdir>
       <imgdir name="24808">
         <string name="name" value="Tranquil Face (White)"/>
-      </imgdir>
-      <imgdir name="24809">
-        <string name="name" value="Beast Tamer Female Face 1 (Whi???…"/>
-      </imgdir>
-      <imgdir name="24810">
-        <string name="name" value="Beast Tamer Female Face 2 (Whi???…"/>
       </imgdir>
       <imgdir name="24811">
         <string name="name" value="Sugar-sweet Face (White)"/>
@@ -26434,9 +26482,6 @@
       <imgdir name="25355">
         <string name="name" value="Dark Circle Face"/>
       </imgdir>
-      <imgdir name="25357">
-        <string name="name" value="Fresh Spring Water Face (Green?…"/>
-      </imgdir>
       <imgdir name="25362">
         <string name="name" value="Fierce Face"/>
       </imgdir>
@@ -26536,9 +26581,6 @@
       <imgdir name="25455">
         <string name="name" value="Dark Circle Face"/>
       </imgdir>
-      <imgdir name="25457">
-        <string name="name" value="Fresh Spring Water Face (Brown?…"/>
-      </imgdir>
       <imgdir name="25462">
         <string name="name" value="Fierce Face"/>
       </imgdir>
@@ -26574,9 +26616,6 @@
       </imgdir>
       <imgdir name="25506">
         <string name="name" value="Forest Fairy Face (Sapphire)"/>
-      </imgdir>
-      <imgdir name="25507">
-        <string name="name" value="Starlight Falling Face (Sapphi???…"/>
       </imgdir>
       <imgdir name="25508">
         <string name="name" value="Meow Face (Sapphire)"/>
@@ -26638,9 +26677,6 @@
       <imgdir name="25555">
         <string name="name" value="Dark Circle Face"/>
       </imgdir>
-      <imgdir name="25557">
-        <string name="name" value="Fresh Spring Water Face (Sapph????…"/>
-      </imgdir>
       <imgdir name="25562">
         <string name="name" value="Fierce Face"/>
       </imgdir>
@@ -26676,9 +26712,6 @@
       </imgdir>
       <imgdir name="25606">
         <string name="name" value="Forest Fairy Face (Violet)"/>
-      </imgdir>
-      <imgdir name="25607">
-        <string name="name" value="Starlight Falling Face (Violet?…"/>
       </imgdir>
       <imgdir name="25608">
         <string name="name" value="Meow Face (Violet)"/>
@@ -26740,9 +26773,6 @@
       <imgdir name="25655">
         <string name="name" value="Dark Circle Face"/>
       </imgdir>
-      <imgdir name="25657">
-        <string name="name" value="Fresh Spring Water Face (Purpl??…"/>
-      </imgdir>
       <imgdir name="25662">
         <string name="name" value="Fierce Face"/>
       </imgdir>
@@ -26778,9 +26808,6 @@
       </imgdir>
       <imgdir name="25706">
         <string name="name" value="Forest Fairy Face (Amethyst)"/>
-      </imgdir>
-      <imgdir name="25707">
-        <string name="name" value="Starlight Falling Face (Amethy???…"/>
       </imgdir>
       <imgdir name="25708">
         <string name="name" value="Meow Face (Amethyst)"/>
@@ -26937,9 +26964,6 @@
       </imgdir>
       <imgdir name="25855">
         <string name="name" value="Dark Circle Face"/>
-      </imgdir>
-      <imgdir name="25857">
-        <string name="name" value="Fresh Spring Water Face (White?…"/>
       </imgdir>
       <imgdir name="25862">
         <string name="name" value="Fierce Face"/>
@@ -27415,9 +27439,6 @@
       <imgdir name="26359">
         <string name="name" value="Dark Circle Face"/>
       </imgdir>
-      <imgdir name="26361">
-        <string name="name" value="Fresh Spring Water Face (Green?…"/>
-      </imgdir>
       <imgdir name="26370">
         <string name="name" value="Antici...pation"/>
       </imgdir>
@@ -27532,9 +27553,6 @@
       <imgdir name="26459">
         <string name="name" value="Dark Circle Face"/>
       </imgdir>
-      <imgdir name="26461">
-        <string name="name" value="Fresh Spring Water Face (Brown?…"/>
-      </imgdir>
       <imgdir name="26470">
         <string name="name" value="Antici...pation"/>
       </imgdir>
@@ -27555,9 +27573,6 @@
       </imgdir>
       <imgdir name="26503">
         <string name="name" value="Forest Fairy Face (Sapphire)"/>
-      </imgdir>
-      <imgdir name="26504">
-        <string name="name" value="Starlight Falling Face (Sapphi???…"/>
       </imgdir>
       <imgdir name="26505">
         <string name="name" value="Sly Face (Sapphire)"/>
@@ -27649,9 +27664,6 @@
       <imgdir name="26559">
         <string name="name" value="Dark Circle Face"/>
       </imgdir>
-      <imgdir name="26561">
-        <string name="name" value="Fresh Spring Water Face (Sapph????…"/>
-      </imgdir>
       <imgdir name="26570">
         <string name="name" value="Antici...pation"/>
       </imgdir>
@@ -27672,9 +27684,6 @@
       </imgdir>
       <imgdir name="26603">
         <string name="name" value="Forest Fairy Face (Violet)"/>
-      </imgdir>
-      <imgdir name="26604">
-        <string name="name" value="Starlight Falling Face (Violet?…"/>
       </imgdir>
       <imgdir name="26605">
         <string name="name" value="Sly Face (Violet)"/>
@@ -27766,9 +27775,6 @@
       <imgdir name="26659">
         <string name="name" value="Dark Circle Face"/>
       </imgdir>
-      <imgdir name="26661">
-        <string name="name" value="Fresh Spring Water Face (Purpl??…"/>
-      </imgdir>
       <imgdir name="26670">
         <string name="name" value="Antici...pation"/>
       </imgdir>
@@ -27789,9 +27795,6 @@
       </imgdir>
       <imgdir name="26703">
         <string name="name" value="Forest Fairy Face (Amethyst)"/>
-      </imgdir>
-      <imgdir name="26704">
-        <string name="name" value="Starlight Falling Face (Amethy???…"/>
       </imgdir>
       <imgdir name="26705">
         <string name="name" value="Sly Face (Amethyst)"/>
@@ -27996,9 +27999,6 @@
       </imgdir>
       <imgdir name="26859">
         <string name="name" value="Dark Circle Face"/>
-      </imgdir>
-      <imgdir name="26861">
-        <string name="name" value="Fresh Spring Water Face (White?…"/>
       </imgdir>
       <imgdir name="26870">
         <string name="name" value="Antici...pation"/>
@@ -31350,6 +31350,15 @@
       </imgdir>
     </imgdir>
     <imgdir name="Glove">
+      <imgdir name="1082512">
+        <string name="name" value="Valentine&apos;s Bracelet &lt;Advanced&gt;"/>
+      </imgdir>
+      <imgdir name="1082513">
+        <string name="name" value="Valentine&apos;s Bracelet &lt;Intermediate&gt;"/>
+      </imgdir>
+      <imgdir name="1082769">
+        <string name="name" value="Pink Bean and Yeti Keyring Gloves"/>
+      </imgdir>
       <imgdir name="1080003">
         <string name="name" value="Armor Gloves"/>
       </imgdir>
@@ -31496,12 +31505,6 @@
       </imgdir>
       <imgdir name="1082511">
         <string name="name" value="Green Dinosaur Gloves"/>
-      </imgdir>
-      <imgdir name="1082512">
-        <string name="name" value="Valentine&apos;s Bracelet &lt;Advanced?…"/>
-      </imgdir>
-      <imgdir name="1082513">
-        <string name="name" value="Valentine&apos;s Bracelet &lt;Intermed?????…"/>
       </imgdir>
       <imgdir name="1082514">
         <string name="name" value="Valentine&apos;s Bracelet &lt;Basic&gt;"/>
@@ -31709,9 +31712,6 @@
       </imgdir>
       <imgdir name="1082758">
         <string name="name" value="Sullen Hand"/>
-      </imgdir>
-      <imgdir name="1082769">
-        <string name="name" value="Pink Bean and Yeti Keyring Glo???…"/>
       </imgdir>
       <imgdir name="1080000">
         <string name="name" value="White Ninja Gloves"/>
@@ -32437,6 +32437,276 @@
       </imgdir>
     </imgdir>
     <imgdir name="Hair">
+      <imgdir name="30109">
+        <string name="name" value="Black Time World White Rabbit Hair"/>
+      </imgdir>
+      <imgdir name="30118">
+        <string name="name" value="Red Time World White Rabbit Hair"/>
+      </imgdir>
+      <imgdir name="30119">
+        <string name="name" value="Orange Time World White Rabbit Hair"/>
+      </imgdir>
+      <imgdir name="30128">
+        <string name="name" value="Yellow Time World White Rabbit Hair"/>
+      </imgdir>
+      <imgdir name="30129">
+        <string name="name" value="Blue Time World White Rabbit Hair"/>
+      </imgdir>
+      <imgdir name="30138">
+        <string name="name" value="Purple Time World White Rabbit Hair"/>
+      </imgdir>
+      <imgdir name="30139">
+        <string name="name" value="Brown Time World White Rabbit Hair"/>
+      </imgdir>
+      <imgdir name="32097">
+        <string name="name" value="Wacky Happy Fun Time Hair (Black)"/>
+      </imgdir>
+      <imgdir name="32098">
+        <string name="name" value="Wacky Happy Fun Time Hair (Red)"/>
+      </imgdir>
+      <imgdir name="32099">
+        <string name="name" value="Wacky Happy Fun Time Hair (Orange)"/>
+      </imgdir>
+      <imgdir name="32100">
+        <string name="name" value="Wacky Happy Fun Time Hair (Yellow)"/>
+      </imgdir>
+      <imgdir name="32101">
+        <string name="name" value="Wacky Happy Fun Time Hair (Blue)"/>
+      </imgdir>
+      <imgdir name="32102">
+        <string name="name" value="Wacky Happy Fun Time Hair (Purple)"/>
+      </imgdir>
+      <imgdir name="32103">
+        <string name="name" value="Wacky Happy Fun Time Hair (Brown)"/>
+      </imgdir>
+      <imgdir name="33248">
+        <string name="name" value="Black Going to School in the Morning Hair"/>
+      </imgdir>
+      <imgdir name="33249">
+        <string name="name" value="Red Going to School in the Morning Hair"/>
+      </imgdir>
+      <imgdir name="33258">
+        <string name="name" value="Orange Going to School in the Morning Hair"/>
+      </imgdir>
+      <imgdir name="33259">
+        <string name="name" value="Yellow Going to School in the Morning Hair"/>
+      </imgdir>
+      <imgdir name="33268">
+        <string name="name" value="Blue Going to School in the Morning Hair"/>
+      </imgdir>
+      <imgdir name="33269">
+        <string name="name" value="Purple Going to School in the Morning Hair"/>
+      </imgdir>
+      <imgdir name="33278">
+        <string name="name" value="Brown Going to School in the Morning Hair"/>
+      </imgdir>
+      <imgdir name="33629">
+        <string name="name" value="Orange Elegant Knee-length Hair"/>
+      </imgdir>
+      <imgdir name="33638">
+        <string name="name" value="Yellow Elegant Knee-length Hair"/>
+      </imgdir>
+      <imgdir name="33648">
+        <string name="name" value="Purple Elegant Knee-length Hair"/>
+      </imgdir>
+      <imgdir name="33723">
+        <string name="name" value="Blonde Artistic Highlights Hair"/>
+      </imgdir>
+      <imgdir name="33726">
+        <string name="name" value="Purple Artistic Highlights Hair"/>
+      </imgdir>
+      <imgdir name="34829">
+        <string name="name" value="Orange Wild Princess&apos;s Mane (M)"/>
+      </imgdir>
+      <imgdir name="34838">
+        <string name="name" value="Yellow Wild Princess&apos;s Mane (M)"/>
+      </imgdir>
+      <imgdir name="34848">
+        <string name="name" value="Purple Wild Princess&apos;s Mane (M)"/>
+      </imgdir>
+      <imgdir name="35160">
+        <string name="name" value="Beast Tamer Male Hair 1 (Black)"/>
+      </imgdir>
+      <imgdir name="35162">
+        <string name="name" value="Beast Tamer Male Hair 1 (Orange)"/>
+      </imgdir>
+      <imgdir name="35163">
+        <string name="name" value="Beast Tamer Male Hair 1 (Blonde)"/>
+      </imgdir>
+      <imgdir name="35164">
+        <string name="name" value="Beast Tamer Male Hair 1 (Green)"/>
+      </imgdir>
+      <imgdir name="35166">
+        <string name="name" value="Beast Tamer Male Hair 1 (Purple)"/>
+      </imgdir>
+      <imgdir name="35170">
+        <string name="name" value="Beast Tamer Male Hair 2 (Black)"/>
+      </imgdir>
+      <imgdir name="35172">
+        <string name="name" value="Beast Tamer Male Hair 2 (Orange)"/>
+      </imgdir>
+      <imgdir name="35173">
+        <string name="name" value="Beast Tamer Male Hair 2 (Blonde)"/>
+      </imgdir>
+      <imgdir name="35174">
+        <string name="name" value="Beast Tamer Male Hair 2 (Green)"/>
+      </imgdir>
+      <imgdir name="35176">
+        <string name="name" value="Beast Tamer Male Hair 2 (Purple)"/>
+      </imgdir>
+      <imgdir name="35310">
+        <string name="name" value="[[FROZEN CONTENT]] Black Kristoff Hair"/>
+      </imgdir>
+      <imgdir name="35311">
+        <string name="name" value="[[FROZEN CONTENT]] Red Kristoff Hair"/>
+      </imgdir>
+      <imgdir name="35312">
+        <string name="name" value="[[FROZEN CONTENT]] Orange Kristoff Hair"/>
+      </imgdir>
+      <imgdir name="35313">
+        <string name="name" value="[[FROZEN CONTENT]] Yellow Kristoff Hair"/>
+      </imgdir>
+      <imgdir name="35314">
+        <string name="name" value="[[FROZEN CONTENT]] Green Kristoff Hair"/>
+      </imgdir>
+      <imgdir name="35315">
+        <string name="name" value="[[FROZEN CONTENT]] Blue Kristoff Hair"/>
+      </imgdir>
+      <imgdir name="35316">
+        <string name="name" value="[[FROZEN CONTENT]] Purple Kristoff Hair"/>
+      </imgdir>
+      <imgdir name="35317">
+        <string name="name" value="[[FROZEN CONTENT]] Brown Kristoff Hair"/>
+      </imgdir>
+      <imgdir name="35700">
+        <string name="name" value="Black Tousled Medium-length Hair"/>
+      </imgdir>
+      <imgdir name="35702">
+        <string name="name" value="Orange Tousled Medium-length Hair"/>
+      </imgdir>
+      <imgdir name="35703">
+        <string name="name" value="Yellow Tousled Medium-length Hair"/>
+      </imgdir>
+      <imgdir name="35704">
+        <string name="name" value="Green Tousled Medium-length Hair"/>
+      </imgdir>
+      <imgdir name="35705">
+        <string name="name" value="Blue Tousled Medium-length Hair"/>
+      </imgdir>
+      <imgdir name="35706">
+        <string name="name" value="Purple Tousled Medium-length Hair"/>
+      </imgdir>
+      <imgdir name="35707">
+        <string name="name" value="Brown Tousled Medium-length Hair"/>
+      </imgdir>
+      <imgdir name="35709">
+        <string name="name" value="Black Cute and Nice Daughter Hair"/>
+      </imgdir>
+      <imgdir name="35718">
+        <string name="name" value="Red Cute and Nice Daughter Hair"/>
+      </imgdir>
+      <imgdir name="35719">
+        <string name="name" value="Orange Cute and Nice Daughter Hair"/>
+      </imgdir>
+      <imgdir name="35728">
+        <string name="name" value="Blonde Cute and Nice Daughter Hair"/>
+      </imgdir>
+      <imgdir name="35729">
+        <string name="name" value="Blue Cute and Nice Daughter Hair"/>
+      </imgdir>
+      <imgdir name="35738">
+        <string name="name" value="Purple Cute and Nice Daughter Hair"/>
+      </imgdir>
+      <imgdir name="35739">
+        <string name="name" value="Brown Cute and Nice Daughter Hair"/>
+      </imgdir>
+      <imgdir name="35830">
+        <string name="name" value="Black Tied-Back Spirit Walker Hair"/>
+      </imgdir>
+      <imgdir name="35831">
+        <string name="name" value="Red Tied-Back Spirit Walker Hair"/>
+      </imgdir>
+      <imgdir name="35832">
+        <string name="name" value="Orange Tied-Back Spirit Walker Hair"/>
+      </imgdir>
+      <imgdir name="35833">
+        <string name="name" value="Yellow Tied-Back Spirit Walker Hair"/>
+      </imgdir>
+      <imgdir name="35834">
+        <string name="name" value="Green Tied-Back Spirit Walker Hair"/>
+      </imgdir>
+      <imgdir name="35835">
+        <string name="name" value="Blue Tied-Back Spirit Walker Hair"/>
+      </imgdir>
+      <imgdir name="35836">
+        <string name="name" value="Purple Tied-Back Spirit Walker Hair"/>
+      </imgdir>
+      <imgdir name="35837">
+        <string name="name" value="Brown Tied-Back Spirit Walker Hair"/>
+      </imgdir>
+      <imgdir name="36148">
+        <string name="name" value="Orange Wild Princess&apos;s Mane (F)"/>
+      </imgdir>
+      <imgdir name="36149">
+        <string name="name" value="Blonde Wild Princess&apos;s Mane (F)"/>
+      </imgdir>
+      <imgdir name="36159">
+        <string name="name" value="Purple Wild Princess&apos;s Mane (F)"/>
+      </imgdir>
+      <imgdir name="36738">
+        <string name="name" value="Web Drama Main Male Character Hair"/>
+      </imgdir>
+      <imgdir name="36739">
+        <string name="name" value="Web Drama Main Male Character Hair"/>
+      </imgdir>
+      <imgdir name="36748">
+        <string name="name" value="Web Drama Main Male Character Hair"/>
+      </imgdir>
+      <imgdir name="36749">
+        <string name="name" value="Web Drama Main Male Character Hair"/>
+      </imgdir>
+      <imgdir name="36758">
+        <string name="name" value="Web Drama Main Male Character Hair"/>
+      </imgdir>
+      <imgdir name="36759">
+        <string name="name" value="Web Drama Main Male Character Hair"/>
+      </imgdir>
+      <imgdir name="36768">
+        <string name="name" value="Web Drama Main Male Character Hair"/>
+      </imgdir>
+      <imgdir name="37962">
+        <string name="name" value="Orange Fairy Queen Titania Hair"/>
+      </imgdir>
+      <imgdir name="37963">
+        <string name="name" value="Yellow Fairy Queen Titania Hair"/>
+      </imgdir>
+      <imgdir name="37966">
+        <string name="name" value="Purple Fairy Queen Titania Hair"/>
+      </imgdir>
+      <imgdir name="38440">
+        <string name="name" value="[[FROZEN CONTENT]] Black Elsa Hair"/>
+      </imgdir>
+      <imgdir name="38441">
+        <string name="name" value="[[FROZEN CONTENT]] Red Elsa Hair"/>
+      </imgdir>
+      <imgdir name="38442">
+        <string name="name" value="[[FROZEN CONTENT]] Orange Elsa Hair"/>
+      </imgdir>
+      <imgdir name="38443">
+        <string name="name" value="[[FROZEN CONTENT]] Yellow Elsa Hair"/>
+      </imgdir>
+      <imgdir name="38444">
+        <string name="name" value="[[FROZEN CONTENT]] Green Elsa Hair"/>
+      </imgdir>
+      <imgdir name="38445">
+        <string name="name" value="[[FROZEN CONTENT]] Blue Elsa Hair"/>
+      </imgdir>
+      <imgdir name="38446">
+        <string name="name" value="[[FROZEN CONTENT]] Purple Elsa Hair"/>
+      </imgdir>
+      <imgdir name="38447">
+        <string name="name" value="[[FROZEN CONTENT]] Brown Elsa Hair"/>
+      </imgdir>
       <imgdir name="30008">
         <string name="name" value="Black Boomy Hair"/>
       </imgdir>
@@ -32583,27 +32853,6 @@
       </imgdir>
       <imgdir name="30108">
         <string name="name" value="Brown Jay Hair"/>
-      </imgdir>
-      <imgdir name="30109">
-        <string name="name" value="Black Time World White Rabbit ????…"/>
-      </imgdir>
-      <imgdir name="30118">
-        <string name="name" value="Red Time World White Rabbit Ha??…"/>
-      </imgdir>
-      <imgdir name="30119">
-        <string name="name" value="Orange Time World White Rabbit?????…"/>
-      </imgdir>
-      <imgdir name="30128">
-        <string name="name" value="Yellow Time World White Rabbit?????…"/>
-      </imgdir>
-      <imgdir name="30129">
-        <string name="name" value="Blue Time World White Rabbit H???…"/>
-      </imgdir>
-      <imgdir name="30138">
-        <string name="name" value="Purple Time World White Rabbit?????…"/>
-      </imgdir>
-      <imgdir name="30139">
-        <string name="name" value="Brown Time World White Rabbit ????…"/>
       </imgdir>
       <imgdir name="30148">
         <string name="name" value="Black Hayato Hair"/>
@@ -34389,27 +34638,6 @@
       </imgdir>
       <imgdir name="32096">
         <string name="name" value="Brown Yokai Hair"/>
-      </imgdir>
-      <imgdir name="32097">
-        <string name="name" value="Wacky Happy Fun Time Hair (Bla???…"/>
-      </imgdir>
-      <imgdir name="32098">
-        <string name="name" value="Wacky Happy Fun Time Hair (Red?…"/>
-      </imgdir>
-      <imgdir name="32099">
-        <string name="name" value="Wacky Happy Fun Time Hair (Ora????…"/>
-      </imgdir>
-      <imgdir name="32100">
-        <string name="name" value="Wacky Happy Fun Time Hair (Yel????…"/>
-      </imgdir>
-      <imgdir name="32101">
-        <string name="name" value="Wacky Happy Fun Time Hair (Blu??…"/>
-      </imgdir>
-      <imgdir name="32102">
-        <string name="name" value="Wacky Happy Fun Time Hair (Pur????…"/>
-      </imgdir>
-      <imgdir name="32103">
-        <string name="name" value="Wacky Happy Fun Time Hair (Bro???…"/>
       </imgdir>
       <imgdir name="32104">
         <string name="name" value="Black Curly Poodle Hair"/>
@@ -37771,12 +37999,6 @@
       <imgdir name="33247">
         <string name="name" value="Brown Clean-Cut Short Hair"/>
       </imgdir>
-      <imgdir name="33248">
-        <string name="name" value="Black Going to School in the M???????????…"/>
-      </imgdir>
-      <imgdir name="33249">
-        <string name="name" value="Red Going to School in the Mor?????????…"/>
-      </imgdir>
       <imgdir name="33250">
         <string name="name" value="Black Elf Hair"/>
       </imgdir>
@@ -37800,12 +38022,6 @@
       </imgdir>
       <imgdir name="33257">
         <string name="name" value="Brown Elf Hair"/>
-      </imgdir>
-      <imgdir name="33258">
-        <string name="name" value="Orange Going to School in the ????????????…"/>
-      </imgdir>
-      <imgdir name="33259">
-        <string name="name" value="Yellow Going to School in the ????????????…"/>
       </imgdir>
       <imgdir name="33260">
         <string name="name" value="Black Neinheart Hair"/>
@@ -37831,12 +38047,6 @@
       <imgdir name="33267">
         <string name="name" value="Brown Neinheart Hair"/>
       </imgdir>
-      <imgdir name="33268">
-        <string name="name" value="Blue Going to School in the Mo??????????…"/>
-      </imgdir>
-      <imgdir name="33269">
-        <string name="name" value="Purple Going to School in the ????????????…"/>
-      </imgdir>
       <imgdir name="33270">
         <string name="name" value="Black Stlyish Updo"/>
       </imgdir>
@@ -37860,9 +38070,6 @@
       </imgdir>
       <imgdir name="33277">
         <string name="name" value="Brown Stlyish Updo"/>
-      </imgdir>
-      <imgdir name="33278">
-        <string name="name" value="Brown Going to School in the M???????????…"/>
       </imgdir>
       <imgdir name="33279">
         <string name="name" value="Black Yorozu Hair"/>
@@ -38914,9 +39121,6 @@
       <imgdir name="33628">
         <string name="name" value="Red Elegant Knee-length Hair"/>
       </imgdir>
-      <imgdir name="33629">
-        <string name="name" value="Orange Elegant Knee-length Hai?…"/>
-      </imgdir>
       <imgdir name="33630">
         <string name="name" value="Black Messy Bowl Hair"/>
       </imgdir>
@@ -38940,9 +39144,6 @@
       </imgdir>
       <imgdir name="33637">
         <string name="name" value="Brown Messy Bowl Hair"/>
-      </imgdir>
-      <imgdir name="33638">
-        <string name="name" value="Yellow Elegant Knee-length Hai?…"/>
       </imgdir>
       <imgdir name="33639">
         <string name="name" value="Blue Elegant Knee-length Hair"/>
@@ -38970,9 +39171,6 @@
       </imgdir>
       <imgdir name="33647">
         <string name="name" value="Brown I&apos;m the Best Hair"/>
-      </imgdir>
-      <imgdir name="33648">
-        <string name="name" value="Purple Elegant Knee-length Hai?…"/>
       </imgdir>
       <imgdir name="33649">
         <string name="name" value="Brown Elegant Knee-length Hair"/>
@@ -39196,17 +39394,11 @@
       <imgdir name="33722">
         <string name="name" value="OrangeArtistic Highlights Hair"/>
       </imgdir>
-      <imgdir name="33723">
-        <string name="name" value="Blonde Artistic Highlights Hai?…"/>
-      </imgdir>
       <imgdir name="33724">
         <string name="name" value="Green Artistic Highlights Hair"/>
       </imgdir>
       <imgdir name="33725">
         <string name="name" value="Blue Artistic Highlights Hair"/>
-      </imgdir>
-      <imgdir name="33726">
-        <string name="name" value="Purple Artistic Highlights Hai?…"/>
       </imgdir>
       <imgdir name="33727">
         <string name="name" value="Brown Artistic Highlights Hair"/>
@@ -42370,9 +42562,6 @@
       <imgdir name="34828">
         <string name="name" value="Red Wild Princess&apos;s Mane (M)"/>
       </imgdir>
-      <imgdir name="34829">
-        <string name="name" value="Orange Wild Princess&apos;s Mane (M?…"/>
-      </imgdir>
       <imgdir name="34830">
         <string name="name" value="Black Nymph Hair"/>
       </imgdir>
@@ -42396,9 +42585,6 @@
       </imgdir>
       <imgdir name="34837">
         <string name="name" value="Brown Nymph Hair"/>
-      </imgdir>
-      <imgdir name="34838">
-        <string name="name" value="Yellow Wild Princess&apos;s Mane (M?…"/>
       </imgdir>
       <imgdir name="34839">
         <string name="name" value="Blue Wild Princess&apos;s Mane (M)"/>
@@ -42426,9 +42612,6 @@
       </imgdir>
       <imgdir name="34847">
         <string name="name" value="Brown Siren Hair"/>
-      </imgdir>
-      <imgdir name="34848">
-        <string name="name" value="Purple Wild Princess&apos;s Mane (M?…"/>
       </imgdir>
       <imgdir name="34849">
         <string name="name" value="Brown Wild Princess&apos;s Mane (M)"/>
@@ -43363,26 +43546,11 @@
       <imgdir name="35159">
         <string name="name" value="Anastasia Hair Mod - Black"/>
       </imgdir>
-      <imgdir name="35160">
-        <string name="name" value="Beast Tamer Male Hair 1 (Black?…"/>
-      </imgdir>
       <imgdir name="35161">
         <string name="name" value="Beast Tamer Male Hair 1 (Red)"/>
       </imgdir>
-      <imgdir name="35162">
-        <string name="name" value="Beast Tamer Male Hair 1 (Orang??…"/>
-      </imgdir>
-      <imgdir name="35163">
-        <string name="name" value="Beast Tamer Male Hair 1 (Blond??…"/>
-      </imgdir>
-      <imgdir name="35164">
-        <string name="name" value="Beast Tamer Male Hair 1 (Green?…"/>
-      </imgdir>
       <imgdir name="35165">
         <string name="name" value="Beast Tamer Male Hair 1 (Blue)"/>
-      </imgdir>
-      <imgdir name="35166">
-        <string name="name" value="Beast Tamer Male Hair 1 (Purpl??…"/>
       </imgdir>
       <imgdir name="35167">
         <string name="name" value="Country Perm Hair"/>
@@ -43393,26 +43561,11 @@
       <imgdir name="35169">
         <string name="name" value="Anastasia Hair Mod - Orange"/>
       </imgdir>
-      <imgdir name="35170">
-        <string name="name" value="Beast Tamer Male Hair 2 (Black?…"/>
-      </imgdir>
       <imgdir name="35171">
         <string name="name" value="Beast Tamer Male Hair 2 (Red)"/>
       </imgdir>
-      <imgdir name="35172">
-        <string name="name" value="Beast Tamer Male Hair 2 (Orang??…"/>
-      </imgdir>
-      <imgdir name="35173">
-        <string name="name" value="Beast Tamer Male Hair 2 (Blond??…"/>
-      </imgdir>
-      <imgdir name="35174">
-        <string name="name" value="Beast Tamer Male Hair 2 (Green?…"/>
-      </imgdir>
       <imgdir name="35175">
         <string name="name" value="Beast Tamer Male Hair 2 (Blue)"/>
-      </imgdir>
-      <imgdir name="35176">
-        <string name="name" value="Beast Tamer Male Hair 2 (Purpl??…"/>
       </imgdir>
       <imgdir name="35177">
         <string name="name" value="Cute Apple Hair"/>
@@ -43812,30 +43965,6 @@
       </imgdir>
       <imgdir name="35309">
         <string name="name" value="Apollo Hair Mod - Orange"/>
-      </imgdir>
-      <imgdir name="35310">
-        <string name="name" value="[[FROZEN CONTENT]] Black Krist????????…"/>
-      </imgdir>
-      <imgdir name="35311">
-        <string name="name" value="[[FROZEN CONTENT]] Red Kristof??????…"/>
-      </imgdir>
-      <imgdir name="35312">
-        <string name="name" value="[[FROZEN CONTENT]] Orange Kris?????????…"/>
-      </imgdir>
-      <imgdir name="35313">
-        <string name="name" value="[[FROZEN CONTENT]] Yellow Kris?????????…"/>
-      </imgdir>
-      <imgdir name="35314">
-        <string name="name" value="[[FROZEN CONTENT]] Green Krist????????…"/>
-      </imgdir>
-      <imgdir name="35315">
-        <string name="name" value="[[FROZEN CONTENT]] Blue Kristo???????…"/>
-      </imgdir>
-      <imgdir name="35316">
-        <string name="name" value="[[FROZEN CONTENT]] Purple Kris?????????…"/>
-      </imgdir>
-      <imgdir name="35317">
-        <string name="name" value="[[FROZEN CONTENT]] Brown Krist????????…"/>
       </imgdir>
       <imgdir name="35318">
         <string name="name" value="Apollo Hair Mod - Yellow"/>
@@ -44983,35 +45112,11 @@
       <imgdir name="35699">
         <string name="name" value="Purple Half Up-Do Hair"/>
       </imgdir>
-      <imgdir name="35700">
-        <string name="name" value="Black Tousled Medium-length Ha??…"/>
-      </imgdir>
       <imgdir name="35701">
         <string name="name" value="Red Tousled Medium-length Hair"/>
       </imgdir>
-      <imgdir name="35702">
-        <string name="name" value="Orange Tousled Medium-length H???…"/>
-      </imgdir>
-      <imgdir name="35703">
-        <string name="name" value="Yellow Tousled Medium-length H???…"/>
-      </imgdir>
-      <imgdir name="35704">
-        <string name="name" value="Green Tousled Medium-length Ha??…"/>
-      </imgdir>
-      <imgdir name="35705">
-        <string name="name" value="Blue Tousled Medium-length Hai?…"/>
-      </imgdir>
-      <imgdir name="35706">
-        <string name="name" value="Purple Tousled Medium-length H???…"/>
-      </imgdir>
-      <imgdir name="35707">
-        <string name="name" value="Brown Tousled Medium-length Ha??…"/>
-      </imgdir>
       <imgdir name="35708">
         <string name="name" value="Brown Half Up-Do Hair"/>
-      </imgdir>
-      <imgdir name="35709">
-        <string name="name" value="Black Cute and Nice Daughter H???…"/>
       </imgdir>
       <imgdir name="35710">
         <string name="name" value="Black Sprout Shiny Hair"/>
@@ -45037,12 +45142,6 @@
       <imgdir name="35717">
         <string name="name" value="Brown Sprout Shiny Hair"/>
       </imgdir>
-      <imgdir name="35718">
-        <string name="name" value="Red Cute and Nice Daughter Hai?…"/>
-      </imgdir>
-      <imgdir name="35719">
-        <string name="name" value="Orange Cute and Nice Daughter ????…"/>
-      </imgdir>
       <imgdir name="35720">
         <string name="name" value="Black Sea Hair"/>
       </imgdir>
@@ -45067,12 +45166,6 @@
       <imgdir name="35727">
         <string name="name" value="Brown Sea Hair"/>
       </imgdir>
-      <imgdir name="35728">
-        <string name="name" value="Blonde Cute and Nice Daughter ????…"/>
-      </imgdir>
-      <imgdir name="35729">
-        <string name="name" value="Blue Cute and Nice Daughter Ha??…"/>
-      </imgdir>
       <imgdir name="35730">
         <string name="name" value="Hair 35730"/>
       </imgdir>
@@ -45096,12 +45189,6 @@
       </imgdir>
       <imgdir name="35737">
         <string name="name" value="Hair 35737"/>
-      </imgdir>
-      <imgdir name="35738">
-        <string name="name" value="Purple Cute and Nice Daughter ????…"/>
-      </imgdir>
-      <imgdir name="35739">
-        <string name="name" value="Brown Cute and Nice Daughter H???…"/>
       </imgdir>
       <imgdir name="35740">
         <string name="name" value="Black 80&apos;s European Hair"/>
@@ -45372,30 +45459,6 @@
       </imgdir>
       <imgdir name="35829">
         <string name="name" value="Yellow Bed Head Hair"/>
-      </imgdir>
-      <imgdir name="35830">
-        <string name="name" value="Black Tied-Back Spirit Walker ????…"/>
-      </imgdir>
-      <imgdir name="35831">
-        <string name="name" value="Red Tied-Back Spirit Walker Ha??…"/>
-      </imgdir>
-      <imgdir name="35832">
-        <string name="name" value="Orange Tied-Back Spirit Walker?????…"/>
-      </imgdir>
-      <imgdir name="35833">
-        <string name="name" value="Yellow Tied-Back Spirit Walker?????…"/>
-      </imgdir>
-      <imgdir name="35834">
-        <string name="name" value="Green Tied-Back Spirit Walker ????…"/>
-      </imgdir>
-      <imgdir name="35835">
-        <string name="name" value="Blue Tied-Back Spirit Walker H???…"/>
-      </imgdir>
-      <imgdir name="35836">
-        <string name="name" value="Purple Tied-Back Spirit Walker?????…"/>
-      </imgdir>
-      <imgdir name="35837">
-        <string name="name" value="Brown Tied-Back Spirit Walker ????…"/>
       </imgdir>
       <imgdir name="35838">
         <string name="name" value="Blue Bed Head Hair"/>
@@ -46327,12 +46390,6 @@
       <imgdir name="36147">
         <string name="name" value="Brown Beshroomed Hair"/>
       </imgdir>
-      <imgdir name="36148">
-        <string name="name" value="Orange Wild Princess&apos;s Mane (F?…"/>
-      </imgdir>
-      <imgdir name="36149">
-        <string name="name" value="Blonde Wild Princess&apos;s Mane (F?…"/>
-      </imgdir>
       <imgdir name="36150">
         <string name="name" value="Black Cannoneer Hair"/>
       </imgdir>
@@ -46359,9 +46416,6 @@
       </imgdir>
       <imgdir name="36158">
         <string name="name" value="Blue Wild Princess&apos;s Mane (F)"/>
-      </imgdir>
-      <imgdir name="36159">
-        <string name="name" value="Purple Wild Princess&apos;s Mane (F?…"/>
       </imgdir>
       <imgdir name="36160">
         <string name="name" value="Black Zed&apos;s Dead Hair"/>
@@ -48097,12 +48151,6 @@
       <imgdir name="36737">
         <string name="name" value="Brown My-Dear-Prince Hair"/>
       </imgdir>
-      <imgdir name="36738">
-        <string name="name" value="Web Drama Main Male Character ????…"/>
-      </imgdir>
-      <imgdir name="36739">
-        <string name="name" value="Web Drama Main Male Character ????…"/>
-      </imgdir>
       <imgdir name="36740">
         <string name="name" value="Black Tropical Hair"/>
       </imgdir>
@@ -48126,12 +48174,6 @@
       </imgdir>
       <imgdir name="36747">
         <string name="name" value="Brown Tropical Hair"/>
-      </imgdir>
-      <imgdir name="36748">
-        <string name="name" value="Web Drama Main Male Character ????…"/>
-      </imgdir>
-      <imgdir name="36749">
-        <string name="name" value="Web Drama Main Male Character ????…"/>
       </imgdir>
       <imgdir name="36750">
         <string name="name" value="Black Argent Hair"/>
@@ -48157,12 +48199,6 @@
       <imgdir name="36757">
         <string name="name" value="Brown Argent Hair"/>
       </imgdir>
-      <imgdir name="36758">
-        <string name="name" value="Web Drama Main Male Character ????…"/>
-      </imgdir>
-      <imgdir name="36759">
-        <string name="name" value="Web Drama Main Male Character ????…"/>
-      </imgdir>
       <imgdir name="36760">
         <string name="name" value="White Windy Hair"/>
       </imgdir>
@@ -48186,9 +48222,6 @@
       </imgdir>
       <imgdir name="36767">
         <string name="name" value="Brown Windy Hair"/>
-      </imgdir>
-      <imgdir name="36768">
-        <string name="name" value="Web Drama Main Male Character ????…"/>
       </imgdir>
       <imgdir name="36769">
         <string name="name" value="Milky White Paper Hair"/>
@@ -51769,20 +51802,11 @@
       <imgdir name="37961">
         <string name="name" value="Red Fairy Queen Titania Hair"/>
       </imgdir>
-      <imgdir name="37962">
-        <string name="name" value="Orange Fairy Queen Titania Hai?…"/>
-      </imgdir>
-      <imgdir name="37963">
-        <string name="name" value="Yellow Fairy Queen Titania Hai?…"/>
-      </imgdir>
       <imgdir name="37964">
         <string name="name" value="Green Fairy Queen Titania Hair"/>
       </imgdir>
       <imgdir name="37965">
         <string name="name" value="Blue Fairy Queen Titania Hair"/>
-      </imgdir>
-      <imgdir name="37966">
-        <string name="name" value="Purple Fairy Queen Titania Hai?…"/>
       </imgdir>
       <imgdir name="37967">
         <string name="name" value="Pink Fairy Queen Titania Hair"/>
@@ -53202,30 +53226,6 @@
       </imgdir>
       <imgdir name="38439">
         <string name="name" value="Balayage Hair"/>
-      </imgdir>
-      <imgdir name="38440">
-        <string name="name" value="[[FROZEN CONTENT]] Black Elsa ????…"/>
-      </imgdir>
-      <imgdir name="38441">
-        <string name="name" value="[[FROZEN CONTENT]] Red Elsa Ha??…"/>
-      </imgdir>
-      <imgdir name="38442">
-        <string name="name" value="[[FROZEN CONTENT]] Orange Elsa?????…"/>
-      </imgdir>
-      <imgdir name="38443">
-        <string name="name" value="[[FROZEN CONTENT]] Yellow Elsa?????…"/>
-      </imgdir>
-      <imgdir name="38444">
-        <string name="name" value="[[FROZEN CONTENT]] Green Elsa ????…"/>
-      </imgdir>
-      <imgdir name="38445">
-        <string name="name" value="[[FROZEN CONTENT]] Blue Elsa H???…"/>
-      </imgdir>
-      <imgdir name="38446">
-        <string name="name" value="[[FROZEN CONTENT]] Purple Elsa?????…"/>
-      </imgdir>
-      <imgdir name="38447">
-        <string name="name" value="[[FROZEN CONTENT]] Brown Elsa ????…"/>
       </imgdir>
       <imgdir name="38448">
         <string name="name" value="Balayage Hair"/>
@@ -62322,6 +62322,156 @@
       </imgdir>
     </imgdir>
     <imgdir name="Longcoat">
+      <imgdir name="1050186">
+        <string name="name" value="Rookie Maple Boy School Uniform"/>
+      </imgdir>
+      <imgdir name="1050332">
+        <string name="name" value="Nostalgic Luxury School Uniform"/>
+      </imgdir>
+      <imgdir name="1050333">
+        <string name="name" value="Confident Luxury School Uniform"/>
+      </imgdir>
+      <imgdir name="1050334">
+        <string name="name" value="Premium Floral Print School Uniform"/>
+      </imgdir>
+      <imgdir name="1050367">
+        <string name="name" value="Kerning Engineering School Uniform"/>
+      </imgdir>
+      <imgdir name="1051402">
+        <string name="name" value="Nostalgic Luxury School Uniform"/>
+      </imgdir>
+      <imgdir name="1051403">
+        <string name="name" value="Confident Luxury School Uniform"/>
+      </imgdir>
+      <imgdir name="1051404">
+        <string name="name" value="Premium Floral Print School Uniform"/>
+      </imgdir>
+      <imgdir name="1051665">
+        <string name="name" value="Influencer Loose-top Training Outfit"/>
+      </imgdir>
+      <imgdir name="1052284">
+        <string name="name" value="Henesys Academy Uniform (with pants)"/>
+      </imgdir>
+      <imgdir name="1052413">
+        <string name="name" value="Mitakihara Middle School Uniform (Boys)"/>
+      </imgdir>
+      <imgdir name="1052414">
+        <string name="name" value="Mitakihara Middle School Uniform (Girls)"/>
+      </imgdir>
+      <imgdir name="1052649">
+        <string name="name" value="Royal Adventure Suit (Magician)"/>
+      </imgdir>
+      <imgdir name="1052728">
+        <string name="name" value="Refreshing Female Cardigan Outfit"/>
+      </imgdir>
+      <imgdir name="1052873">
+        <string name="name" value="Mikasa&apos;s Scout Regiment Uniform"/>
+      </imgdir>
+      <imgdir name="1053225">
+        <string name="name" value="Puppy Love Samurai Outfit (Pink)"/>
+      </imgdir>
+      <imgdir name="1053226">
+        <string name="name" value="Puppy Love Samurai Outfit (Blue)"/>
+      </imgdir>
+      <imgdir name="1053324">
+        <string name="name" value="Tomoeda Middle School Female Winter Uniform"/>
+      </imgdir>
+      <imgdir name="1053325">
+        <string name="name" value="Tomoeda Middle School Male Winter Uniform"/>
+      </imgdir>
+      <imgdir name="1053344">
+        <string name="name" value="Starry Summer Night Outfit (F) "/>
+      </imgdir>
+      <imgdir name="1053345">
+        <string name="name" value="Starry Summer Night Outfit (M) "/>
+      </imgdir>
+      <imgdir name="1053381">
+        <string name="name" value="Lunar New Year Pudgy Piggy Outfit (F)"/>
+      </imgdir>
+      <imgdir name="1053382">
+        <string name="name" value="Lunar New Year Pudgy Piggy Outfit (M)"/>
+      </imgdir>
+      <imgdir name="1053385">
+        <string name="name" value="Outsized Sailor Coat (Brown &amp; Black)"/>
+      </imgdir>
+      <imgdir name="1053386">
+        <string name="name" value="Outsized Sailor Coat (Black &amp; Ivory)"/>
+      </imgdir>
+      <imgdir name="1053387">
+        <string name="name" value="Outsized Sailor Coat (Navy &amp; White)"/>
+      </imgdir>
+      <imgdir name="1053388">
+        <string name="name" value="Outsized Sailor Coat (White &amp; Purple)"/>
+      </imgdir>
+      <imgdir name="1053389">
+        <string name="name" value="Outsized Sailor Coat (White &amp; Red)"/>
+      </imgdir>
+      <imgdir name="1053459">
+        <string name="name" value="Great Golden Dragon Knight Uniform Pants"/>
+      </imgdir>
+      <imgdir name="1053460">
+        <string name="name" value="Great Golden Dragon Knight Uniform Mini Skirt"/>
+      </imgdir>
+      <imgdir name="1053488">
+        <string name="name" value="Purrfect White Tiger Pajama Outfit"/>
+      </imgdir>
+      <imgdir name="1053489">
+        <string name="name" value="Petite Checkered Pastel Purple Outfit"/>
+      </imgdir>
+      <imgdir name="1053490">
+        <string name="name" value="Petite Polka Dot Pastel Violet Outfit"/>
+      </imgdir>
+      <imgdir name="1053533">
+        <string name="name" value="Blue Well-Deserved Vacation Outfit"/>
+      </imgdir>
+      <imgdir name="1053534">
+        <string name="name" value="Violet Well-Deserved Vacation Outfit"/>
+      </imgdir>
+      <imgdir name="1053566">
+        <string name="name" value="Yellow Kindergarten Back-to-School Outfit"/>
+      </imgdir>
+      <imgdir name="1053567">
+        <string name="name" value="Navy Kindergarten Back-to-School Outfit"/>
+      </imgdir>
+      <imgdir name="1053582">
+        <string name="name" value="Summer Survival Sleeveless Outfit"/>
+      </imgdir>
+      <imgdir name="1053591">
+        <string name="name" value="Orange Mushroom Backpack Outfit"/>
+      </imgdir>
+      <imgdir name="1053650">
+        <string name="name" value="Black Hand-Knit Bunny Doll T-Shirt"/>
+      </imgdir>
+      <imgdir name="1053651">
+        <string name="name" value="White Hand-Knit Bunny Doll T-Shirt"/>
+      </imgdir>
+      <imgdir name="1053677">
+        <string name="name" value="Warm &amp; Cozy Blue Heart Effect Overall"/>
+      </imgdir>
+      <imgdir name="1053790">
+        <string name="name" value="Simple Little Ghost Wizard Robe"/>
+      </imgdir>
+      <imgdir name="1053791">
+        <string name="name" value="Ribbon Little Ghost Wizard Robe"/>
+      </imgdir>
+      <imgdir name="1053824">
+        <string name="name" value="Long-Sleeved Lavender Vest Outfit"/>
+      </imgdir>
+      <imgdir name="1053905">
+        <string name="name" value="Magic Trainee&apos;s Uniform (Type A)"/>
+      </imgdir>
+      <imgdir name="1053906">
+        <string name="name" value="Magic Trainee&apos;s Uniform (Type B)"/>
+      </imgdir>
+      <imgdir name="1054015">
+        <string name="name" value="Time to Brush Your Teeth Pajamas"/>
+      </imgdir>
+      <imgdir name="1054034">
+        <string name="name" value="Mischievous Kitty Pumpkin Outfit"/>
+      </imgdir>
+      <imgdir name="1054035">
+        <string name="name" value="Mischievous Kitty Ribbon Outfit"/>
+      </imgdir>
       <imgdir name="1050121">
         <string name="name" value="Oriental Bridegroom Suit"/>
       </imgdir>
@@ -62405,9 +62555,6 @@
       </imgdir>
       <imgdir name="1050185">
         <string name="name" value="Red Skull Overall"/>
-      </imgdir>
-      <imgdir name="1050186">
-        <string name="name" value="Rookie Maple Boy School Unifor?…"/>
       </imgdir>
       <imgdir name="1050187">
         <string name="name" value="Blue Snow Flower Wear"/>
@@ -62643,15 +62790,6 @@
       <imgdir name="1050331">
         <string name="name" value="Bold Luxury School Uniform"/>
       </imgdir>
-      <imgdir name="1050332">
-        <string name="name" value="Nostalgic Luxury School Unifor?…"/>
-      </imgdir>
-      <imgdir name="1050333">
-        <string name="name" value="Confident Luxury School Unifor?…"/>
-      </imgdir>
-      <imgdir name="1050334">
-        <string name="name" value="Premium Floral Print School Un?????…"/>
-      </imgdir>
       <imgdir name="1050335">
         <string name="name" value="Melody Boy"/>
       </imgdir>
@@ -62711,9 +62849,6 @@
       </imgdir>
       <imgdir name="1050366">
         <string name="name" value="The Kingdom Suit of King"/>
-      </imgdir>
-      <imgdir name="1050367">
-        <string name="name" value="Kerning Engineering School Uni????…"/>
       </imgdir>
       <imgdir name="1050368">
         <string name="name" value="Romantic Sky"/>
@@ -63420,15 +63555,6 @@
       <imgdir name="1051401">
         <string name="name" value="Bold Luxury School Uniform"/>
       </imgdir>
-      <imgdir name="1051402">
-        <string name="name" value="Nostalgic Luxury School Unifor?…"/>
-      </imgdir>
-      <imgdir name="1051403">
-        <string name="name" value="Confident Luxury School Unifor?…"/>
-      </imgdir>
-      <imgdir name="1051404">
-        <string name="name" value="Premium Floral Print School Un?????…"/>
-      </imgdir>
       <imgdir name="1051405">
         <string name="name" value="Melody Girl"/>
       </imgdir>
@@ -63816,9 +63942,6 @@
       <imgdir name="1051663">
         <string name="name" value="Longcoat 1051663"/>
       </imgdir>
-      <imgdir name="1051665">
-        <string name="name" value="Influencer Loose-top Training ??????…"/>
-      </imgdir>
       <imgdir name="1051673">
         <string name="name" value="Sunflower Oceanwalk"/>
       </imgdir>
@@ -63972,9 +64095,6 @@
       <imgdir name="1052282">
         <string name="name" value="Oz Magic Robe"/>
       </imgdir>
-      <imgdir name="1052284">
-        <string name="name" value="Henesys Academy Uniform (with ??????…"/>
-      </imgdir>
       <imgdir name="1052285">
         <string name="name" value="Happi"/>
       </imgdir>
@@ -64100,12 +64220,6 @@
       </imgdir>
       <imgdir name="1052412">
         <string name="name" value="Toy Prince"/>
-      </imgdir>
-      <imgdir name="1052413">
-        <string name="name" value="Mitakihara Middle School Unifo?????????…"/>
-      </imgdir>
-      <imgdir name="1052414">
-        <string name="name" value="Mitakihara Middle School Unifo??????????…"/>
       </imgdir>
       <imgdir name="1052416">
         <string name="name" value="Orchid&apos;s Black Wing Uniform"/>
@@ -64329,9 +64443,6 @@
       <imgdir name="1052648">
         <string name="name" value="Successor of the Library"/>
       </imgdir>
-      <imgdir name="1052649">
-        <string name="name" value="Royal Adventure Suit (Magician?…"/>
-      </imgdir>
       <imgdir name="1052650">
         <string name="name" value="Royal Adventure Suit (Bowman)"/>
       </imgdir>
@@ -64436,9 +64547,6 @@
       </imgdir>
       <imgdir name="1052727">
         <string name="name" value="Refreshing Male Outfit"/>
-      </imgdir>
-      <imgdir name="1052728">
-        <string name="name" value="Refreshing Female Cardigan Out???…"/>
       </imgdir>
       <imgdir name="1052729">
         <string name="name" value="RED Paint Shirt &amp; Jeans"/>
@@ -64565,9 +64673,6 @@
       </imgdir>
       <imgdir name="1052872">
         <string name="name" value="Red Ribbon Dress"/>
-      </imgdir>
-      <imgdir name="1052873">
-        <string name="name" value="Mikasa&apos;s Scout Regiment Unifor?…"/>
       </imgdir>
       <imgdir name="1052874">
         <string name="name" value="Levi&apos;s Scout Regiment Uniform"/>
@@ -64986,12 +65091,6 @@
       <imgdir name="1053222">
         <string name="name" value="Falling Darkness Outfit (M)"/>
       </imgdir>
-      <imgdir name="1053225">
-        <string name="name" value="Puppy Love Samurai Outfit (Pin??…"/>
-      </imgdir>
-      <imgdir name="1053226">
-        <string name="name" value="Puppy Love Samurai Outfit (Blu??…"/>
-      </imgdir>
       <imgdir name="1053231">
         <string name="name" value="Sensible Denim (Red)"/>
       </imgdir>
@@ -65082,23 +65181,11 @@
       <imgdir name="1053323">
         <string name="name" value="Syaoran Battle Costume Outfit"/>
       </imgdir>
-      <imgdir name="1053324">
-        <string name="name" value="Tomoeda Middle School Female W?????????????…"/>
-      </imgdir>
-      <imgdir name="1053325">
-        <string name="name" value="Tomoeda Middle School Male Win???????????…"/>
-      </imgdir>
       <imgdir name="1053329">
         <string name="name" value="Summer Story Dress"/>
       </imgdir>
       <imgdir name="1053330">
         <string name="name" value="Frog Overall"/>
-      </imgdir>
-      <imgdir name="1053344">
-        <string name="name" value="Starry Summer Night Outfit (F)?…"/>
-      </imgdir>
-      <imgdir name="1053345">
-        <string name="name" value="Starry Summer Night Outfit (M)?…"/>
       </imgdir>
       <imgdir name="1053346">
         <string name="name" value="One-Eyed Grim Reaper Outfit"/>
@@ -65123,27 +65210,6 @@
       </imgdir>
       <imgdir name="1053378">
         <string name="name" value="Silly Blue Pajamas (M)"/>
-      </imgdir>
-      <imgdir name="1053381">
-        <string name="name" value="Lunar New Year Pudgy Piggy Out???????…"/>
-      </imgdir>
-      <imgdir name="1053382">
-        <string name="name" value="Lunar New Year Pudgy Piggy Out???????…"/>
-      </imgdir>
-      <imgdir name="1053385">
-        <string name="name" value="Outsized Sailor Coat (Brown &amp; ??????…"/>
-      </imgdir>
-      <imgdir name="1053386">
-        <string name="name" value="Outsized Sailor Coat (Black &amp; ??????…"/>
-      </imgdir>
-      <imgdir name="1053387">
-        <string name="name" value="Outsized Sailor Coat (Navy &amp; W?????…"/>
-      </imgdir>
-      <imgdir name="1053388">
-        <string name="name" value="Outsized Sailor Coat (White &amp; ???????…"/>
-      </imgdir>
-      <imgdir name="1053389">
-        <string name="name" value="Outsized Sailor Coat (White &amp; ????…"/>
       </imgdir>
       <imgdir name="1053397">
         <string name="name" value="Spring Cleaning Coveralls"/>
@@ -65196,12 +65262,6 @@
       <imgdir name="1053458">
         <string name="name" value="Violet Dark Furrytail Coat"/>
       </imgdir>
-      <imgdir name="1053459">
-        <string name="name" value="Great Golden Dragon Knight Uni??????????…"/>
-      </imgdir>
-      <imgdir name="1053460">
-        <string name="name" value="Great Golden Dragon Knight Uni???????????????…"/>
-      </imgdir>
       <imgdir name="1053464">
         <string name="name" value="Havoc&apos;s Uniform"/>
       </imgdir>
@@ -65249,15 +65309,6 @@
       </imgdir>
       <imgdir name="1053487">
         <string name="name" value="Denim Girl"/>
-      </imgdir>
-      <imgdir name="1053488">
-        <string name="name" value="Purrfect White Tiger Pajama Ou????…"/>
-      </imgdir>
-      <imgdir name="1053489">
-        <string name="name" value="Petite Checkered Pastel Purple???????…"/>
-      </imgdir>
-      <imgdir name="1053490">
-        <string name="name" value="Petite Polka Dot Pastel Violet???????…"/>
       </imgdir>
       <imgdir name="1053491">
         <string name="name" value="Snowbunny Outfit"/>
@@ -65325,12 +65376,6 @@
       <imgdir name="1053530">
         <string name="name" value="Winter Plush Hoodie"/>
       </imgdir>
-      <imgdir name="1053533">
-        <string name="name" value="Blue Well-Deserved Vacation Ou????…"/>
-      </imgdir>
-      <imgdir name="1053534">
-        <string name="name" value="Violet Well-Deserved Vacation ??????…"/>
-      </imgdir>
       <imgdir name="1053537">
         <string name="name" value="Soft Lavender Hoodie"/>
       </imgdir>
@@ -65352,12 +65397,6 @@
       <imgdir name="1053563">
         <string name="name" value="Love Mouse Outfit"/>
       </imgdir>
-      <imgdir name="1053566">
-        <string name="name" value="Yellow Kindergarten Back-to-Sc???????????…"/>
-      </imgdir>
-      <imgdir name="1053567">
-        <string name="name" value="Navy Kindergarten Back-to-Scho?????????…"/>
-      </imgdir>
       <imgdir name="1053570">
         <string name="name" value="Puffy Cloud Overalls"/>
       </imgdir>
@@ -65378,9 +65417,6 @@
       </imgdir>
       <imgdir name="1053581">
         <string name="name" value="Sailor&apos;s Song Dress"/>
-      </imgdir>
-      <imgdir name="1053582">
-        <string name="name" value="Summer Survival Sleeveless Out???…"/>
       </imgdir>
       <imgdir name="1053583">
         <string name="name" value="Summer Survival Dress"/>
@@ -65405,9 +65441,6 @@
       </imgdir>
       <imgdir name="1053590">
         <string name="name" value="Cozy Sound Sleep"/>
-      </imgdir>
-      <imgdir name="1053591">
-        <string name="name" value="Orange Mushroom Backpack Outfi?…"/>
       </imgdir>
       <imgdir name="1053593">
         <string name="name" value="Nero Print Overfit Outfit"/>
@@ -65478,12 +65511,6 @@
       <imgdir name="1053649">
         <string name="name" value="Dark Night Flight Skirt"/>
       </imgdir>
-      <imgdir name="1053650">
-        <string name="name" value="Black Hand-Knit Bunny Doll T-S????…"/>
-      </imgdir>
-      <imgdir name="1053651">
-        <string name="name" value="White Hand-Knit Bunny Doll T-S????…"/>
-      </imgdir>
       <imgdir name="1053652">
         <string name="name" value="Black Ox Outfit"/>
       </imgdir>
@@ -65504,9 +65531,6 @@
       </imgdir>
       <imgdir name="1053676">
         <string name="name" value="Cozy Blue Heart Effect Outfit"/>
-      </imgdir>
-      <imgdir name="1053677">
-        <string name="name" value="Warm &amp; Cozy Blue Heart Effect ???????…"/>
       </imgdir>
       <imgdir name="1053679">
         <string name="name" value="Joyful Birthday"/>
@@ -65601,12 +65625,6 @@
       <imgdir name="1053789">
         <string name="name" value="Cozy Winter"/>
       </imgdir>
-      <imgdir name="1053790">
-        <string name="name" value="Simple Little Ghost Wizard Rob?…"/>
-      </imgdir>
-      <imgdir name="1053791">
-        <string name="name" value="Ribbon Little Ghost Wizard Rob?…"/>
-      </imgdir>
       <imgdir name="1053794">
         <string name="name" value="Heroic Hogul Suit"/>
       </imgdir>
@@ -65627,9 +65645,6 @@
       </imgdir>
       <imgdir name="1053822">
         <string name="name" value="Crimson Hush Uniform"/>
-      </imgdir>
-      <imgdir name="1053824">
-        <string name="name" value="Long-Sleeved Lavender Vest Out???…"/>
       </imgdir>
       <imgdir name="1053825">
         <string name="name" value="Long-Sleeved Pink Vest Outfit"/>
@@ -65700,12 +65715,6 @@
       <imgdir name="1053904">
         <string name="name" value="Evening Orchid"/>
       </imgdir>
-      <imgdir name="1053905">
-        <string name="name" value="Magic Trainee&apos;s Uniform (Type ??…"/>
-      </imgdir>
-      <imgdir name="1053906">
-        <string name="name" value="Magic Trainee&apos;s Uniform (Type ??…"/>
-      </imgdir>
       <imgdir name="1053913">
         <string name="name" value="I&apos;m Recovering"/>
       </imgdir>
@@ -65760,20 +65769,11 @@
       <imgdir name="1053991">
         <string name="name" value="Red Point Blue Fashion"/>
       </imgdir>
-      <imgdir name="1054015">
-        <string name="name" value="Time to Brush Your Teeth Pajam??…"/>
-      </imgdir>
       <imgdir name="1054016">
         <string name="name" value="Hysteric Bear Outfit"/>
       </imgdir>
       <imgdir name="1054017">
         <string name="name" value="Hysteric Bear Dress"/>
-      </imgdir>
-      <imgdir name="1054034">
-        <string name="name" value="Mischievous Kitty Pumpkin Outf??…"/>
-      </imgdir>
-      <imgdir name="1054035">
-        <string name="name" value="Mischievous Kitty Ribbon Outfi?…"/>
       </imgdir>
       <imgdir name="1054040">
         <string name="name" value="Aqua Outfit"/>
@@ -68882,6 +68882,9 @@
       </imgdir>
     </imgdir>
     <imgdir name="PetEquip">
+      <imgdir name="1802317">
+        <string name="name" value="Jr. Reaper Sign (I&apos;m with stoopid)"/>
+      </imgdir>
       <imgdir name="1802040">
         <string name="name" value="Dimension Flower"/>
       </imgdir>
@@ -69052,9 +69055,6 @@
       </imgdir>
       <imgdir name="1802316">
         <string name="name" value="Porcupine Sunglasses"/>
-      </imgdir>
-      <imgdir name="1802317">
-        <string name="name" value="Jr. Reaper Sign (I&apos;m with stoo????…"/>
       </imgdir>
       <imgdir name="1802318">
         <string name="name" value="Jr. Reaper Sign (cc plz)"/>
@@ -70373,6 +70373,60 @@
       </imgdir>
     </imgdir>
     <imgdir name="Ring">
+      <imgdir name="1112023">
+        <string name="name" value="Planetarium for Two Promise Ring"/>
+      </imgdir>
+      <imgdir name="1112026">
+        <string name="name" value="You and Me Under the Mistletoe Friendship Ring"/>
+      </imgdir>
+      <imgdir name="1112135">
+        <string name="name" value="Ink-and-Wash Painting Name Tag Ring"/>
+      </imgdir>
+      <imgdir name="1112157">
+        <string name="name" value="I Love Mustache Label Ring (Blue)"/>
+      </imgdir>
+      <imgdir name="1112158">
+        <string name="name" value="I Love Mustache Label Ring (Red)"/>
+      </imgdir>
+      <imgdir name="1112180">
+        <string name="name" value="Blood Alliance Friendship Label Ring"/>
+      </imgdir>
+      <imgdir name="1112238">
+        <string name="name" value="Ink-and-Wash Thought Bubble Ring"/>
+      </imgdir>
+      <imgdir name="1112259">
+        <string name="name" value="Mister Mustache Word Bubble Ring"/>
+      </imgdir>
+      <imgdir name="1112263">
+        <string name="name" value="Strawberry Cake Word Bubble Ring"/>
+      </imgdir>
+      <imgdir name="1112269">
+        <string name="name" value="I Love Mustache Quote Ring (Blue)"/>
+      </imgdir>
+      <imgdir name="1112270">
+        <string name="name" value="I Love Mustache Quote Ring (Red)"/>
+      </imgdir>
+      <imgdir name="1112290">
+        <string name="name" value="Snow Day Dream Word Bubble Ring"/>
+      </imgdir>
+      <imgdir name="1112293">
+        <string name="name" value="Blood Alliance Friendship Word Bubble Ring"/>
+      </imgdir>
+      <imgdir name="1112814">
+        <string name="name" value="Friendship Ring: Elric brothers"/>
+      </imgdir>
+      <imgdir name="1112818">
+        <string name="name" value="Friendship Ring: Drilling team and coat of arms"/>
+      </imgdir>
+      <imgdir name="1112820">
+        <string name="name" value="Friendship Ring: Dragon and Phoenix"/>
+      </imgdir>
+      <imgdir name="1112945">
+        <string name="name" value="Always Craving Sweet N&apos; Sour BBQ"/>
+      </imgdir>
+      <imgdir name="1115087">
+        <string name="name" value="Frankenstein&apos;s Monster Chat Ring"/>
+      </imgdir>
       <imgdir name="1112011">
         <string name="name" value="Couple Ring: Fire &amp; Ice"/>
       </imgdir>
@@ -70388,23 +70442,14 @@
       <imgdir name="1112016">
         <string name="name" value="Couple Ring: Snowflake Ring"/>
       </imgdir>
-      <imgdir name="1112023">
-        <string name="name" value="Planetarium for Two Promise Ri??…"/>
-      </imgdir>
       <imgdir name="1112024">
         <string name="name" value="Angel Bunny Promise Ring"/>
-      </imgdir>
-      <imgdir name="1112026">
-        <string name="name" value="You and Me Under the Mistletoe????????????????…"/>
       </imgdir>
       <imgdir name="1112127">
         <string name="name" value="Welcome Back Ring"/>
       </imgdir>
       <imgdir name="1112134">
         <string name="name" value="Bamboo Name Tag Ring"/>
-      </imgdir>
-      <imgdir name="1112135">
-        <string name="name" value="Ink-and-Wash Painting Name Tag?????…"/>
       </imgdir>
       <imgdir name="1112136">
         <string name="name" value="Sausage Ring"/>
@@ -70457,12 +70502,6 @@
       <imgdir name="1112156">
         <string name="name" value="Oink Label Ring"/>
       </imgdir>
-      <imgdir name="1112157">
-        <string name="name" value="I Love Mustache Label Ring (Bl???…"/>
-      </imgdir>
-      <imgdir name="1112158">
-        <string name="name" value="I Love Mustache Label Ring (Re??…"/>
-      </imgdir>
       <imgdir name="1112159">
         <string name="name" value="Star of Africa Label Ring"/>
       </imgdir>
@@ -70505,9 +70544,6 @@
       <imgdir name="1112179">
         <string name="name" value="Snowy Christmas Label Ring"/>
       </imgdir>
-      <imgdir name="1112180">
-        <string name="name" value="Blood Alliance Friendship Labe??????…"/>
-      </imgdir>
       <imgdir name="1112182">
         <string name="name" value="Baby Label Ring"/>
       </imgdir>
@@ -70544,9 +70580,6 @@
       <imgdir name="1112237">
         <string name="name" value="Bamboo Thought Bubble Ring"/>
       </imgdir>
-      <imgdir name="1112238">
-        <string name="name" value="Ink-and-Wash Thought Bubble Ri??…"/>
-      </imgdir>
       <imgdir name="1112243">
         <string name="name" value="Scoreboard Quote Ring"/>
       </imgdir>
@@ -70568,9 +70601,6 @@
       <imgdir name="1112258">
         <string name="name" value="Green Apple Word Bubble Ring"/>
       </imgdir>
-      <imgdir name="1112259">
-        <string name="name" value="Mister Mustache Word Bubble Ri??…"/>
-      </imgdir>
       <imgdir name="1112260">
         <string name="name" value="Guild Word Bubble Ring"/>
       </imgdir>
@@ -70579,9 +70609,6 @@
       </imgdir>
       <imgdir name="1112262">
         <string name="name" value="Angel Word Bubble Ring"/>
-      </imgdir>
-      <imgdir name="1112263">
-        <string name="name" value="Strawberry Cake Word Bubble Ri??…"/>
       </imgdir>
       <imgdir name="1112264">
         <string name="name" value="Blueberry Quote Ring."/>
@@ -70597,12 +70624,6 @@
       </imgdir>
       <imgdir name="1112268">
         <string name="name" value="Oink Word Bubble Ring"/>
-      </imgdir>
-      <imgdir name="1112269">
-        <string name="name" value="I Love Mustache Quote Ring (Bl???…"/>
-      </imgdir>
-      <imgdir name="1112270">
-        <string name="name" value="I Love Mustache Quote Ring (Re??…"/>
       </imgdir>
       <imgdir name="1112271">
         <string name="name" value="Star of Africa Quote Ring"/>
@@ -70640,17 +70661,11 @@
       <imgdir name="1112288">
         <string name="name" value="Treble Clef Quote Ring"/>
       </imgdir>
-      <imgdir name="1112290">
-        <string name="name" value="Snow Day Dream Word Bubble Rin?…"/>
-      </imgdir>
       <imgdir name="1112291">
         <string name="name" value="Snowy Christmas Quote Ring"/>
       </imgdir>
       <imgdir name="1112292">
         <string name="name" value="Silver Guild Word Bubble Ring"/>
-      </imgdir>
-      <imgdir name="1112293">
-        <string name="name" value="Blood Alliance Friendship Word????????????…"/>
       </imgdir>
       <imgdir name="1112294">
         <string name="name" value="Cloud Sheep Quote Ring"/>
@@ -70685,23 +70700,14 @@
       <imgdir name="1112804">
         <string name="name" value="Ring 1112804"/>
       </imgdir>
-      <imgdir name="1112814">
-        <string name="name" value="Friendship Ring: Elric brother?…"/>
-      </imgdir>
       <imgdir name="1112815">
         <string name="name" value="Friendship Ring: Military dog"/>
       </imgdir>
       <imgdir name="1112817">
         <string name="name" value="Friendship Ring: Zero Gravity"/>
       </imgdir>
-      <imgdir name="1112818">
-        <string name="name" value="Friendship Ring: Drilling team?????????????????…"/>
-      </imgdir>
       <imgdir name="1112819">
         <string name="name" value="Friendship Ring: Homunculus"/>
-      </imgdir>
-      <imgdir name="1112820">
-        <string name="name" value="Friendship Ring: Dragon and Ph?????…"/>
       </imgdir>
       <imgdir name="1112821">
         <string name="name" value="Friendship Ring: Snowflake"/>
@@ -70762,9 +70768,6 @@
       </imgdir>
       <imgdir name="1112943">
         <string name="name" value="Supreme Stylist Ring"/>
-      </imgdir>
-      <imgdir name="1112945">
-        <string name="name" value="Always Craving Sweet N&apos; Sour B??…"/>
       </imgdir>
       <imgdir name="1112946">
         <string name="name" value="Rainbow Jewelry"/>
@@ -70924,9 +70927,6 @@
       </imgdir>
       <imgdir name="1115086">
         <string name="name" value="First Love Chat Ring"/>
-      </imgdir>
-      <imgdir name="1115087">
-        <string name="name" value="Frankenstein&apos;s Monster Chat Ri??…"/>
       </imgdir>
       <imgdir name="1115088">
         <string name="name" value="Night Magician Chat Ring"/>
@@ -71866,6 +71866,45 @@
       </imgdir>
     </imgdir>
     <imgdir name="Shoes">
+      <imgdir name="1070028">
+        <string name="name" value="Evergreen Magistrate Pretty Shoes"/>
+      </imgdir>
+      <imgdir name="1070068">
+        <string name="name" value="The Kingdom Dress Shoes of King"/>
+      </imgdir>
+      <imgdir name="1071084">
+        <string name="name" value="The Kingdom Blue Heels of Queen"/>
+      </imgdir>
+      <imgdir name="1072647">
+        <string name="name" value="Kerning Engineering School Shoes"/>
+      </imgdir>
+      <imgdir name="1073194">
+        <string name="name" value="Sweet Fresh Cream Dessert Shoes"/>
+      </imgdir>
+      <imgdir name="1073243">
+        <string name="name" value="Puppy Love Samurai Shoes (Blue)"/>
+      </imgdir>
+      <imgdir name="1073244">
+        <string name="name" value="Puppy Love Samurai Shoes (Pink)"/>
+      </imgdir>
+      <imgdir name="1073285">
+        <string name="name" value="Tomoeda Middle School Male Shoes"/>
+      </imgdir>
+      <imgdir name="1073286">
+        <string name="name" value="Tomoeda Middle School Female Shoes"/>
+      </imgdir>
+      <imgdir name="1073324">
+        <string name="name" value="Shield 1073324"/>
+      </imgdir>
+      <imgdir name="1073328">
+        <string name="name" value="Lunar New Year Pudgy Piggy Shoes"/>
+      </imgdir>
+      <imgdir name="1073372">
+        <string name="name" value="Great Golden Dragon Knight Slip-Ons"/>
+      </imgdir>
+      <imgdir name="1073373">
+        <string name="name" value="Great Golden Dragon Knight Slip-Ons"/>
+      </imgdir>
       <imgdir name="1070018">
         <string name="name" value="Napoleon Shoes"/>
       </imgdir>
@@ -71883,9 +71922,6 @@
       </imgdir>
       <imgdir name="1070027">
         <string name="name" value="Combat Shoes"/>
-      </imgdir>
-      <imgdir name="1070028">
-        <string name="name" value="Evergreen Magistrate Pretty Sh???…"/>
       </imgdir>
       <imgdir name="1070029">
         <string name="name" value="Antique Demon Boots"/>
@@ -71913,9 +71949,6 @@
       </imgdir>
       <imgdir name="1070067">
         <string name="name" value="Cozy Snow Flower"/>
-      </imgdir>
-      <imgdir name="1070068">
-        <string name="name" value="The Kingdom Dress Shoes of Kin?…"/>
       </imgdir>
       <imgdir name="1070069">
         <string name="name" value="Soaring Sky"/>
@@ -72090,9 +72123,6 @@
       </imgdir>
       <imgdir name="1071083">
         <string name="name" value="Cozy Snow Flower"/>
-      </imgdir>
-      <imgdir name="1071084">
-        <string name="name" value="The Kingdom Blue Heels of Quee?…"/>
       </imgdir>
       <imgdir name="1071085">
         <string name="name" value="Soaring Cloud"/>
@@ -72405,9 +72435,6 @@
       </imgdir>
       <imgdir name="1072637">
         <string name="name" value="Hades Shoes"/>
-      </imgdir>
-      <imgdir name="1072647">
-        <string name="name" value="Kerning Engineering School Sho??…"/>
       </imgdir>
       <imgdir name="1072648">
         <string name="name" value="Ellinia Magic School Shoes"/>
@@ -73000,9 +73027,6 @@
       <imgdir name="1073193">
         <string name="name" value="Sweet Chocolate Dessert Shoes"/>
       </imgdir>
-      <imgdir name="1073194">
-        <string name="name" value="Sweet Fresh Cream Dessert Shoe?…"/>
-      </imgdir>
       <imgdir name="1073195">
         <string name="name" value="Yellow Chick Shoes (M)"/>
       </imgdir>
@@ -73060,12 +73084,6 @@
       <imgdir name="1073239">
         <string name="name" value="Rabble Rouser Shoes (M)"/>
       </imgdir>
-      <imgdir name="1073243">
-        <string name="name" value="Puppy Love Samurai Shoes (Blue?…"/>
-      </imgdir>
-      <imgdir name="1073244">
-        <string name="name" value="Puppy Love Samurai Shoes (Pink?…"/>
-      </imgdir>
       <imgdir name="1073246">
         <string name="name" value="Shoes 1073246"/>
       </imgdir>
@@ -73120,12 +73138,6 @@
       <imgdir name="1073284">
         <string name="name" value="Sakura Battle Costume Shoes"/>
       </imgdir>
-      <imgdir name="1073285">
-        <string name="name" value="Tomoeda Middle School Male Sho??…"/>
-      </imgdir>
-      <imgdir name="1073286">
-        <string name="name" value="Tomoeda Middle School Female S????…"/>
-      </imgdir>
       <imgdir name="1073287">
         <string name="name" value="Syaoran Battle Costume Shoes"/>
       </imgdir>
@@ -73150,14 +73162,8 @@
       <imgdir name="1073316">
         <string name="name" value="Sweet Rudolph Anklet"/>
       </imgdir>
-      <imgdir name="1073324">
-        <string name="name" value="Shield 1073324"/>
-      </imgdir>
       <imgdir name="1073325">
         <string name="name" value="Shield 1073325"/>
-      </imgdir>
-      <imgdir name="1073328">
-        <string name="name" value="Lunar New Year Pudgy Piggy Sho??…"/>
       </imgdir>
       <imgdir name="1073334">
         <string name="name" value="Ruins Explorer Boots"/>
@@ -73188,12 +73194,6 @@
       </imgdir>
       <imgdir name="1073371">
         <string name="name" value="Violet Dark Furrytail Anklet"/>
-      </imgdir>
-      <imgdir name="1073372">
-        <string name="name" value="Great Golden Dragon Knight Sli?????…"/>
-      </imgdir>
-      <imgdir name="1073373">
-        <string name="name" value="Great Golden Dragon Knight Sli?????…"/>
       </imgdir>
       <imgdir name="1073376">
         <string name="name" value="Shield 1073376"/>
@@ -74825,6 +74825,9 @@
       </imgdir>
     </imgdir>
     <imgdir name="Taming">
+      <imgdir name="1912581">
+        <string name="name" value="TamingMob 1912581"/>
+      </imgdir>
       <imgdir name="1902003">
         <string name="name" value="TamingMob 1902003"/>
       </imgdir>
@@ -75055,9 +75058,6 @@
       </imgdir>
       <imgdir name="1912578">
         <string name="name" value="TamingMob 1912578"/>
-      </imgdir>
-      <imgdir name="1912581">
-        <string name="name" value="TamingMob 1912581"/>
       </imgdir>
       <imgdir name="1912846">
         <string name="name" value="TamingMob 1912846"/>
