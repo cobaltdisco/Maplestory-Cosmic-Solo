@@ -27,6 +27,10 @@ public enum EquipSlot {
     SADDLE("Sd", -19),
     MEDAL("Me", -49),
     BELT("Be", -50),
+    // Badges post-date v83, so the client has no badge slot and files them under the pendant
+    // slot instead -- verified: it sends -17 for 1129000. Without this entry the item falls
+    // through to PET_EQUIP and the equip is refused with a packet-edit warning.
+    BADGE("Ba", -17),
     PET_EQUIP;
 
     private String name;
