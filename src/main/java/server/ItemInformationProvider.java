@@ -216,13 +216,18 @@ public class ItemInformationProvider {
             theData = cashStringData;
         } else if (itemId >= 2000000 && itemId < 3000000) {
             theData = consumeStringData;
-        } else if ((itemId >= 1010000 && itemId < 1040000) || (itemId >= 1122000 && itemId < 1123000) || (itemId >= 1132000 && itemId < 1133000) || (itemId >= 1142000 && itemId < 1143000)) {
+        } else if ((itemId >= 1010000 && itemId < 1040000) || (itemId >= 1122000 && itemId < 1123000) || (itemId >= 1132000 && itemId < 1133000) || (itemId >= 1142000 && itemId < 1143000)
+                || (itemId >= 1129000 && itemId < 1130000)) {   // ported cosmetics reach into 1129xxx
             theData = eqpStringData;
             cat = "Eqp/Accessory";
         } else if (itemId >= 1000000 && itemId < 1010000) {
             theData = eqpStringData;
             cat = "Eqp/Cap";
-        } else if (itemId >= 1102000 && itemId < 1103000) {
+        } else if (itemId >= 1100000 && itemId < 1104000) {
+            // Vanilla capes only occupy 1102xxx, but ported MapleLegends capes span
+            // 1100000-1103688. Nothing else claims 1100xxx/1101xxx/1103xxx, and an id
+            // outside every band resolves to no name at all — which quietly drops the
+            // item from commands, shops and NPC pools.
             theData = eqpStringData;
             cat = "Eqp/Cape";
         } else if (itemId >= 1040000 && itemId < 1050000) {
