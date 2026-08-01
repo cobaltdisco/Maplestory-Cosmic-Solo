@@ -412,10 +412,24 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 
         sendNext("You have obtained a #b#t" + item.getId() + "##k.");
 
-        int[] maps = {MapId.HENESYS, MapId.ELLINIA, MapId.PERION, MapId.KERNING_CITY, MapId.SLEEPYWOOD, MapId.MUSHROOM_SHRINE,
-                MapId.SHOWA_SPA_M, MapId.SHOWA_SPA_F, MapId.NEW_LEAF_CITY, MapId.NAUTILUS_HARBOR};
-        final int mapId = maps[(getNpc() != NpcId.GACHAPON_NAUTILUS && getNpc() != NpcId.GACHAPON_NLC) ?
-                (getNpc() - NpcId.GACHAPON_HENESYS) : getNpc() == NpcId.GACHAPON_NLC ? 8 : 9];
+        // Name the town outright instead of indexing a 10-slot array by (npc - GACHAPON_HENESYS).
+        // That arithmetic ran off the end for El Nath (9100110 -> slot 10, out of bounds) and
+        // silently mislabelled Ludibrium (9100108 -> slot 8, "New Leaf City").
+        final int mapId = switch (getNpc()) {
+            case NpcId.GACHAPON_HENESYS -> MapId.HENESYS;
+            case NpcId.GACHAPON_ELLINIA -> MapId.ELLINIA;
+            case NpcId.GACHAPON_PERION -> MapId.PERION;
+            case NpcId.GACHAPON_KERNING -> MapId.KERNING_CITY;
+            case NpcId.GACHAPON_SLEEPYWOOD -> MapId.SLEEPYWOOD;
+            case NpcId.GACHAPON_MUSHROOM_SHRINE -> MapId.MUSHROOM_SHRINE;
+            case NpcId.GACHAPON_SHOWA_MALE -> MapId.SHOWA_SPA_M;
+            case NpcId.GACHAPON_SHOWA_FEMALE -> MapId.SHOWA_SPA_F;
+            case NpcId.GACHAPON_LUDIBRIUM -> MapId.LUDIBRIUM;
+            case NpcId.GACHAPON_NLC -> MapId.NEW_LEAF_CITY;
+            case NpcId.GACHAPON_EL_NATH -> MapId.EL_NATH;
+            case NpcId.GACHAPON_NAUTILUS -> MapId.NAUTILUS_HARBOR;
+            default -> getPlayer().getMapId();      // a gachapon we do not know about announces where it stands
+        };
         String map = c.getChannelServer().getMapFactory().getMap(mapId).getMapName();
 
         Gachapon.log(getPlayer(), item.getId(), map);
