@@ -219,6 +219,22 @@ public final class EquipIndex {
     }
 
     /**
+     * The weapon's class, as its id band: 130 one-handed sword, 145 bow, 170 cash weapon, and so
+     * on - 0 for anything that is not a weapon.
+     * <p>
+     * This is the same value {@link ItemInformationProvider#getWeaponType} keys on
+     * ({@code (id / 10000) % 100}), just not collapsed: that method folds axes and blunt weapons
+     * into one GENERAL_SWING type, and calls everything outside 130-149 NOT_A_WEAPON - which
+     * includes all 689 ported cash weapons in the 170 band. The band keeps both distinctions.
+     * <p>
+     * Whether an item is a weapon comes from its islot rather than its id range, so it agrees
+     * with the equip-slot facet by construction.
+     */
+    public static int weaponBand(Entry e) {
+        return e.slot().startsWith("Wp") ? e.id() / 10000 : 0;
+    }
+
+    /**
      * 0 = male, 1 = female, 2 = either. This is the id convention the v83 client itself applies
      * when it decides whether a character may wear an item, so filtering on it matches what the
      * player will actually be able to equip - regardless of what the item was "meant" to be.

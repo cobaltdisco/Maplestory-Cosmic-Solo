@@ -9,6 +9,8 @@
     --bg: #f4f6f9; --panel: #ffffff; --panel2: #f2f4f8; --line: #dde2ea;
     --text: #1e2330; --dim: #62697a; --accent: #2563eb; --ok: #15803d;
     --warn: #b45309; --bad: #d33b3b; --sel: #e3edff;
+    --accent-hover: #1d4fd7; --accent-press: #1740b0; --press: #e2e7f0;
+    --ring: rgba(37, 99, 235, .25);
   }
   * { box-sizing: border-box; }
   body {
@@ -32,7 +34,10 @@
     color: var(--dim); padding: 8px 16px; border-radius: 8px 8px 0 0;
     cursor: pointer; font-size: 14px;
   }
-  nav button.on { background: var(--panel); color: var(--text); border-color: var(--line); }
+  nav button:hover { color: var(--text); background: rgba(255, 255, 255, .6); }
+  nav button:active { background: var(--press); }
+  nav button.on { background: var(--panel); color: var(--text); border-color: var(--line); font-weight: 600; }
+  nav button.on:hover { background: var(--panel); }
   main { padding: 0 20px 40px; }
   section { display: none; background: var(--panel); border: 1px solid var(--line); border-radius: 0 10px 10px 10px; padding: 20px; }
   section.on { display: block; }
@@ -45,12 +50,35 @@
     background: #fff; color: var(--text); border: 1px solid var(--line);
     border-radius: 6px; padding: 7px 10px; font-size: 13.5px; font-family: inherit;
   }
-  input:focus, select:focus { outline: 1px solid var(--accent); }
-  button.act { cursor: pointer; background: var(--panel2); }
-  button.act:hover { border-color: var(--accent); color: var(--accent); }
+  input:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--ring); }
+  input:hover, select:hover { border-color: #b9c2d1; }
+  select { cursor: pointer; }
+
+  /* Buttons need three visibly different states: at rest, "you can click this", and "you are
+     clicking it right now". The press state moves the button 1px down and darkens it, so the
+     click lands as a physical event rather than something you have to infer from the result. */
+  button.act {
+    cursor: pointer; background: var(--panel2);
+    transition: background .12s, border-color .12s, color .12s, box-shadow .12s;
+  }
+  button.act:hover { background: #fff; border-color: var(--accent); color: var(--accent); box-shadow: 0 1px 3px rgba(20, 26, 40, .1); }
+  button.act:active { background: var(--press); border-color: var(--accent); box-shadow: inset 0 2px 4px rgba(20, 26, 40, .14); transform: translateY(1px); }
+  button.act:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--ring); }
+
   button.primary { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
-  button.primary:hover { color: #fff; }
-  button.primary:disabled { opacity: .45; cursor: not-allowed; }
+  button.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: #fff; box-shadow: 0 2px 6px var(--ring); }
+  button.primary:active { background: var(--accent-press); border-color: var(--accent-press); box-shadow: inset 0 2px 4px rgba(0, 0, 0, .22); transform: translateY(1px); }
+  button.primary:disabled, button.act:disabled { opacity: .45; cursor: not-allowed; }
+  /* Disabled must not react at all, or a dead button still looks live. */
+  button:disabled:hover, button:disabled:active {
+    background: var(--panel2); border-color: var(--line); color: var(--text);
+    box-shadow: none; transform: none;
+  }
+  button.primary:disabled:hover, button.primary:disabled:active {
+    background: var(--accent); border-color: var(--accent); color: #fff;
+  }
+  /* Set while a request is in flight, so a slow round trip still reads as "it registered". */
+  button.busy { cursor: progress; }
   .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
   .card { background: var(--panel2); border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
   /* Without this a number input keeps its default intrinsic width and its spinner arrows
@@ -63,7 +91,9 @@
   th { color: var(--dim); font-weight: 500; font-size: 12px; }
   tbody tr { cursor: pointer; }
   tbody tr:hover { background: var(--panel2); }
+  tbody tr:active { background: var(--press); }
   tbody tr.sel { background: var(--sel); }
+  tbody tr.sel td:first-child { box-shadow: inset 3px 0 0 var(--accent); }
   .scroll { max-height: 420px; overflow: auto; border: 1px solid var(--line); border-radius: 8px; }
   .split { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 16px; align-items: start; }
   @media (max-width: 900px) { .split { grid-template-columns: 1fr; } }
@@ -187,6 +217,7 @@
         <option value="2">仅通用</option>
       </select></div>
       <div><label>部位</label><select id="eqSlot"><option value="">全部</option></select></div>
+      <div><label>武器类型</label><select id="eqWeapon"><option value="">全部</option></select></div>
       <div><label>现金装备</label><select id="eqCash">
         <option value="hide">隐藏（时装）</option>
         <option value="all">一起显示</option>
@@ -297,6 +328,16 @@ const SLOT_NAMES = {
   "WpSp": "武器(低级)", "Ri": "戒指", "Pe": "项链", "Tm": "骑宠", "Sd": "鞍具",
   "Me": "勋章", "Be": "腰带", "Ba": "徽章", "": "宠物装备 / 无部位"
 };
+// Weapon class by id band. Each label was checked against the actual item names in that band
+// rather than taken on faith - e.g. 133 holds the Zamadars, which are daggers.
+// 134/135/136/139 hold nothing, and 170 is entirely cash weapons (689 items, zero non-cash).
+const WEAPON_NAMES = {
+  130: "单手剑", 131: "单手斧", 132: "单手钝器", 133: "短剑",
+  137: "短杖", 138: "长杖",
+  140: "双手剑", 141: "双手斧", 142: "双手钝器", 143: "枪", 144: "矛",
+  145: "弓", 146: "弩", 147: "拳套", 148: "指虎", 149: "火枪",
+  170: "现金武器（时装）"
+};
 const JOB_BITS = [[1, "剑士"], [2, "法师"], [4, "弓箭手"], [8, "飞侠"], [16, "海盗"]];
 const GENDERS = ["男", "女", "通用"];
 const STATS = [
@@ -346,6 +387,23 @@ function toast(message, ok) {
 function iconCell(id) {
   return `<div class="icon"><img src="icons/${id}.png" alt="" loading="lazy"
     onerror="this.parentNode.classList.add('none'); this.remove();"></div>`;
+}
+
+// Runs an action with the button locked and relabelled. Without this a click that takes a moment
+// to come back looks identical to a click that never registered.
+async function withBusy(button, label, action) {
+  const original = button.textContent;
+  const wasDisabled = button.disabled;
+  button.disabled = true;
+  button.classList.add("busy");
+  button.textContent = label;
+  try {
+    return await action();
+  } finally {
+    button.textContent = original;
+    button.classList.remove("busy");
+    button.disabled = wasDisabled;
+  }
 }
 
 function pickIcon(id) {
@@ -456,7 +514,8 @@ $("saveRates").addEventListener("click", async () => {
   if ($("worldSel").value !== "") body.set("world", $("worldSel").value);
   document.querySelectorAll("[data-rate]").forEach(el => body.set(el.dataset.rate, el.value));
   document.querySelectorAll("[data-global]").forEach(el => body.set(el.dataset.global, el.value));
-  const res = await (await fetch("api/rates", { method: "POST", body })).json();
+  const res = await withBusy($("saveRates"), "应用中…",
+    async () => (await fetch("api/rates", { method: "POST", body })).json());
   if (res.ok) {
     state = res;
     renderRates(true);
@@ -501,6 +560,7 @@ async function loadEquips() {
     cash: $("eqCash").value, sort: $("eqSort").value,
     q: $("eqSearch").value, limit: "300"
   });
+  if ($("eqWeapon").value !== "") params.set("weapon", $("eqWeapon").value);
   if ($("eqLevel").value !== "") params.set("maxLevel", $("eqLevel").value);
 
   const data = await (await fetch("api/equips?" + params)).json();
@@ -523,6 +583,17 @@ async function loadEquips() {
   slotSel.innerHTML = `<option value="">全部（${slotTotal}）</option>` +
     slots.map(s => `<option value="${esc(s.slot)}">${esc(SLOT_NAMES[s.slot] ?? s.slot ?? "未知")}（${s.count}）</option>`).join("");
   slotSel.value = keepSlot;
+
+  // Bands with no name of their own keep their number rather than getting an invented label.
+  const wpSel = $("eqWeapon");
+  const keepWeapon = wpSel.value;
+  const weapons = data.weapons || [];
+  if (keepWeapon && !weapons.some(w => String(w.weapon) === keepWeapon)) {
+    weapons.push({ weapon: Number(keepWeapon), count: 0 });
+  }
+  wpSel.innerHTML = `<option value="">全部武器（${weapons.reduce((n, w) => n + w.count, 0)}）</option>` +
+    weapons.map(w => `<option value="${w.weapon}">${WEAPON_NAMES[w.weapon] || (w.weapon + "xxxx")}（${w.count}）</option>`).join("");
+  wpSel.value = keepWeapon;
 
   $("equipCount").textContent =
     `匹配 ${data.total} 件，显示前 ${data.shown} 件` + (data.total > data.shown ? "（再收窄条件可看到其余的）" : "");
@@ -596,12 +667,13 @@ $("giftEquip").addEventListener("click", async () => {
   body.set("tuc", $("eqTuc").value);
   body.set("untradeable", $("eqUntradeable").checked ? "true" : "false");
 
-  const res = await (await fetch("api/gift", { method: "POST", body })).json();
+  const res = await withBusy($("giftEquip"), "赠送中…",
+    async () => (await fetch("api/gift", { method: "POST", body })).json());
   toast(res.ok ? res.message : res.error, !!res.ok);
   if (res.ok) loadState();
 });
 
-["eqJob", "eqGender", "eqSlot", "eqLevel", "eqJobStrict", "eqCash", "eqSort"]
+["eqJob", "eqGender", "eqSlot", "eqWeapon", "eqLevel", "eqJobStrict", "eqCash", "eqSort"]
   .forEach(id => $(id).addEventListener("change", loadEquips));
 $("eqSearch").addEventListener("input", debounce(loadEquips, 250));
 
@@ -684,7 +756,8 @@ $("giftItem").addEventListener("click", async () => {
     chrId: chr.id, itemId: pickedItem.id,
     qty: $("itQty").value, petDays: $("itDays").value
   });
-  const res = await (await fetch("api/gift", { method: "POST", body })).json();
+  const res = await withBusy($("giftItem"), "赠送中…",
+    async () => (await fetch("api/gift", { method: "POST", body })).json());
   toast(res.ok ? res.message : res.error, !!res.ok);
   if (res.ok) loadState();
 });
@@ -705,7 +778,8 @@ document.querySelectorAll("nav button").forEach(btn => btn.addEventListener("cli
     s.classList.toggle("on", s.id === "tab-" + btn.dataset.tab));
 }));
 
-$("refresh").addEventListener("click", () => { loadState(); loadEquips(); loadItems(); });
+$("refresh").addEventListener("click", () => withBusy($("refresh"), "刷新中…",
+  () => Promise.all([loadState(), loadEquips(), loadItems()])));
 $("target").addEventListener("change", () => { renderOnline(); syncGiftButtons(); });
 
 loadState();

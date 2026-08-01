@@ -355,8 +355,11 @@ public class WebAdminServer {
         String cash = q.getOrDefault("cash", "hide");
         String sort = q.getOrDefault("sort", "id");
 
+        int weapon = parseInt(q.get("weapon"), -1);     // -1 = any, otherwise an id band like 145
+
         List<EquipIndex.Entry> matches = new ArrayList<>();
         Map<String, Integer> slotCounts = new HashMap<>();
+        Map<Integer, Integer> weaponCounts = new TreeMap<>();
         for (EquipIndex.Entry e : all) {
             if (cash.equals("hide") && e.cash()) {
                 continue;
@@ -378,10 +381,19 @@ public class WebAdminServer {
                     && !String.valueOf(e.id()).contains(text)) {
                 continue;
             }
-            // Counted before the slot filter, so each slot shows how many items it would yield
-            // under the other filters - a slot's own selection must not shrink its own number.
-            slotCounts.merge(e.slot(), 1, Integer::sum);
+            // Counted before their own filter, so each option shows how many items it would yield
+            // under the other filters - an option's own selection must not shrink its own number.
+            int band = EquipIndex.weaponBand(e);
+            if (weapon < 0 || band == weapon) {
+                slotCounts.merge(e.slot(), 1, Integer::sum);
+            }
+            if (band > 0 && (slot.isEmpty() || slot.equals(e.slot()))) {
+                weaponCounts.merge(band, 1, Integer::sum);
+            }
             if (!slot.isEmpty() && !slot.equals(e.slot())) {
+                continue;
+            }
+            if (weapon >= 0 && band != weapon) {
                 continue;
             }
             matches.add(e);
@@ -402,6 +414,8 @@ public class WebAdminServer {
         out.put("shown", results.size());
         out.put("results", results);
         out.put("slots", facetList(slotCounts, "slot"));
+        // Weapon classes read best in id order (130 sword ... 149 gun, 170 cash), not by count.
+        out.put("weapons", orderedFacetList(weaponCounts, "weapon"));
         respondJson(exchange, out);
     }
 
@@ -451,6 +465,18 @@ public class WebAdminServer {
             return true;
         }
         return !strict && reqJob == 0;
+    }
+
+    /** Facet counts in the map's own order, under the key the front end filters on. */
+    private static <K> List<Object> orderedFacetList(Map<K, Integer> counts, String key) {
+        List<Object> out = new ArrayList<>();
+        counts.forEach((facet, count) -> {
+            Map<String, Object> m = Json.obj();
+            m.put(key, facet);
+            m.put("count", count);
+            out.add(m);
+        });
+        return out;
     }
 
     /** Facet counts, biggest first, under the key the front end filters on. */
