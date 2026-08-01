@@ -63641,6 +63641,7 @@
     <imgdir name="0">
       <int name="npc" value="9209001"/>
       <int name="lvmin" value="30"/>
+      <string name="end" value="2010010100"/>
     </imgdir>
     <imgdir name="1">
       <int name="npc" value="9209001"/>
@@ -63723,6 +63724,7 @@
         </imgdir>
       </imgdir>
       <int name="lvmin" value="30"/>
+      <string name="end" value="2010010100"/>
     </imgdir>
   </imgdir>
   <imgdir name="8251">
@@ -63766,6 +63768,7 @@
     <imgdir name="0">
       <int name="npc" value="9209008"/>
       <int name="lvmin" value="50"/>
+      <string name="end" value="2010010100"/>
     </imgdir>
   </imgdir>
   <imgdir name="8254">
