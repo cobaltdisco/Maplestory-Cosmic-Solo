@@ -29,17 +29,10 @@ function start() {
     cm.sendSimple(menuText());
 }
 
-/* Hair and eyes are gendered by the thousands digit of their id, and the client happily
- * draws a female style on a male character, so nothing stops the mismatch but this. */
-function gender() {
-    return cm.getPlayer().getGender();
-}
-
 function menuText() {
-    var g = gender();
     return "Sit down, let's see what suits you.\r\n"
-        + "I have #b" + Styles.styleCount("Hair", g) + "#k hairstyles and #b"
-        + Styles.styleCount("Face", g) + "#k looks for your eyes.\r\n\r\n"
+        + "I have #b" + Styles.styleCount("Hair") + "#k hairstyles and #b"
+        + Styles.styleCount("Face") + "#k looks for your eyes.\r\n\r\n"
         + "#b#L1#Hair - enter a number#l\r\n"
         + "#L2#Hair - browse page by page#l\r\n"
         + "#L3#Hair - surprise me#l\r\n"
@@ -72,7 +65,8 @@ function showStyles(ids, header) {
     }
     options = ids;
     state = "pick";
-    // The dialog draws the avatars but captions none of them, so list the names alongside.
+    // The client captions each avatar from its own String.wz, but list the names in the
+    // dialog text too so the numbering is unambiguous.
     cm.sendStyle(header + Styles.captions(ids), ids);
 }
 
@@ -89,8 +83,8 @@ function askNumberEntry() {
 
 function askPage() {
     state = "page";
-    var pages = Styles.pageCount(kind, gender(), PER_PAGE);
-    var here = Math.floor((Styles.styleNumber(current(), gender()) - 1) / PER_PAGE) + 1;
+    var pages = Styles.pageCount(kind, PER_PAGE);
+    var here = Math.floor((Styles.styleNumber(current()) - 1) / PER_PAGE) + 1;
     if (here < 1) {
         here = 1;
     }
@@ -119,12 +113,12 @@ function action(mode, type, selection) {
         switch (selection) {
             case 1: kind = "Hair"; askNumberEntry(); break;
             case 2: kind = "Hair"; askPage(); break;
-            case 3: kind = "Hair"; showStyles(Styles.random("Hair", gender(), PER_PAGE, Styles.colour(current())),
+            case 3: kind = "Hair"; showStyles(Styles.random("Hair", PER_PAGE, Styles.colour(current())),
                         "How about one of these?"); break;
             case 4: kind = "Hair"; askColour(); break;
             case 5: kind = "Face"; askNumberEntry(); break;
             case 6: kind = "Face"; askPage(); break;
-            case 7: kind = "Face"; showStyles(Styles.random("Face", gender(), PER_PAGE, Styles.colour(current())),
+            case 7: kind = "Face"; showStyles(Styles.random("Face", PER_PAGE, Styles.colour(current())),
                         "How about one of these?"); break;
             case 8: kind = "Face"; askColour(); break;
             default: cm.dispose();
@@ -140,20 +134,14 @@ function action(mode, type, selection) {
             cm.dispose();
             return;
         }
-        if (!Styles.fitsGender(id, gender())) {
-            cm.sendOk("#b" + Styles.name(id) + "#k isn't cut for you, I'm afraid. "
-                + "That one's for the other side of the salon.");
-            cm.dispose();
-            return;
-        }
         // Show it before committing -- the preview is the whole point of this dialog.
         showStyles([id], "Is this the one?\r\n#b" + Styles.name(id) + "#k");
         return;
     }
 
     if (state === "page") {
-        showStyles(Styles.page(kind, gender(), selection - 1, PER_PAGE, Styles.colour(current())),
-            "Page #b" + selection + "#k of #b" + Styles.pageCount(kind, gender(), PER_PAGE) + "#k.");
+        showStyles(Styles.page(kind, selection - 1, PER_PAGE, Styles.colour(current())),
+            "Page #b" + selection + "#k of #b" + Styles.pageCount(kind, PER_PAGE) + "#k.");
         return;
     }
 
