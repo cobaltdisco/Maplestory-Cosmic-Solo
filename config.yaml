@@ -464,3 +464,26 @@ server:
     NPCS_SCRIPTABLE:
       #9200000: Talk to Cody # Cody
       9001105: Rescue Gaga!  # Grandpa moon bunny
+
+    # Seasonal NPCs.
+    # Map life entries carry a `limitedname` tag naming the event they belong to; Nexon only
+    # spawned them while that event ran. This server never read the tag, so 198 event placements
+    # -- Christmas village, Valentine, Halloween, the 2008 summer agents -- stood in town all
+    # year. Setting this true spawns an entry only when its tag is listed below.
+    USE_LIFE_LIMITEDNAME: true
+    # Kept on because each still has working content behind it, verified against Quest.wz and
+    # scripts/npc (tools-local/QuestGate reports the rest as dead):
+    #   gaga, 6th   -> Gaga, the Boss Rush PQ recruiter, in 16 towns
+    #   dealerA     -> Abdula, the skill/mastery book drop announcer
+    #   Valentine   -> Ace of Hearts synthesises scrolls, and fronts live quest 8206
+    #   stalker00/1 -> Reef, fronts live quests 2224/2225/2226/2228
+    # Everything omitted here (xmasvillage, 2008summer, 2008xmas, halloween09_GL, aranEvent,
+    # buroo, JumpEvent1-4, maple7market, maple7market_egg) has only expired quests behind it.
+    # Add a tag back to bring that event's NPCs out again; no data change needed.
+    ACTIVE_LIMITED_EVENTS:
+      - gaga
+      - 6th
+      - dealerA
+      - Valentine
+      - stalker00
+      - stalker01

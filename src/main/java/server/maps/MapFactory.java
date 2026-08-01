@@ -21,6 +21,7 @@
  */
 package server.maps;
 
+import config.YamlConfig;
 import constants.id.MapId;
 import provider.Data;
 import provider.DataProvider;
@@ -56,8 +57,25 @@ public class MapFactory {
         mapSource = DataProviderFactory.getDataProvider(WZFiles.MAP);
     }
 
+    /**
+     * Nexon tagged seasonal life entries with `limitedname` and only spawned them while that
+     * event was running. Nothing here ever read the field, so the Christmas village, the
+     * Valentine pair and a dozen other event crews have been standing in town all year round.
+     * Honour the tag; config.yaml names the events that count as running.
+     */
+    private static boolean outOfSeason(Data life) {
+        if (!YamlConfig.config.server.USE_LIFE_LIMITEDNAME) {
+            return false;
+        }
+        Data tag = life.getChildByPath("limitedname");
+        return tag != null && !YamlConfig.config.server.ACTIVE_LIMITED_EVENTS.contains(DataTool.getString(tag));
+    }
+
     private static void loadLifeFromWz(MapleMap map, Data mapData) {
         for (Data life : mapData.getChildByPath("life")) {
+            if (outOfSeason(life)) {
+                continue;
+            }
             life.getName();
             String id = DataTool.getString(life.getChildByPath("id"));
             String type = DataTool.getString(life.getChildByPath("type"));

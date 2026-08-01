@@ -1,6 +1,8 @@
 package config;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ServerConfig {
@@ -303,4 +305,8 @@ public class ServerConfig {
 
     //Custom NPC overrides. List of NPC IDs.
     public Map<String, String> NPCS_SCRIPTABLE = new HashMap<>();
+
+    //Seasonal life entries. See ACTIVE_LIMITED_EVENTS in config.yaml.
+    public boolean USE_LIFE_LIMITEDNAME = true;
+    public List<String> ACTIVE_LIMITED_EVENTS = new ArrayList<>();
 }
