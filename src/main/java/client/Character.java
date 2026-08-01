@@ -3164,6 +3164,9 @@ public class Character extends AbstractCharacterObject {
                     updateSingleStat(Stat.EXP, 0);
                     break;
                 }
+                if (YamlConfig.config.server.SINGLE_LEVELUP_PER_EXP_GAIN) {
+                    break;      // bank the surplus; the next kill takes the next level
+                }
             }
 
             if (leftover > 0) {
