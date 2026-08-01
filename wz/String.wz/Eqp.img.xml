@@ -75230,8 +75230,1958 @@
       </imgdir>
     </imgdir>
     <imgdir name="Weapon">
+      <imgdir name="1302084">
+        <string name="name" value="Torch"/>
+      </imgdir>
+      <imgdir name="1302085">
+        <string name="name" value="Fork"/>
+      </imgdir>
+      <imgdir name="1302108">
+        <string name="name" value="Speargrave (One-Handed Sword)"/>
+      </imgdir>
+      <imgdir name="1302109">
+        <string name="name" value="Flairgrave (One-Handed Sword)"/>
+      </imgdir>
+      <imgdir name="1302142">
+        <string name="name" value="Weapon 1302142"/>
+      </imgdir>
+      <imgdir name="1302149">
+        <string name="name" value="Marx Von Leon Sabre"/>
+      </imgdir>
+      <imgdir name="1302220">
+        <string name="name" value="Fiery Fox"/>
+      </imgdir>
+      <imgdir name="1302304">
+        <string name="name" value="Maple Saint Sword"/>
+      </imgdir>
+      <imgdir name="1302917">
+        <string name="name" value="Purple Whip"/>
+      </imgdir>
+      <imgdir name="1302918">
+        <string name="name" value="Blue Whip"/>
+      </imgdir>
+      <imgdir name="1302919">
+        <string name="name" value="Cursed Knife"/>
+      </imgdir>
+      <imgdir name="1302920">
+        <string name="name" value="Green Whip"/>
+      </imgdir>
+      <imgdir name="1312040">
+        <string name="name" value="Speargrave (One-Handed Axe)"/>
+      </imgdir>
+      <imgdir name="1312041">
+        <string name="name" value="Flairgrave (One-Handed Axe)"/>
+      </imgdir>
+      <imgdir name="1312056">
+        <string name="name" value="Weapon 1312056"/>
+      </imgdir>
+      <imgdir name="1312057">
+        <string name="name" value="Black Mountain Axe"/>
+      </imgdir>
+      <imgdir name="1312095">
+        <string name="name" value="Marx Von Leon Axe"/>
+      </imgdir>
+      <imgdir name="1312179">
+        <string name="name" value="Maple Saint Axe"/>
+      </imgdir>
+      <imgdir name="1322034">
+        <string name="name" value="Metal Bar"/>
+      </imgdir>
+      <imgdir name="1322066">
+        <string name="name" value="Speargrave (One-Handed Mace)"/>
+      </imgdir>
+      <imgdir name="1322067">
+        <string name="name" value="Flairgrave (One-Handed Mace)"/>
+      </imgdir>
+      <imgdir name="1322084">
+        <string name="name" value="Weapon 1322084"/>
+      </imgdir>
+      <imgdir name="1322135">
+        <string name="name" value="Marx Von Leon Hammer"/>
+      </imgdir>
+      <imgdir name="1322230">
+        <string name="name" value="Maple Saint Mace"/>
+      </imgdir>
+      <imgdir name="1332028">
+        <string name="name" value="Maple Dagger"/>
+      </imgdir>
+      <imgdir name="1332082">
+        <string name="name" value="Speargrave (Dagger)"/>
+      </imgdir>
+      <imgdir name="1332083">
+        <string name="name" value="Flairgrave (Dagger)"/>
+      </imgdir>
+      <imgdir name="1332114">
+        <string name="name" value="Weapon 1332114"/>
+      </imgdir>
+      <imgdir name="1332126">
+        <string name="name" value="Nox Von Leon Dagger"/>
+      </imgdir>
+      <imgdir name="1332254">
+        <string name="name" value="Maple Saint Cutter"/>
+      </imgdir>
+      <imgdir name="1372047">
+        <string name="name" value="Speargrave (Wand)"/>
+      </imgdir>
+      <imgdir name="1372048">
+        <string name="name" value="Flairgrave (Wand)"/>
+      </imgdir>
+      <imgdir name="1372071">
+        <string name="name" value="Weapon 1372071"/>
+      </imgdir>
+      <imgdir name="1372080">
+        <string name="name" value="Alma Von Leon Wand"/>
+      </imgdir>
+      <imgdir name="1372201">
+        <string name="name" value="Maple Saint Wand"/>
+      </imgdir>
+      <imgdir name="1382063">
+        <string name="name" value="Speargrave (Staff)"/>
+      </imgdir>
+      <imgdir name="1382064">
+        <string name="name" value="Flairgrave (Staff)"/>
+      </imgdir>
+      <imgdir name="1382093">
+        <string name="name" value="Weapon 1382093"/>
+      </imgdir>
+      <imgdir name="1382102">
+        <string name="name" value="Alma Von Leon Staff"/>
+      </imgdir>
+      <imgdir name="1382239">
+        <string name="name" value="Maple Saint Staff"/>
+      </imgdir>
+      <imgdir name="1402038">
+        <string name="name" value="Toy of 101"/>
+      </imgdir>
+      <imgdir name="1402054">
+        <string name="name" value="Speargrave (Two-Handed Sword)"/>
+      </imgdir>
+      <imgdir name="1402055">
+        <string name="name" value="Flairgrave (Two-Handed Sword)"/>
+      </imgdir>
+      <imgdir name="1402085">
+        <string name="name" value="Weapon 1402085"/>
+      </imgdir>
+      <imgdir name="1402091">
+        <string name="name" value="Marx Von Leon Sword"/>
+      </imgdir>
+      <imgdir name="1402229">
+        <string name="name" value="Maple Saint Two-handed Sword"/>
+      </imgdir>
+      <imgdir name="1402270">
+        <string name="name" value="Pixel Sword"/>
+      </imgdir>
+      <imgdir name="1412036">
+        <string name="name" value="Speargrave (Two-Handed Axe)"/>
+      </imgdir>
+      <imgdir name="1412037">
+        <string name="name" value="Flairgrave (Two-Handed Axe)"/>
+      </imgdir>
+      <imgdir name="1412055">
+        <string name="name" value="Weapon 1412055"/>
+      </imgdir>
+      <imgdir name="1412158">
+        <string name="name" value="Maple Saint Two-handed Axe"/>
+      </imgdir>
+      <imgdir name="1412179">
+        <string name="name" value="Marx Von Leon Two-Handed Axe"/>
+      </imgdir>
+      <imgdir name="1422040">
+        <string name="name" value="Speargrave (Two-Handed Mace)"/>
+      </imgdir>
+      <imgdir name="1422041">
+        <string name="name" value="Flairgrave (Two-Handed Mace)"/>
+      </imgdir>
+      <imgdir name="1422057">
+        <string name="name" value="Weapon 1422057"/>
+      </imgdir>
+      <imgdir name="1422165">
+        <string name="name" value="Maple Saint Maul"/>
+      </imgdir>
+      <imgdir name="1422186">
+        <string name="name" value="Marx Von Leon Two-Handed Hammer"/>
+      </imgdir>
+      <imgdir name="1432051">
+        <string name="name" value="Speargrave (Spear)"/>
+      </imgdir>
+      <imgdir name="1432052">
+        <string name="name" value="Flairgrave (Spear)"/>
+      </imgdir>
+      <imgdir name="1432075">
+        <string name="name" value="Weapon 1432075"/>
+      </imgdir>
+      <imgdir name="1432084">
+        <string name="name" value="Marx Von Leon Spear"/>
+      </imgdir>
+      <imgdir name="1432194">
+        <string name="name" value="Maple Saint Spear"/>
+      </imgdir>
+      <imgdir name="1442072">
+        <string name="name" value="Speargrave (Polearm)"/>
+      </imgdir>
+      <imgdir name="1442073">
+        <string name="name" value="Flairgrave (Polearm)"/>
+      </imgdir>
+      <imgdir name="1442104">
+        <string name="name" value="Weapon 1442104"/>
+      </imgdir>
+      <imgdir name="1442113">
+        <string name="name" value="Marx Von Leon Halberd"/>
+      </imgdir>
+      <imgdir name="1442248">
+        <string name="name" value="Maple Saint Polearm"/>
+      </imgdir>
+      <imgdir name="1452063">
+        <string name="name" value="Speargrave (Bow)"/>
+      </imgdir>
+      <imgdir name="1452064">
+        <string name="name" value="Flairgrave (Bow)"/>
+      </imgdir>
+      <imgdir name="1452100">
+        <string name="name" value="Weapon 1452100"/>
+      </imgdir>
+      <imgdir name="1452107">
+        <string name="name" value="Fox Von Leon Bow"/>
+      </imgdir>
+      <imgdir name="1452232">
+        <string name="name" value="Maple Saint Longbow"/>
+      </imgdir>
+      <imgdir name="1462057">
+        <string name="name" value="Speargrave (Crossbow)"/>
+      </imgdir>
+      <imgdir name="1462058">
+        <string name="name" value="Flairgrave (Crossbow)"/>
+      </imgdir>
+      <imgdir name="1462085">
+        <string name="name" value="Weapon 1462085"/>
+      </imgdir>
+      <imgdir name="1462094">
+        <string name="name" value="Fox Von Leon Crossbow"/>
+      </imgdir>
+      <imgdir name="1462219">
+        <string name="name" value="Maple Saint Crossbow"/>
+      </imgdir>
+      <imgdir name="1472078">
+        <string name="name" value="Speargrave (Claw)"/>
+      </imgdir>
+      <imgdir name="1472079">
+        <string name="name" value="Flairgrave (Claw)"/>
+      </imgdir>
+      <imgdir name="1472088">
+        <string name="name" value="Sweet Fork Cake"/>
+      </imgdir>
+      <imgdir name="1472111">
+        <string name="name" value="Weapon 1472111"/>
+      </imgdir>
+      <imgdir name="1472118">
+        <string name="name" value="Nox Von Leon Guards"/>
+      </imgdir>
+      <imgdir name="1472241">
+        <string name="name" value="Maple Saint Stinger"/>
+      </imgdir>
+      <imgdir name="1479000">
+        <string name="name" value="Oven Mitt"/>
+      </imgdir>
+      <imgdir name="1482035">
+        <string name="name" value="Flairgrave (Knuckle)"/>
+      </imgdir>
+      <imgdir name="1482036">
+        <string name="name" value="Speargrave (Knuckle)"/>
+      </imgdir>
+      <imgdir name="1482073">
+        <string name="name" value="Weapon 1482073"/>
+      </imgdir>
+      <imgdir name="1482080">
+        <string name="name" value="Cora Von Leon Claw"/>
+      </imgdir>
+      <imgdir name="1482196">
+        <string name="name" value="Maple Saint Grip"/>
+      </imgdir>
+      <imgdir name="1492031">
+        <string name="name" value="Judgement"/>
+      </imgdir>
+      <imgdir name="1492073">
+        <string name="name" value="Weapon 1492073"/>
+      </imgdir>
+      <imgdir name="1492081">
+        <string name="name" value="Cora Von Leon Pistol"/>
+      </imgdir>
+      <imgdir name="1492205">
+        <string name="name" value="Maple Saint Shooter"/>
+      </imgdir>
+      <imgdir name="1702097">
+        <string name="name" value="Fire Katana"/>
+      </imgdir>
+      <imgdir name="1702101">
+        <string name="name" value="Meso Gunner"/>
+      </imgdir>
+      <imgdir name="1702109">
+        <string name="name" value="Weapon 1702109"/>
+      </imgdir>
+      <imgdir name="1702110">
+        <string name="name" value="Weapon 1702110"/>
+      </imgdir>
+      <imgdir name="1702111">
+        <string name="name" value="Weapon 1702111"/>
+      </imgdir>
+      <imgdir name="1702113">
+        <string name="name" value="Maoster Pole Arm"/>
+      </imgdir>
+      <imgdir name="1702116">
+        <string name="name" value="Jie Blue"/>
+      </imgdir>
+      <imgdir name="1702117">
+        <string name="name" value="Jie Red"/>
+      </imgdir>
+      <imgdir name="1702176">
+        <string name="name" value="Ghost Flame Katana"/>
+      </imgdir>
+      <imgdir name="1702186">
+        <string name="name" value="3rd Anniversary Weapon"/>
+      </imgdir>
+      <imgdir name="1702194">
+        <string name="name" value="Flame Torch"/>
+      </imgdir>
+      <imgdir name="1702197">
+        <string name="name" value="Tsunami Wave"/>
+      </imgdir>
+      <imgdir name="1702198">
+        <string name="name" value="Bullseye Board"/>
+      </imgdir>
+      <imgdir name="1702199">
+        <string name="name" value="Rainbow Umbrella"/>
+      </imgdir>
+      <imgdir name="1702200">
+        <string name="name" value="Transparent Umbrella"/>
+      </imgdir>
+      <imgdir name="1702205">
+        <string name="name" value="Maw of the Dungeon"/>
+      </imgdir>
+      <imgdir name="1702206">
+        <string name="name" value="Bloodstained Maw"/>
+      </imgdir>
+      <imgdir name="1702214">
+        <string name="name" value="Whip"/>
+      </imgdir>
+      <imgdir name="1702221">
+        <string name="name" value="Mini Bean Propeller"/>
+      </imgdir>
+      <imgdir name="1702222">
+        <string name="name" value="Fanfare Firecracker"/>
+      </imgdir>
+      <imgdir name="1702223">
+        <string name="name" value="Sparkler"/>
+      </imgdir>
+      <imgdir name="1702224">
+        <string name="name" value="Transparent Weapon"/>
+      </imgdir>
+      <imgdir name="1702232">
+        <string name="name" value="Golden Bulldog"/>
+      </imgdir>
+      <imgdir name="1702236">
+        <string name="name" value="Death Note"/>
+      </imgdir>
+      <imgdir name="1702237">
+        <string name="name" value="Inari the White Fox"/>
+      </imgdir>
+      <imgdir name="1702239">
+        <string name="name" value="Holy Mystics"/>
+      </imgdir>
+      <imgdir name="1702240">
+        <string name="name" value="Dark Mystics"/>
+      </imgdir>
+      <imgdir name="1702241">
+        <string name="name" value="Maple Pyrope Sword"/>
+      </imgdir>
+      <imgdir name="1702242">
+        <string name="name" value="Maple Pyrope Axe"/>
+      </imgdir>
+      <imgdir name="1702243">
+        <string name="name" value="Maple Pyrope Hammer"/>
+      </imgdir>
+      <imgdir name="1702244">
+        <string name="name" value="Maple Pyrope Halfmoon"/>
+      </imgdir>
+      <imgdir name="1702245">
+        <string name="name" value="Maple Pyrope Wand"/>
+      </imgdir>
+      <imgdir name="1702247">
+        <string name="name" value="Maple Pyrope Staff"/>
+      </imgdir>
+      <imgdir name="1702248">
+        <string name="name" value="Rudolph"/>
+      </imgdir>
+      <imgdir name="1702252">
+        <string name="name" value="Hunting Hawk"/>
+      </imgdir>
+      <imgdir name="1702253">
+        <string name="name" value="Bunny Umbrella"/>
+      </imgdir>
+      <imgdir name="1702255">
+        <string name="name" value="Maple Pyrope Rohen"/>
+      </imgdir>
+      <imgdir name="1702256">
+        <string name="name" value="Mini Wind Archer"/>
+      </imgdir>
+      <imgdir name="1702257">
+        <string name="name" value="Mini Dawn Warrior"/>
+      </imgdir>
+      <imgdir name="1702258">
+        <string name="name" value="Mini Blaze Wizard"/>
+      </imgdir>
+      <imgdir name="1702259">
+        <string name="name" value="Mini Thunder Breaker"/>
+      </imgdir>
+      <imgdir name="1702260">
+        <string name="name" value="Mini Night Walker"/>
+      </imgdir>
+      <imgdir name="1702261">
+        <string name="name" value="Cherry Blossom Weapon"/>
+      </imgdir>
+      <imgdir name="1702262">
+        <string name="name" value="Green Leaf Guards"/>
+      </imgdir>
+      <imgdir name="1702263">
+        <string name="name" value="Kitty Spirit Weapon"/>
+      </imgdir>
+      <imgdir name="1702264">
+        <string name="name" value="Strawberry Basket"/>
+      </imgdir>
+      <imgdir name="1702265">
+        <string name="name" value="Ignition Cloth Gloves"/>
+      </imgdir>
+      <imgdir name="1702266">
+        <string name="name" value="Sunshine Pan"/>
+      </imgdir>
+      <imgdir name="1702267">
+        <string name="name" value="Fullmetal Alchemist"/>
+      </imgdir>
+      <imgdir name="1702268">
+        <string name="name" value="Evan Wand"/>
+      </imgdir>
+      <imgdir name="1702274">
+        <string name="name" value="Dragon Lord Gloves"/>
+      </imgdir>
+      <imgdir name="1702275">
+        <string name="name" value="Rainbow Umbrella"/>
+      </imgdir>
+      <imgdir name="1702276">
+        <string name="name" value="Rainbow Bow"/>
+      </imgdir>
+      <imgdir name="1702277">
+        <string name="name" value="Test Pen"/>
+      </imgdir>
+      <imgdir name="1702278">
+        <string name="name" value="King Crow Fan"/>
+      </imgdir>
+      <imgdir name="1702279">
+        <string name="name" value="Shining Feather Sword"/>
+      </imgdir>
+      <imgdir name="1702280">
+        <string name="name" value="Shining Feather Slayer"/>
+      </imgdir>
+      <imgdir name="1702281">
+        <string name="name" value="Shining Feather Lord"/>
+      </imgdir>
+      <imgdir name="1702282">
+        <string name="name" value="Shining Feather Bow"/>
+      </imgdir>
+      <imgdir name="1702283">
+        <string name="name" value="Shining Feather Knuckle"/>
+      </imgdir>
+      <imgdir name="1702284">
+        <string name="name" value="Handbag (Pink)"/>
+      </imgdir>
+      <imgdir name="1702285">
+        <string name="name" value="Handbag (Blue)"/>
+      </imgdir>
+      <imgdir name="1702286">
+        <string name="name" value="Marchosias"/>
+      </imgdir>
+      <imgdir name="1702287">
+        <string name="name" value="Battle Mage Staff"/>
+      </imgdir>
+      <imgdir name="1702288">
+        <string name="name" value="Wild Hunter Crossbow"/>
+      </imgdir>
+      <imgdir name="1702289">
+        <string name="name" value="Royal Marine Flag"/>
+      </imgdir>
+      <imgdir name="1702290">
+        <string name="name" value="Maple Pyrope Battle Axe"/>
+      </imgdir>
+      <imgdir name="1702291">
+        <string name="name" value="Elizabeth Fan"/>
+      </imgdir>
+      <imgdir name="1702292">
+        <string name="name" value="Maple Pyrope Maul"/>
+      </imgdir>
+      <imgdir name="1702293">
+        <string name="name" value="Suitcase"/>
+      </imgdir>
+      <imgdir name="1702294">
+        <string name="name" value="Maple Pyrope Spear"/>
+      </imgdir>
+      <imgdir name="1702295">
+        <string name="name" value="Playing Cards"/>
+      </imgdir>
+      <imgdir name="1702296">
+        <string name="name" value="Yo Yo"/>
+      </imgdir>
+      <imgdir name="1702297">
+        <string name="name" value="Maple Pyrope Hellslayer"/>
+      </imgdir>
+      <imgdir name="1702298">
+        <string name="name" value="Maple Pyrope Bow"/>
+      </imgdir>
+      <imgdir name="1702299">
+        <string name="name" value="Chocolate Dipped Stick"/>
+      </imgdir>
+      <imgdir name="1702300">
+        <string name="name" value="Electric Fly Swatter"/>
+      </imgdir>
+      <imgdir name="1702301">
+        <string name="name" value="Rabbit Weapon"/>
+      </imgdir>
+      <imgdir name="1702302">
+        <string name="name" value="Alien Mug"/>
+      </imgdir>
+      <imgdir name="1702303">
+        <string name="name" value="Baby Bottle"/>
+      </imgdir>
+      <imgdir name="1702304">
+        <string name="name" value="Funny Punch Yo-yo"/>
+      </imgdir>
+      <imgdir name="1702305">
+        <string name="name" value="Carrot"/>
+      </imgdir>
+      <imgdir name="1702306">
+        <string name="name" value="Burning Breeze Fan"/>
+      </imgdir>
+      <imgdir name="1702307">
+        <string name="name" value="Maple Pyrope Crow"/>
+      </imgdir>
+      <imgdir name="1702308">
+        <string name="name" value="Spring Blossoms"/>
+      </imgdir>
+      <imgdir name="1702309">
+        <string name="name" value="Rainbow Sparkle"/>
+      </imgdir>
+      <imgdir name="1702310">
+        <string name="name" value="Disco Glitter Star"/>
+      </imgdir>
+      <imgdir name="1702312">
+        <string name="name" value="Maple Pyrope Skanda"/>
+      </imgdir>
+      <imgdir name="1702317">
+        <string name="name" value="Bloody Ruby Saber"/>
+      </imgdir>
+      <imgdir name="1702318">
+        <string name="name" value="Twilight Saber"/>
+      </imgdir>
+      <imgdir name="1702319">
+        <string name="name" value="Evergreen Saber"/>
+      </imgdir>
+      <imgdir name="1702320">
+        <string name="name" value="Slate Thunder Saber"/>
+      </imgdir>
+      <imgdir name="1702321">
+        <string name="name" value="Dark Magneta Saber"/>
+      </imgdir>
+      <imgdir name="1702322">
+        <string name="name" value="Soild Black Saber"/>
+      </imgdir>
+      <imgdir name="1702323">
+        <string name="name" value="Ombra &amp; Luce Saber"/>
+      </imgdir>
+      <imgdir name="1702325">
+        <string name="name" value="Truth"/>
+      </imgdir>
+      <imgdir name="1702326">
+        <string name="name" value="Alphonse Elric"/>
+      </imgdir>
+      <imgdir name="1702327">
+        <string name="name" value="Melvin&apos;s Weapon"/>
+      </imgdir>
+      <imgdir name="1702328">
+        <string name="name" value="Pink Angel Syringe"/>
+      </imgdir>
+      <imgdir name="1702330">
+        <string name="name" value="Milky Way"/>
+      </imgdir>
+      <imgdir name="1702331">
+        <string name="name" value="Ferry Tale"/>
+      </imgdir>
+      <imgdir name="1702332">
+        <string name="name" value="Bat Sword"/>
+      </imgdir>
+      <imgdir name="1702333">
+        <string name="name" value="Strawberry Sword"/>
+      </imgdir>
+      <imgdir name="1702334">
+        <string name="name" value="Crystal Fantasia Wand"/>
+      </imgdir>
+      <imgdir name="1702335">
+        <string name="name" value="Alchemist Potion Weapon"/>
+      </imgdir>
+      <imgdir name="1702336">
+        <string name="name" value="Lord Tempest"/>
+      </imgdir>
+      <imgdir name="1702337">
+        <string name="name" value="Lightning Soul"/>
+      </imgdir>
+      <imgdir name="1702338">
+        <string name="name" value="Madoka&apos;s Bow"/>
+      </imgdir>
+      <imgdir name="1702339">
+        <string name="name" value="Homura&apos;s Shield"/>
+      </imgdir>
+      <imgdir name="1702340">
+        <string name="name" value="Rabbit Out of the Hat"/>
+      </imgdir>
+      <imgdir name="1702341">
+        <string name="name" value="Rainbow Lolipop"/>
+      </imgdir>
+      <imgdir name="1702342">
+        <string name="name" value="Orchid&apos;s Bunny Doll"/>
+      </imgdir>
+      <imgdir name="1702343">
+        <string name="name" value="Maple Pyrope Knuckle"/>
+      </imgdir>
+      <imgdir name="1702346">
+        <string name="name" value="Lucky Pouch Weapon"/>
+      </imgdir>
+      <imgdir name="1702347">
+        <string name="name" value="Fortune Flash"/>
+      </imgdir>
+      <imgdir name="1702348">
+        <string name="name" value="Snowflake Rod"/>
+      </imgdir>
+      <imgdir name="1702349">
+        <string name="name" value="Maple Pyrope Shooter"/>
+      </imgdir>
+      <imgdir name="1702350">
+        <string name="name" value="Chocolatier Stick"/>
+      </imgdir>
+      <imgdir name="1702352">
+        <string name="name" value="Magic Herb Teaspoon"/>
+      </imgdir>
+      <imgdir name="1702357">
+        <string name="name" value="Starfall Magic Square"/>
+      </imgdir>
+      <imgdir name="1702359">
+        <string name="name" value="Blue Syringe"/>
+      </imgdir>
+      <imgdir name="1702360">
+        <string name="name" value="Coin Sword"/>
+      </imgdir>
+      <imgdir name="1702362">
+        <string name="name" value="Pink Bean Buddy"/>
+      </imgdir>
+      <imgdir name="1702363">
+        <string name="name" value="Crystalline Sheen"/>
+      </imgdir>
+      <imgdir name="1702365">
+        <string name="name" value="Tedimus Beartaculous"/>
+      </imgdir>
+      <imgdir name="1702366">
+        <string name="name" value="Shark-sicle"/>
+      </imgdir>
+      <imgdir name="1702367">
+        <string name="name" value="Rose Butterwand"/>
+      </imgdir>
+      <imgdir name="1702368">
+        <string name="name" value="Iris Butterwand"/>
+      </imgdir>
+      <imgdir name="1702369">
+        <string name="name" value="Toppo Gun"/>
+      </imgdir>
+      <imgdir name="1702371">
+        <string name="name" value="Pimp Stick"/>
+      </imgdir>
+      <imgdir name="1702372">
+        <string name="name" value="Pimp Chalice"/>
+      </imgdir>
+      <imgdir name="1702374">
+        <string name="name" value="Bladed Falcon&apos;s Katana"/>
+      </imgdir>
+      <imgdir name="1702375">
+        <string name="name" value="Atlantis"/>
+      </imgdir>
+      <imgdir name="1702376">
+        <string name="name" value="Onmyouji Fan"/>
+      </imgdir>
+      <imgdir name="1702380">
+        <string name="name" value="Azure Crystal Crusher"/>
+      </imgdir>
+      <imgdir name="1702381">
+        <string name="name" value="Twin Crescent Blade"/>
+      </imgdir>
+      <imgdir name="1702382">
+        <string name="name" value="Korean Thanksgiving Persimmon Branch"/>
+      </imgdir>
+      <imgdir name="1702390">
+        <string name="name" value="Halloween Leopard Umbrella"/>
+      </imgdir>
+      <imgdir name="1702392">
+        <string name="name" value="Dark Devil Weapon"/>
+      </imgdir>
+      <imgdir name="1702393">
+        <string name="name" value="Slither Style Snake Sword"/>
+      </imgdir>
+      <imgdir name="1702397">
+        <string name="name" value="Twinkle Sparkle"/>
+      </imgdir>
+      <imgdir name="1702399">
+        <string name="name" value="Neo Light Sword"/>
+      </imgdir>
+      <imgdir name="1702401">
+        <string name="name" value="Bunny Carrot Weapon"/>
+      </imgdir>
+      <imgdir name="1702402">
+        <string name="name" value="Stylish Iron"/>
+      </imgdir>
+      <imgdir name="1702403">
+        <string name="name" value="Giant Detective Magnifying Glass"/>
+      </imgdir>
+      <imgdir name="1702405">
+        <string name="name" value="Starlight Heart Scepter"/>
+      </imgdir>
+      <imgdir name="1702408">
+        <string name="name" value="Francis&apos;s Puppet"/>
+      </imgdir>
+      <imgdir name="1702409">
+        <string name="name" value="Wand of Hirura"/>
+      </imgdir>
+      <imgdir name="1702415">
+        <string name="name" value="Dreamy Candy Pillow"/>
+      </imgdir>
+      <imgdir name="1702417">
+        <string name="name" value="Blue Rose Parasol"/>
+      </imgdir>
+      <imgdir name="1702422">
+        <string name="name" value="Idol Mike"/>
+      </imgdir>
+      <imgdir name="1702423">
+        <string name="name" value="Goblin Fire"/>
+      </imgdir>
+      <imgdir name="1702432">
+        <string name="name" value="Eighteen Weapons"/>
+      </imgdir>
+      <imgdir name="1702433">
+        <string name="name" value="Salamander"/>
+      </imgdir>
+      <imgdir name="1702434">
+        <string name="name" value="Genie&apos;s Fist"/>
+      </imgdir>
+      <imgdir name="1702435">
+        <string name="name" value="Aladdin&apos;s Whistle"/>
+      </imgdir>
+      <imgdir name="1702442">
+        <string name="name" value="Baseball Bat"/>
+      </imgdir>
+      <imgdir name="1702446">
+        <string name="name" value="Sea Otter Slammer"/>
+      </imgdir>
+      <imgdir name="1702451">
+        <string name="name" value="Superstar Microphone"/>
+      </imgdir>
+      <imgdir name="1702454">
+        <string name="name" value="Seal Wave Snuggler"/>
+      </imgdir>
+      <imgdir name="1702455">
+        <string name="name" value="RED Paint Bucket"/>
+      </imgdir>
+      <imgdir name="1702456">
+        <string name="name" value="Fairy Pico"/>
+      </imgdir>
+      <imgdir name="1702457">
+        <string name="name" value="Fantastic Ice Pop"/>
+      </imgdir>
+      <imgdir name="1702458">
+        <string name="name" value="Fireworks Fan"/>
+      </imgdir>
+      <imgdir name="1702459">
+        <string name="name" value="Cotten Candy Weapon"/>
+      </imgdir>
+      <imgdir name="1702461">
+        <string name="name" value="Chicky-Chicky Boom"/>
+      </imgdir>
+      <imgdir name="1702462">
+        <string name="name" value="Fantasy Butterfly Flower"/>
+      </imgdir>
+      <imgdir name="1702463">
+        <string name="name" value="Magical Night Festival"/>
+      </imgdir>
+      <imgdir name="1702464">
+        <string name="name" value="Sparkling Buddy"/>
+      </imgdir>
+      <imgdir name="1702468">
+        <string name="name" value="Soft Chocolate Fondue Scepter"/>
+      </imgdir>
+      <imgdir name="1702469">
+        <string name="name" value="Arachne"/>
+      </imgdir>
+      <imgdir name="1702470">
+        <string name="name" value="Free Spirit"/>
+      </imgdir>
+      <imgdir name="1702472">
+        <string name="name" value="Vampire Phantom&apos;s Fate"/>
+      </imgdir>
+      <imgdir name="1702473">
+        <string name="name" value="Shadow Executor"/>
+      </imgdir>
+      <imgdir name="1702475">
+        <string name="name" value="Maha"/>
+      </imgdir>
+      <imgdir name="1702478">
+        <string name="name" value="Cat Soul"/>
+      </imgdir>
+      <imgdir name="1702480">
+        <string name="name" value="Celena"/>
+      </imgdir>
+      <imgdir name="1702483">
+        <string name="name" value="Fox in a Tube"/>
+      </imgdir>
+      <imgdir name="1702485">
+        <string name="name" value="Goodie Bundle"/>
+      </imgdir>
+      <imgdir name="1702486">
+        <string name="name" value="Fluttering Camellia Flower"/>
+      </imgdir>
+      <imgdir name="1702488">
+        <string name="name" value="Pony&apos;s Carrot"/>
+      </imgdir>
+      <imgdir name="1702490">
+        <string name="name" value="Zealot Lantern"/>
+      </imgdir>
+      <imgdir name="1702492">
+        <string name="name" value="Chinese Lantern"/>
+      </imgdir>
+      <imgdir name="1702497">
+        <string name="name" value="Sparkling Luck Sack"/>
+      </imgdir>
+      <imgdir name="1702499">
+        <string name="name" value="Guardian Scepter"/>
+      </imgdir>
+      <imgdir name="1702501">
+        <string name="name" value="Flower Dance"/>
+      </imgdir>
+      <imgdir name="1702502">
+        <string name="name" value="Cane From the Stars"/>
+      </imgdir>
+      <imgdir name="1702503">
+        <string name="name" value="Bubbling Shot"/>
+      </imgdir>
+      <imgdir name="1702504">
+        <string name="name" value="Frozen Heart"/>
+      </imgdir>
+      <imgdir name="1702505">
+        <string name="name" value="Breezy Bamboo"/>
+      </imgdir>
+      <imgdir name="1702507">
+        <string name="name" value="Violet Fan"/>
+      </imgdir>
+      <imgdir name="1702508">
+        <string name="name" value="Strawberry Milk Weapon"/>
+      </imgdir>
+      <imgdir name="1702509">
+        <string name="name" value="Rainbow Cane"/>
+      </imgdir>
+      <imgdir name="1702510">
+        <string name="name" value="Rabbit and Bear Flashlight"/>
+      </imgdir>
+      <imgdir name="1702512">
+        <string name="name" value="Crown Rod"/>
+      </imgdir>
+      <imgdir name="1702519">
+        <string name="name" value="Pink Antique Parasol"/>
+      </imgdir>
+      <imgdir name="1702524">
+        <string name="name" value="Plump Tomato"/>
+      </imgdir>
       <imgdir name="1702526">
-        <string name="name" value="Shoes 1702526"/>
+        <string name="name" value="Rifle Blade"/>
+      </imgdir>
+      <imgdir name="1702527">
+        <string name="name" value="Shiny Morningstar"/>
+      </imgdir>
+      <imgdir name="1702528">
+        <string name="name" value="Xylophone Melody"/>
+      </imgdir>
+      <imgdir name="1702530">
+        <string name="name" value="Sweet Summer Hammer"/>
+      </imgdir>
+      <imgdir name="1702533">
+        <string name="name" value="Photo-op"/>
+      </imgdir>
+      <imgdir name="1702534">
+        <string name="name" value="Baby Paci"/>
+      </imgdir>
+      <imgdir name="1702535">
+        <string name="name" value="Hula Hula Penglyn"/>
+      </imgdir>
+      <imgdir name="1702538">
+        <string name="name" value="Dewdrop Lantern"/>
+      </imgdir>
+      <imgdir name="1702543">
+        <string name="name" value="Maple Saint Sword"/>
+      </imgdir>
+      <imgdir name="1702544">
+        <string name="name" value="Lalala~ Leek"/>
+      </imgdir>
+      <imgdir name="1702545">
+        <string name="name" value="Maple Saint Axe"/>
+      </imgdir>
+      <imgdir name="1702546">
+        <string name="name" value="Maple Saint Mace"/>
+      </imgdir>
+      <imgdir name="1702547">
+        <string name="name" value="Sweet Persimmon"/>
+      </imgdir>
+      <imgdir name="1702548">
+        <string name="name" value="Golden Banana"/>
+      </imgdir>
+      <imgdir name="1702549">
+        <string name="name" value="Pom-pom Power"/>
+      </imgdir>
+      <imgdir name="1702550">
+        <string name="name" value="Peach Trio"/>
+      </imgdir>
+      <imgdir name="1702552">
+        <string name="name" value="Fuwa Fuwa Cake Fork"/>
+      </imgdir>
+      <imgdir name="1702553">
+        <string name="name" value="Dangerous Medicine Bottle"/>
+      </imgdir>
+      <imgdir name="1702554">
+        <string name="name" value="Scary Huge Hand"/>
+      </imgdir>
+      <imgdir name="1702555">
+        <string name="name" value="Noble Lady&apos;s Black Fan"/>
+      </imgdir>
+      <imgdir name="1702556">
+        <string name="name" value="Blade"/>
+      </imgdir>
+      <imgdir name="1702557">
+        <string name="name" value="Duster"/>
+      </imgdir>
+      <imgdir name="1702558">
+        <string name="name" value="Maple Saint Cutter"/>
+      </imgdir>
+      <imgdir name="1702559">
+        <string name="name" value="Teddy&apos;s Companion (White)"/>
+      </imgdir>
+      <imgdir name="1702560">
+        <string name="name" value="Teddy&apos;s Companion (Brown)"/>
+      </imgdir>
+      <imgdir name="1702562">
+        <string name="name" value="Winter Snowman"/>
+      </imgdir>
+      <imgdir name="1702563">
+        <string name="name" value="Maple Saint Wand"/>
+      </imgdir>
+      <imgdir name="1702565">
+        <string name="name" value="Death&apos;s Scythe"/>
+      </imgdir>
+      <imgdir name="1702566">
+        <string name="name" value="Rammy Scepter"/>
+      </imgdir>
+      <imgdir name="1702567">
+        <string name="name" value="Floating Tigers"/>
+      </imgdir>
+      <imgdir name="1702568">
+        <string name="name" value="Maple Saint Staff"/>
+      </imgdir>
+      <imgdir name="1702569">
+        <string name="name" value="Maple Saint Two-handed Sword"/>
+      </imgdir>
+      <imgdir name="1702570">
+        <string name="name" value="Fluffy Snow Bunny"/>
+      </imgdir>
+      <imgdir name="1702571">
+        <string name="name" value="Top Snow Shovel"/>
+      </imgdir>
+      <imgdir name="1702572">
+        <string name="name" value="Red Rose Umbrella"/>
+      </imgdir>
+      <imgdir name="1702573">
+        <string name="name" value="Maple Saint Two-handed Axe"/>
+      </imgdir>
+      <imgdir name="1702574">
+        <string name="name" value="Beast Trainer"/>
+      </imgdir>
+      <imgdir name="1702575">
+        <string name="name" value="Lovely Chocolate Basket"/>
+      </imgdir>
+      <imgdir name="1702576">
+        <string name="name" value="Ground Pounder"/>
+      </imgdir>
+      <imgdir name="1702577">
+        <string name="name" value="Golden Fishnet"/>
+      </imgdir>
+      <imgdir name="1702578">
+        <string name="name" value="Maple Saint Maul"/>
+      </imgdir>
+      <imgdir name="1702579">
+        <string name="name" value="Crystal Cat Weapon"/>
+      </imgdir>
+      <imgdir name="1702580">
+        <string name="name" value="Maple Saint Spear"/>
+      </imgdir>
+      <imgdir name="1702581">
+        <string name="name" value="Sweetie Bros"/>
+      </imgdir>
+      <imgdir name="1702582">
+        <string name="name" value="Maple Saint Polearm"/>
+      </imgdir>
+      <imgdir name="1702583">
+        <string name="name" value="Cat Pringles"/>
+      </imgdir>
+      <imgdir name="1702586">
+        <string name="name" value="Dreaming Dandelion"/>
+      </imgdir>
+      <imgdir name="1702587">
+        <string name="name" value="Rockin&apos; Guitar"/>
+      </imgdir>
+      <imgdir name="1702588">
+        <string name="name" value="Black Cat Plush"/>
+      </imgdir>
+      <imgdir name="1702589">
+        <string name="name" value="Fairy Blossom"/>
+      </imgdir>
+      <imgdir name="1702590">
+        <string name="name" value="Giant Pig Bar"/>
+      </imgdir>
+      <imgdir name="1702591">
+        <string name="name" value="Grand Romance"/>
+      </imgdir>
+      <imgdir name="1702592">
+        <string name="name" value="Maple Saint Longbow"/>
+      </imgdir>
+      <imgdir name="1702594">
+        <string name="name" value="Sweepy Orchid"/>
+      </imgdir>
+      <imgdir name="1702595">
+        <string name="name" value="Mint Kitty Tea Time"/>
+      </imgdir>
+      <imgdir name="1702597">
+        <string name="name" value="Rainbow Seashell"/>
+      </imgdir>
+      <imgdir name="1702598">
+        <string name="name" value="Maple Poof Ball"/>
+      </imgdir>
+      <imgdir name="1702600">
+        <string name="name" value="Pasta"/>
+      </imgdir>
+      <imgdir name="1702601">
+        <string name="name" value="Bacon"/>
+      </imgdir>
+      <imgdir name="1702602">
+        <string name="name" value="Hamburger"/>
+      </imgdir>
+      <imgdir name="1702603">
+        <string name="name" value="Rib Steak"/>
+      </imgdir>
+      <imgdir name="1702604">
+        <string name="name" value="Parfait"/>
+      </imgdir>
+      <imgdir name="1702605">
+        <string name="name" value="Donut"/>
+      </imgdir>
+      <imgdir name="1702606">
+        <string name="name" value="Squid"/>
+      </imgdir>
+      <imgdir name="1702607">
+        <string name="name" value="Cheese Carrot Stick"/>
+      </imgdir>
+      <imgdir name="1702608">
+        <string name="name" value="Marine Stripe Umbrella"/>
+      </imgdir>
+      <imgdir name="1702609">
+        <string name="name" value="Maple Saint Crossbow"/>
+      </imgdir>
+      <imgdir name="1702610">
+        <string name="name" value="Maple Saint Stinger"/>
+      </imgdir>
+      <imgdir name="1702611">
+        <string name="name" value="Duckling Cross Bag Weapon"/>
+      </imgdir>
+      <imgdir name="1702615">
+        <string name="name" value="The Shift Blade"/>
+      </imgdir>
+      <imgdir name="1702616">
+        <string name="name" value="Ducky Candy Bar"/>
+      </imgdir>
+      <imgdir name="1702617">
+        <string name="name" value="Lotus Fantasy"/>
+      </imgdir>
+      <imgdir name="1702618">
+        <string name="name" value="Maple Saint Grip"/>
+      </imgdir>
+      <imgdir name="1702620">
+        <string name="name" value="Mystery Dice"/>
+      </imgdir>
+      <imgdir name="1702622">
+        <string name="name" value="Maple Saint Shooter"/>
+      </imgdir>
+      <imgdir name="1702623">
+        <string name="name" value="Today Jay"/>
+      </imgdir>
+      <imgdir name="1702625">
+        <string name="name" value="Sparking Bluebird"/>
+      </imgdir>
+      <imgdir name="1702626">
+        <string name="name" value="British Handbag Weapon"/>
+      </imgdir>
+      <imgdir name="1702627">
+        <string name="name" value="Sakura Sword"/>
+      </imgdir>
+      <imgdir name="1702628">
+        <string name="name" value="Glory Egg"/>
+      </imgdir>
+      <imgdir name="1702629">
+        <string name="name" value="Latest Mobile Phone"/>
+      </imgdir>
+      <imgdir name="1702630">
+        <string name="name" value="Striking Lantern"/>
+      </imgdir>
+      <imgdir name="1702631">
+        <string name="name" value="Rose Oath"/>
+      </imgdir>
+      <imgdir name="1702632">
+        <string name="name" value="Zakum&apos;s Arm"/>
+      </imgdir>
+      <imgdir name="1702633">
+        <string name="name" value="Banana Monkey Attacker"/>
+      </imgdir>
+      <imgdir name="1702634">
+        <string name="name" value="Zombie Slime and Mushroom"/>
+      </imgdir>
+      <imgdir name="1702636">
+        <string name="name" value="Arctic Narwhal Pillow"/>
+      </imgdir>
+      <imgdir name="1702637">
+        <string name="name" value="Travel Case"/>
+      </imgdir>
+      <imgdir name="1702640">
+        <string name="name" value="Bunny Snowman Attacker"/>
+      </imgdir>
+      <imgdir name="1702641">
+        <string name="name" value="Staff of the Dragon"/>
+      </imgdir>
+      <imgdir name="1702643">
+        <string name="name" value="Double Crossbow"/>
+      </imgdir>
+      <imgdir name="1702645">
+        <string name="name" value="Phantom Cane"/>
+      </imgdir>
+      <imgdir name="1702647">
+        <string name="name" value="Dark Maha"/>
+      </imgdir>
+      <imgdir name="1702649">
+        <string name="name" value="Light and Dark"/>
+      </imgdir>
+      <imgdir name="1702651">
+        <string name="name" value="Forgotten Boxing Hero"/>
+      </imgdir>
+      <imgdir name="1702654">
+        <string name="name" value="Meow Spa"/>
+      </imgdir>
+      <imgdir name="1702655">
+        <string name="name" value="Mercedes Doll"/>
+      </imgdir>
+      <imgdir name="1702656">
+        <string name="name" value="Luminous Doll"/>
+      </imgdir>
+      <imgdir name="1702657">
+        <string name="name" value="Eunwol Doll"/>
+      </imgdir>
+      <imgdir name="1702659">
+        <string name="name" value="Time Master"/>
+      </imgdir>
+      <imgdir name="1702660">
+        <string name="name" value="Mischievous Snowman"/>
+      </imgdir>
+      <imgdir name="1702661">
+        <string name="name" value="Stone Spoon"/>
+      </imgdir>
+      <imgdir name="1702662">
+        <string name="name" value="Silver Spoon"/>
+      </imgdir>
+      <imgdir name="1702663">
+        <string name="name" value="Golden Spoon"/>
+      </imgdir>
+      <imgdir name="1702665">
+        <string name="name" value="Evan Doll"/>
+      </imgdir>
+      <imgdir name="1702666">
+        <string name="name" value="Aran Doll"/>
+      </imgdir>
+      <imgdir name="1702667">
+        <string name="name" value="Phantom Doll"/>
+      </imgdir>
+      <imgdir name="1702668">
+        <string name="name" value="Winter Tambourine"/>
+      </imgdir>
+      <imgdir name="1702669">
+        <string name="name" value="Princess Chronicles"/>
+      </imgdir>
+      <imgdir name="1702671">
+        <string name="name" value="The Bible"/>
+      </imgdir>
+      <imgdir name="1702675">
+        <string name="name" value="Snow Fairy"/>
+      </imgdir>
+      <imgdir name="1702676">
+        <string name="name" value="Crystal Microphone"/>
+      </imgdir>
+      <imgdir name="1702677">
+        <string name="name" value="Damien Doll"/>
+      </imgdir>
+      <imgdir name="1702678">
+        <string name="name" value="Alicia Doll"/>
+      </imgdir>
+      <imgdir name="1702680">
+        <string name="name" value="Camellia Gum"/>
+      </imgdir>
+      <imgdir name="1702681">
+        <string name="name" value="Aquarius Life"/>
+      </imgdir>
+      <imgdir name="1702682">
+        <string name="name" value="Triple Fish Skewer"/>
+      </imgdir>
+      <imgdir name="1702683">
+        <string name="name" value="Instinct"/>
+      </imgdir>
+      <imgdir name="1702684">
+        <string name="name" value="Mystic"/>
+      </imgdir>
+      <imgdir name="1702685">
+        <string name="name" value="Valor"/>
+      </imgdir>
+      <imgdir name="1702686">
+        <string name="name" value="Sweet Peek Weapon"/>
+      </imgdir>
+      <imgdir name="1702687">
+        <string name="name" value="Strawberry Bonbon"/>
+      </imgdir>
+      <imgdir name="1702688">
+        <string name="name" value="Superstar M"/>
+      </imgdir>
+      <imgdir name="1702689">
+        <string name="name" value="Fairy Flora"/>
+      </imgdir>
+      <imgdir name="1702690">
+        <string name="name" value="Noble Maple Rod"/>
+      </imgdir>
+      <imgdir name="1702693">
+        <string name="name" value="Bubble Leaf Weapon"/>
+      </imgdir>
+      <imgdir name="1702694">
+        <string name="name" value="Pastel Rose"/>
+      </imgdir>
+      <imgdir name="1702695">
+        <string name="name" value="Shiba Inu"/>
+      </imgdir>
+      <imgdir name="1702696">
+        <string name="name" value="Silver Wolf"/>
+      </imgdir>
+      <imgdir name="1702697">
+        <string name="name" value="Cup Cat Weapon"/>
+      </imgdir>
+      <imgdir name="1702698">
+        <string name="name" value="Blaster"/>
+      </imgdir>
+      <imgdir name="1702699">
+        <string name="name" value="Colourful Beach Volleyball"/>
+      </imgdir>
+      <imgdir name="1702701">
+        <string name="name" value="Dragonmare Ninth Sword"/>
+      </imgdir>
+      <imgdir name="1702702">
+        <string name="name" value="Porong Fan"/>
+      </imgdir>
+      <imgdir name="1702703">
+        <string name="name" value="Natural Ink Painting"/>
+      </imgdir>
+      <imgdir name="1702705">
+        <string name="name" value="Teddy Tube Wave"/>
+      </imgdir>
+      <imgdir name="1702709">
+        <string name="name" value="High-five Neon V"/>
+      </imgdir>
+      <imgdir name="1702710">
+        <string name="name" value="Kamaitachi&apos;s Sickle"/>
+      </imgdir>
+      <imgdir name="1702711">
+        <string name="name" value="Owl Spellbook"/>
+      </imgdir>
+      <imgdir name="1702712">
+        <string name="name" value="Moon Bunny Bell Weapon"/>
+      </imgdir>
+      <imgdir name="1702713">
+        <string name="name" value="Witch&apos;s Staff"/>
+      </imgdir>
+      <imgdir name="1702714">
+        <string name="name" value="Bichon Paw Weapon"/>
+      </imgdir>
+      <imgdir name="1702716">
+        <string name="name" value="Dew Parasol"/>
+      </imgdir>
+      <imgdir name="1702717">
+        <string name="name" value="Glow Stick of Love"/>
+      </imgdir>
+      <imgdir name="1702718">
+        <string name="name" value="Shadow Warrior&apos;s Sword"/>
+      </imgdir>
+      <imgdir name="1702720">
+        <string name="name" value="Maple M Playphone"/>
+      </imgdir>
+      <imgdir name="1702721">
+        <string name="name" value="Death&apos;s K"/>
+      </imgdir>
+      <imgdir name="1702722">
+        <string name="name" value="Winter Bunny"/>
+      </imgdir>
+      <imgdir name="1702724">
+        <string name="name" value="Undead Teddy"/>
+      </imgdir>
+      <imgdir name="1702725">
+        <string name="name" value="Necromancer"/>
+      </imgdir>
+      <imgdir name="1702726">
+        <string name="name" value="Pumpkin Star"/>
+      </imgdir>
+      <imgdir name="1702727">
+        <string name="name" value="Rabbit Soap Shooter"/>
+      </imgdir>
+      <imgdir name="1702736">
+        <string name="name" value="Frost Staff"/>
+      </imgdir>
+      <imgdir name="1702737">
+        <string name="name" value="Frost Staff"/>
+      </imgdir>
+      <imgdir name="1702740">
+        <string name="name" value="Go Yellow Chicks!"/>
+      </imgdir>
+      <imgdir name="1702745">
+        <string name="name" value="Spring Fairy Flower"/>
+      </imgdir>
+      <imgdir name="1702746">
+        <string name="name" value="Dinofrog"/>
+      </imgdir>
+      <imgdir name="1702749">
+        <string name="name" value="Love Letter Book Bag"/>
+      </imgdir>
+      <imgdir name="1702750">
+        <string name="name" value="Strawberry Fitness Jump Rope"/>
+      </imgdir>
+      <imgdir name="1702755">
+        <string name="name" value="Sweet Baguette"/>
+      </imgdir>
+      <imgdir name="1702756">
+        <string name="name" value="Starlit Dreamweaver"/>
+      </imgdir>
+      <imgdir name="1702760">
+        <string name="name" value="Hamster Devotion!"/>
+      </imgdir>
+      <imgdir name="1702761">
+        <string name="name" value="Sproutbrella"/>
+      </imgdir>
+      <imgdir name="1702767">
+        <string name="name" value="Mustachio on a Stick"/>
+      </imgdir>
+      <imgdir name="1702769">
+        <string name="name" value="Maple Galaxy Laser Gun"/>
+      </imgdir>
+      <imgdir name="1702774">
+        <string name="name" value="Ocean Hydrangea"/>
+      </imgdir>
+      <imgdir name="1702775">
+        <string name="name" value="Watermelon Slice"/>
+      </imgdir>
+      <imgdir name="1702776">
+        <string name="name" value="Water Granos and Weapon"/>
+      </imgdir>
+      <imgdir name="1702778">
+        <string name="name" value="Summer Flower Fairy Weapon"/>
+      </imgdir>
+      <imgdir name="1702779">
+        <string name="name" value="Fluffy Teddy Candy"/>
+      </imgdir>
+      <imgdir name="1702783">
+        <string name="name" value="Rabble Rouser Weapon"/>
+      </imgdir>
+      <imgdir name="1702784">
+        <string name="name" value="Feather Messenger Weapon"/>
+      </imgdir>
+      <imgdir name="1702785">
+        <string name="name" value="Cursed Bat Weapon"/>
+      </imgdir>
+      <imgdir name="1702786">
+        <string name="name" value="Blood Oath Weapon Skin"/>
+      </imgdir>
+      <imgdir name="1702791">
+        <string name="name" value="Master of Hearts"/>
+      </imgdir>
+      <imgdir name="1702793">
+        <string name="name" value="Eggplant of Doom"/>
+      </imgdir>
+      <imgdir name="1702795">
+        <string name="name" value="Enchanting Flute"/>
+      </imgdir>
+      <imgdir name="1702796">
+        <string name="name" value="Organic Rice"/>
+      </imgdir>
+      <imgdir name="1702803">
+        <string name="name" value="Fish Bubbles Weapon"/>
+      </imgdir>
+      <imgdir name="1702804">
+        <string name="name" value="Take Me Too!"/>
+      </imgdir>
+      <imgdir name="1702809">
+        <string name="name" value="Bunny Marker"/>
+      </imgdir>
+      <imgdir name="1702812">
+        <string name="name" value="Lunar New Year VIP Weapon"/>
+      </imgdir>
+      <imgdir name="1702813">
+        <string name="name" value="Royal Guard Weapon"/>
+      </imgdir>
+      <imgdir name="1702815">
+        <string name="name" value="Plum Blossom"/>
+      </imgdir>
+      <imgdir name="1702816">
+        <string name="name" value="Flurry Bear"/>
+      </imgdir>
+      <imgdir name="1702818">
+        <string name="name" value="World of Pink Weapon"/>
+      </imgdir>
+      <imgdir name="1702819">
+        <string name="name" value="Tennis Weapon"/>
+      </imgdir>
+      <imgdir name="1702820">
+        <string name="name" value="Butterfly Weapon"/>
+      </imgdir>
+      <imgdir name="1702822">
+        <string name="name" value="Pink Puzzle Weapon"/>
+      </imgdir>
+      <imgdir name="1702825">
+        <string name="name" value="Homeless Cat Weapon"/>
+      </imgdir>
+      <imgdir name="1702826">
+        <string name="name" value="Kiddy Crayon"/>
+      </imgdir>
+      <imgdir name="1702830">
+        <string name="name" value="Spring Rain Parasol"/>
+      </imgdir>
+      <imgdir name="1702831">
+        <string name="name" value="Tennis Racket"/>
+      </imgdir>
+      <imgdir name="1702832">
+        <string name="name" value="Weapon 1702832"/>
+      </imgdir>
+      <imgdir name="1702837">
+        <string name="name" value="Candy Angel"/>
+      </imgdir>
+      <imgdir name="1702842">
+        <string name="name" value="Navy Telescope Weapon"/>
+      </imgdir>
+      <imgdir name="1702844">
+        <string name="name" value="Antoine Pocket Watch"/>
+      </imgdir>
+      <imgdir name="1702846">
+        <string name="name" value="Summer Story Weapon"/>
+      </imgdir>
+      <imgdir name="1702850">
+        <string name="name" value="Spring Green Foxtail"/>
+      </imgdir>
+      <imgdir name="1702858">
+        <string name="name" value="Wave Sword"/>
+      </imgdir>
+      <imgdir name="1702860">
+        <string name="name" value="One-Eyed Grim Reaper Weapon"/>
+      </imgdir>
+      <imgdir name="1702861">
+        <string name="name" value="One-Eyed Grim Reaper Weapon"/>
+      </imgdir>
+      <imgdir name="1702871">
+        <string name="name" value="Heart Diary"/>
+      </imgdir>
+      <imgdir name="1702875">
+        <string name="name" value="Frostblade Weapon"/>
+      </imgdir>
+      <imgdir name="1702876">
+        <string name="name" value="Necrotic Whip"/>
+      </imgdir>
+      <imgdir name="1702877">
+        <string name="name" value="Mu Young&apos;s Sword"/>
+      </imgdir>
+      <imgdir name="1702883">
+        <string name="name" value="Pajama Party"/>
+      </imgdir>
+      <imgdir name="1702885">
+        <string name="name" value="Lunar New Year Pudgy Piggy"/>
+      </imgdir>
+      <imgdir name="1702886">
+        <string name="name" value="Sweet Beary Chocolate"/>
+      </imgdir>
+      <imgdir name="1702888">
+        <string name="name" value="Drowsy Bunny"/>
+      </imgdir>
+      <imgdir name="1702892">
+        <string name="name" value="Sugarsweet Candy Spear"/>
+      </imgdir>
+      <imgdir name="1702903">
+        <string name="name" value="Yellow Chick Costume Weapon"/>
+      </imgdir>
+      <imgdir name="1702906">
+        <string name="name" value="Cursed Bow"/>
+      </imgdir>
+      <imgdir name="1702914">
+        <string name="name" value="Pink Bean&apos;s Umbrella"/>
+      </imgdir>
+      <imgdir name="1702916">
+        <string name="name" value="Springtime Sprout Greenery"/>
+      </imgdir>
+      <imgdir name="1702918">
+        <string name="name" value="Cherry Blossom Umbrella"/>
+      </imgdir>
+      <imgdir name="1702921">
+        <string name="name" value="Literally an Onyx Apple"/>
+      </imgdir>
+      <imgdir name="1702922">
+        <string name="name" value="Probably an Onyx Apple"/>
+      </imgdir>
+      <imgdir name="1702926">
+        <string name="name" value="Tranquil Picnic Weapon"/>
+      </imgdir>
+      <imgdir name="1702928">
+        <string name="name" value="Record of the Stars"/>
+      </imgdir>
+      <imgdir name="1702931">
+        <string name="name" value="Shepherd&apos;s Crook Weapon Skin"/>
+      </imgdir>
+      <imgdir name="1702933">
+        <string name="name" value="Cozy Croissant"/>
+      </imgdir>
+      <imgdir name="1702934">
+        <string name="name" value="Bib&apos;s Croissant"/>
+      </imgdir>
+      <imgdir name="1702935">
+        <string name="name" value="The Lonely Koi Fish"/>
+      </imgdir>
+      <imgdir name="1702936">
+        <string name="name" value="Perfect Harmony"/>
+      </imgdir>
+      <imgdir name="1702937">
+        <string name="name" value="Ocean Forever"/>
+      </imgdir>
+      <imgdir name="1702938">
+        <string name="name" value="Cream Soda Can"/>
+      </imgdir>
+      <imgdir name="1702940">
+        <string name="name" value="Dark Furrytail Cat&apos;s Paw"/>
+      </imgdir>
+      <imgdir name="1702941">
+        <string name="name" value="Great Golden Dragon&apos;s Fury"/>
+      </imgdir>
+      <imgdir name="1702943">
+        <string name="name" value="Havoc&apos;s Heavy Sword"/>
+      </imgdir>
+      <imgdir name="1702946">
+        <string name="name" value="Dauntless White Tiger"/>
+      </imgdir>
+      <imgdir name="1702948">
+        <string name="name" value="Stargazer Planet"/>
+      </imgdir>
+      <imgdir name="1702950">
+        <string name="name" value="Secret Passport"/>
+      </imgdir>
+      <imgdir name="1702951">
+        <string name="name" value="Baby Bear Night Stroll"/>
+      </imgdir>
+      <imgdir name="1702954">
+        <string name="name" value="Snowbunny"/>
+      </imgdir>
+      <imgdir name="1702956">
+        <string name="name" value="Moonlight Lamp"/>
+      </imgdir>
+      <imgdir name="1702958">
+        <string name="name" value="Maple Bubbler"/>
+      </imgdir>
+      <imgdir name="1702963">
+        <string name="name" value="Wave&apos;s Glowstick"/>
+      </imgdir>
+      <imgdir name="1702965">
+        <string name="name" value="Ice Cream Lover"/>
+      </imgdir>
+      <imgdir name="1702966">
+        <string name="name" value="Petite Penguin"/>
+      </imgdir>
+      <imgdir name="1702967">
+        <string name="name" value="Pink Bean Cotton Candy"/>
+      </imgdir>
+      <imgdir name="1702968">
+        <string name="name" value="Cheesy Mouse Weapon"/>
+      </imgdir>
+      <imgdir name="1702969">
+        <string name="name" value="Red Warrior Katana"/>
+      </imgdir>
+      <imgdir name="1702970">
+        <string name="name" value="[BTS] Last Feather"/>
+      </imgdir>
+      <imgdir name="1702971">
+        <string name="name" value="Pink Bean Huggable Cushion"/>
+      </imgdir>
+      <imgdir name="1702974">
+        <string name="name" value="Snow Crystal Wand"/>
+      </imgdir>
+      <imgdir name="1702978">
+        <string name="name" value="Lovely Sugar Donut"/>
+      </imgdir>
+      <imgdir name="1702979">
+        <string name="name" value="Sweet Bunny Candy Weapon"/>
+      </imgdir>
+      <imgdir name="1702983">
+        <string name="name" value="Grand Master Sword"/>
+      </imgdir>
+      <imgdir name="1702988">
+        <string name="name" value="True Love Chocolate"/>
+      </imgdir>
+      <imgdir name="1702989">
+        <string name="name" value="Heartbreak Chocolate"/>
+      </imgdir>
+      <imgdir name="1702994">
+        <string name="name" value="Lovely Pompom Flower"/>
+      </imgdir>
+      <imgdir name="1703001">
+        <string name="name" value="Sailor&apos;s Song Weapon"/>
+      </imgdir>
+      <imgdir name="1703006">
+        <string name="name" value="Cool Summer Ice Bucket"/>
+      </imgdir>
+      <imgdir name="1703007">
+        <string name="name" value="Bling Coral Staff"/>
+      </imgdir>
+      <imgdir name="1703008">
+        <string name="name" value="Dreaming Traveler"/>
+      </imgdir>
+      <imgdir name="1703014">
+        <string name="name" value="Coral Song"/>
+      </imgdir>
+      <imgdir name="1703016">
+        <string name="name" value="Bubble Devil Gun"/>
+      </imgdir>
+      <imgdir name="1703022">
+        <string name="name" value="Aurora Waltz"/>
+      </imgdir>
+      <imgdir name="1703025">
+        <string name="name" value="Forest Witch Weapon"/>
+      </imgdir>
+      <imgdir name="1703033">
+        <string name="name" value="Mad Mage Staff"/>
+      </imgdir>
+      <imgdir name="1703041">
+        <string name="name" value="Silent Night Weapon"/>
+      </imgdir>
+      <imgdir name="1703047">
+        <string name="name" value="Spooky Wrath"/>
+      </imgdir>
+      <imgdir name="1703048">
+        <string name="name" value="Nightmare&apos;s Bloom"/>
+      </imgdir>
+      <imgdir name="1703049">
+        <string name="name" value="[BTS] Last Feather"/>
+      </imgdir>
+      <imgdir name="1703051">
+        <string name="name" value="[BTS] Army Bomb"/>
+      </imgdir>
+      <imgdir name="1703052">
+        <string name="name" value="Heartfelt Sentiments"/>
+      </imgdir>
+      <imgdir name="1703053">
+        <string name="name" value="Red Bean Fish Pastry"/>
+      </imgdir>
+      <imgdir name="1703055">
+        <string name="name" value="Dark Night Flight Weapon"/>
+      </imgdir>
+      <imgdir name="1703056">
+        <string name="name" value="Hand-Knit Bunny Doll Weapon"/>
+      </imgdir>
+      <imgdir name="1703058">
+        <string name="name" value="Heartfelt Gift"/>
+      </imgdir>
+      <imgdir name="1703059">
+        <string name="name" value="My Beating Heart Weapon"/>
+      </imgdir>
+      <imgdir name="1703061">
+        <string name="name" value="Squirrelbear Camera"/>
+      </imgdir>
+      <imgdir name="1703062">
+        <string name="name" value="Long Long BUGCAT CAPOO"/>
+      </imgdir>
+      <imgdir name="1703065">
+        <string name="name" value="Little Prince/Princess Weapon"/>
+      </imgdir>
+      <imgdir name="1703067">
+        <string name="name" value="Old Secret"/>
+      </imgdir>
+      <imgdir name="1703068">
+        <string name="name" value="Ebony Fan"/>
+      </imgdir>
+      <imgdir name="1703080">
+        <string name="name" value="Music Box Key"/>
+      </imgdir>
+      <imgdir name="1703085">
+        <string name="name" value="Sage Realm Blossom"/>
+      </imgdir>
+      <imgdir name="1703087">
+        <string name="name" value="Sweet Letter Fountain Pen"/>
+      </imgdir>
+      <imgdir name="1703088">
+        <string name="name" value="Petite Spring Scene Raincoat"/>
+      </imgdir>
+      <imgdir name="1703090">
+        <string name="name" value="Sweetest Dream Weapon"/>
+      </imgdir>
+      <imgdir name="1703097">
+        <string name="name" value="Pure Rose Muddler"/>
+      </imgdir>
+      <imgdir name="1703099">
+        <string name="name" value="Sweet Penguin Ice"/>
+      </imgdir>
+      <imgdir name="1703100">
+        <string name="name" value="Refreshing Penguin Ice"/>
+      </imgdir>
+      <imgdir name="1703107">
+        <string name="name" value="Cozy Kitty Cushion"/>
+      </imgdir>
+      <imgdir name="1703108">
+        <string name="name" value="Cute Rabbit Doll Weapon"/>
+      </imgdir>
+      <imgdir name="1703109">
+        <string name="name" value="Cute Kitty Doll Weapon"/>
+      </imgdir>
+      <imgdir name="1703110">
+        <string name="name" value="Cute Fox Doll Weapon"/>
+      </imgdir>
+      <imgdir name="1703111">
+        <string name="name" value="Pop Idol Microphone"/>
+      </imgdir>
+      <imgdir name="1703112">
+        <string name="name" value="Guide of the Night Sky Weapon"/>
+      </imgdir>
+      <imgdir name="1703122">
+        <string name="name" value="Clown Certification"/>
+      </imgdir>
+      <imgdir name="1703127">
+        <string name="name" value="Big Sunflower"/>
+      </imgdir>
+      <imgdir name="1703128">
+        <string name="name" value="Flat Peach"/>
+      </imgdir>
+      <imgdir name="1703134">
+        <string name="name" value="Lonely Baby Bear"/>
+      </imgdir>
+      <imgdir name="1703138">
+        <string name="name" value="Winter Wand"/>
+      </imgdir>
+      <imgdir name="1703139">
+        <string name="name" value="Crystal Moon Weapon"/>
+      </imgdir>
+      <imgdir name="1703144">
+        <string name="name" value="Birthday Popper"/>
+      </imgdir>
+      <imgdir name="1703145">
+        <string name="name" value="Heart-Dangling Broomstick"/>
+      </imgdir>
+      <imgdir name="1703147">
+        <string name="name" value="Brave Tiger&apos;s Spirit"/>
+      </imgdir>
+      <imgdir name="1703154">
+        <string name="name" value="Star Pride"/>
+      </imgdir>
+      <imgdir name="1703155">
+        <string name="name" value="Midnight Ink"/>
+      </imgdir>
+      <imgdir name="1703157">
+        <string name="name" value="Mysterious Familiar"/>
+      </imgdir>
+      <imgdir name="1703160">
+        <string name="name" value="Teddy Bear Ribbon"/>
+      </imgdir>
+      <imgdir name="1703161">
+        <string name="name" value="Starlight Trumpet"/>
+      </imgdir>
+      <imgdir name="1703165">
+        <string name="name" value="Dream Chime Bell Weapon"/>
+      </imgdir>
+      <imgdir name="1703169">
+        <string name="name" value="Snowy Squirrel Acorn"/>
+      </imgdir>
+      <imgdir name="1703170">
+        <string name="name" value="Crimson Hush"/>
+      </imgdir>
+      <imgdir name="1703171">
+        <string name="name" value="Blue Crystal&apos;s Beacon"/>
+      </imgdir>
+      <imgdir name="1703172">
+        <string name="name" value="Moon Slayer"/>
+      </imgdir>
+      <imgdir name="1703173">
+        <string name="name" value="Maple Smartphone"/>
+      </imgdir>
+      <imgdir name="1703176">
+        <string name="name" value="Moon Bunny&apos;s Attire"/>
+      </imgdir>
+      <imgdir name="1703178">
+        <string name="name" value="Moonlight Shine Sword"/>
+      </imgdir>
+      <imgdir name="1703181">
+        <string name="name" value="Starlight Galaxy"/>
+      </imgdir>
+      <imgdir name="1703182">
+        <string name="name" value="Meow Heart Yarn Weapon"/>
+      </imgdir>
+      <imgdir name="1703183">
+        <string name="name" value="Rabbit Heart Yarn Weapon"/>
+      </imgdir>
+      <imgdir name="1703189">
+        <string name="name" value="White Rose Scissors Weapon"/>
+      </imgdir>
+      <imgdir name="1703190">
+        <string name="name" value="Black Rose Scissors Weapon"/>
+      </imgdir>
+      <imgdir name="1703191">
+        <string name="name" value="My Reliable Guide"/>
+      </imgdir>
+      <imgdir name="1703199">
+        <string name="name" value="Bear Pajamas Teddy Bear"/>
+      </imgdir>
+      <imgdir name="1703202">
+        <string name="name" value="Artistic Spirit"/>
+      </imgdir>
+      <imgdir name="1703213">
+        <string name="name" value="Dozing Lamb Cushion"/>
+      </imgdir>
+      <imgdir name="1703214">
+        <string name="name" value="Black Sword"/>
+      </imgdir>
+      <imgdir name="1703217">
+        <string name="name" value="Nightmare Pearl"/>
+      </imgdir>
+      <imgdir name="1703222">
+        <string name="name" value="Wooden Teaspoon Weapon"/>
+      </imgdir>
+      <imgdir name="1703224">
+        <string name="name" value="Heartbeat Home Run"/>
+      </imgdir>
+      <imgdir name="1703226">
+        <string name="name" value="Picnic Day"/>
+      </imgdir>
+      <imgdir name="1703236">
+        <string name="name" value="Beach Party Fireworks"/>
+      </imgdir>
+      <imgdir name="1703237">
+        <string name="name" value="Popping Scoop"/>
+      </imgdir>
+      <imgdir name="1703241">
+        <string name="name" value="Dragon Jewel Staff"/>
+      </imgdir>
+      <imgdir name="1703244">
+        <string name="name" value="Memory Collector"/>
+      </imgdir>
+      <imgdir name="1703245">
+        <string name="name" value="Sandy Beach Toy"/>
+      </imgdir>
+      <imgdir name="1703248">
+        <string name="name" value="Darkness Watcher"/>
+      </imgdir>
+      <imgdir name="1703251">
+        <string name="name" value="Candy Typing"/>
+      </imgdir>
+      <imgdir name="1703267">
+        <string name="name" value="Magic Trainee&apos;s Cane"/>
+      </imgdir>
+      <imgdir name="1703274">
+        <string name="name" value="I&apos;m Blue Recovery Medicine"/>
+      </imgdir>
+      <imgdir name="1703275">
+        <string name="name" value="I&apos;m Pink Recovery Medicine"/>
+      </imgdir>
+      <imgdir name="1703278">
+        <string name="name" value="Green Maplemas Wreath"/>
+      </imgdir>
+      <imgdir name="1703279">
+        <string name="name" value="Friendly Bear Weapon"/>
+      </imgdir>
+      <imgdir name="1703286">
+        <string name="name" value="Meow Candy Basket"/>
+      </imgdir>
+      <imgdir name="1703293">
+        <string name="name" value="Floral Jewel Wand"/>
+      </imgdir>
+      <imgdir name="1703297">
+        <string name="name" value="Ragged Dark Bunny"/>
+      </imgdir>
+      <imgdir name="1703306">
+        <string name="name" value="Winter Fox Cotton Punch"/>
+      </imgdir>
+      <imgdir name="1703307">
+        <string name="name" value="[BLACKPINK] PINK Venom"/>
+      </imgdir>
+      <imgdir name="1703313">
+        <string name="name" value="Porong Fairy Staff"/>
+      </imgdir>
+      <imgdir name="1703316">
+        <string name="name" value="Checkered Heart Bag"/>
+      </imgdir>
+      <imgdir name="1703331">
+        <string name="name" value="Refreshing Lemon Tea"/>
+      </imgdir>
+      <imgdir name="1703359">
+        <string name="name" value="Jr. Necki Weapon"/>
+      </imgdir>
+      <imgdir name="1703362">
+        <string name="name" value="Brushing Teeth Time"/>
+      </imgdir>
+      <imgdir name="1703373">
+        <string name="name" value="Angry Bandage Bear"/>
+      </imgdir>
+      <imgdir name="1703391">
+        <string name="name" value="Midsummer Night Flower Basket"/>
+      </imgdir>
+      <imgdir name="1703397">
+        <string name="name" value="Megumin Weapon"/>
+      </imgdir>
+      <imgdir name="1703401">
+        <string name="name" value="Gifted Magician Magic Wand"/>
+      </imgdir>
+      <imgdir name="1703412">
+        <string name="name" value="Snowy Frost Broomstick"/>
+      </imgdir>
+      <imgdir name="1703419">
+        <string name="name" value="Ghost Dress-up Candy Basket"/>
+      </imgdir>
+      <imgdir name="1703428">
+        <string name="name" value="Blue Dragon&apos;s Cascading Blade"/>
+      </imgdir>
+      <imgdir name="1703463">
+        <string name="name" value="Shining Memorial Staff"/>
+      </imgdir>
+      <imgdir name="1703468">
+        <string name="name" value="Dusk and Dawn Longsword"/>
+      </imgdir>
+      <imgdir name="1703473">
+        <string name="name" value="Spring Spreading Guard Umbrella"/>
+      </imgdir>
+      <imgdir name="1703514">
+        <string name="name" value="Cotton Candy Dreams"/>
+      </imgdir>
+      <imgdir name="1703533">
+        <string name="name" value="Infernal Punisher"/>
       </imgdir>
       <imgdir name="1302107">
         <string name="name" value="Black Crystal Blade"/>
