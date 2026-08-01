@@ -40,7 +40,8 @@ function menuText() {
         + "#L5#Eyes - enter a number#l\r\n"
         + "#L6#Eyes - browse page by page#l\r\n"
         + "#L7#Eyes - surprise me#l\r\n"
-        + "#L8#Eyes - change colour only#l#k";
+        + "#L8#Eyes - change colour only#l#k\r\n\r\n"
+        + "For your skin, see #bMs. Tan#k next door.";
 }
 
 /* Eyes carry a reviewed gender; hair is all unisex until its own review pass. */

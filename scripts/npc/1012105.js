@@ -1,62 +1,103 @@
-/*
-	This file is part of the OdinMS Maple Story Server
-    Copyright (C) 2008 Patrick Huy <patrick.huy@frz.cc>
-		       Matthias Butz <matze@odinms.de>
-		       Jan Christian Meyer <vimes@odinms.de>
+/* Ms. Tan -- Henesys skin care.
+ *
+ * Replaces the stock coupon script (which offered skins 0-4 for a #5153000) with the whole
+ * palette, free: stock v83's 0-5 and 9-11, plus 6-8 and 12-16 ported from MapleLegends.
+ *
+ * The preview dialog draws one avatar per entry and the packet stores the count in a single
+ * byte, so the palette is paged seven at a time -- the same limit Natalie works around for
+ * hair and eyes. Paging is by id so the numbers in the text stay predictable.
+ *
+ * Every id listed here must have BOTH 0000 20xx.img and 0001 20xx.img in the client's
+ * Character.wz; a missing head file draws a headless character rather than failing loudly.
+ */
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as
-    published by the Free Software Foundation version 3 as published by
-    the Free Software Foundation. You may not use, modify or distribute
-    this program under any other version of the GNU Affero General Public
-    License.
+var PER_PAGE = 7;
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
+// Index is the skin id, so the gaps stock v83 left (6-8) are filled in place.
+var NAMES = [
+    "Light", "Tanned", "Dark", "Pale", "Blue", "Green", "Gold", "Slate", "Bronze",
+    "White", "Pink", "Brown", "Ivory", "Ash", "Coral", "Rose", "Blush"
+];
 
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/* Ms. Tan
-	Henesys Skin Change.
-*/
-var status;
-var skin = Array(0, 1, 2, 3, 4);
-var price = 1000000;
+var state;
+var options;        // skin ids currently drawn in the preview dialog
 
 function start() {
-    status = -1;
-    action(1, 0, 0);
+    state = "menu";
+    options = [];
+    cm.sendSimple(menuText());
+}
+
+function pageCount() {
+    return Math.ceil(NAMES.length / PER_PAGE);
+}
+
+function menuText() {
+    var now = cm.getPlayer().getSkinColor().getId();
+    var s = "Welcome to Henesys Skin-Care. No coupon needed any more -- try as many as you like.\r\n"
+        + "You're wearing #b" + nameOf(now) + "#k right now.\r\n\r\n";
+    for (var p = 0; p < pageCount(); p++) {
+        s += "#b#L" + p + "#" + rangeLabel(p) + "#l\r\n";
+    }
+    return s + "#k";
+}
+
+function nameOf(id) {
+    return id >= 0 && id < NAMES.length ? NAMES[id] : "something I don't recognise";
+}
+
+function idsOn(page) {
+    var ids = [];
+    for (var i = page * PER_PAGE; i < NAMES.length && i < (page + 1) * PER_PAGE; i++) {
+        ids.push(i);
+    }
+    return ids;
+}
+
+function rangeLabel(page) {
+    var names = [];
+    var ids = idsOn(page);
+    for (var i = 0; i < ids.length; i++) {
+        names.push(NAMES[ids[i]]);
+    }
+    return names.join(", ");
 }
 
 function action(mode, type, selection) {
-    if (mode < 1) {  // disposing issue with stylishs found thanks to Vcoc
+    if (mode < 1) {
         cm.dispose();
-    } else {
-        if (mode == 1) {
-            status++;
-        } else {
-            status--;
-        }
-
-
-        if (status == 0) {
-            cm.sendSimple("Well, hello! Welcome to the Henesys Skin-Care! Would you like to have a firm, tight, healthy looking skin like mine?  With a #b#t5153000##k, you can let us take care of the rest and have the kind of skin you've always wanted~!\r\n#L1#Skin Care: #i5153000##t5153000##l");
-        } else if (status == 1) {
-            if (cm.haveItem(5153000)) {
-                cm.sendStyle("With our specialized machine, you can see yourself after the treatment in advance. What kind of skin-treatment would you like to do? Choose the style of your liking.", skin);
-            } else {
-                cm.sendOk("Um... you don't have the skin-care coupon you need to receive the treatment. Sorry, but I am afraid we can't do it for you...");
-                cm.dispose();
-
-            }
-        } else {
-            cm.gainItem(5153000, -1);
-            cm.setSkin(selection);
-            cm.sendOk("Enjoy your new and improved skin!");
-            cm.dispose();
-        }
+        return;
     }
+
+    if (state === "menu") {
+        if (selection < 0 || selection >= pageCount()) {
+            cm.dispose();
+            return;
+        }
+        options = idsOn(selection);
+        state = "pick";
+        var caption = "";
+        for (var i = 0; i < options.length; i++) {
+            caption += "\r\n#b" + (i + 1) + ".#k " + NAMES[options[i]];
+        }
+        // sendStyle takes int[]; convert explicitly rather than relying on how a JS array
+        // built by push() happens to bind to it.
+        cm.sendStyle("Have a look at yourself in each of these." + caption,
+            Java.to(options, "int[]"));
+        return;
+    }
+
+    if (state === "pick") {
+        if (selection < 0 || selection >= options.length) {
+            cm.dispose();
+            return;
+        }
+        var id = options[selection];
+        cm.setSkin(id);
+        cm.sendOk("#b" + NAMES[id] + "#k it is. Come back whenever you fancy a change.");
+        cm.dispose();
+        return;
+    }
+
+    cm.dispose();
 }
