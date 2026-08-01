@@ -1976,6 +1976,7 @@ public class Character extends AbstractCharacterObject {
 
     public final void pickupItem(MapObject ob, int petIndex) {     // yes, one picks the MapObject, not the MapItem
         if (ob == null) {                                               // pet index refers to the one picking up the item
+            sendPacket(PacketCreator.enableActions());   // every other exit unlocks the client; so must this one
             return;
         }
 
