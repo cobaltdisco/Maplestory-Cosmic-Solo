@@ -140059,7 +140059,7 @@
     <int name="Period" value="0"/>
     <int name="Priority" value="0"/>
     <int name="Gender" value="2"/>
-    <int name="OnSale" value="1"/>
+    <int name="OnSale" value="0"/>
   </imgdir>
   <imgdir name="13780">
     <int name="SN" value="11100387"/>
@@ -140069,7 +140069,7 @@
     <int name="Period" value="0"/>
     <int name="Priority" value="0"/>
     <int name="Gender" value="2"/>
-    <int name="OnSale" value="1"/>
+    <int name="OnSale" value="0"/>
   </imgdir>
   <imgdir name="13781">
     <int name="SN" value="11100388"/>
@@ -140079,7 +140079,7 @@
     <int name="Period" value="0"/>
     <int name="Priority" value="0"/>
     <int name="Gender" value="2"/>
-    <int name="OnSale" value="1"/>
+    <int name="OnSale" value="0"/>
   </imgdir>
   <imgdir name="13782">
     <int name="SN" value="11100389"/>
@@ -140089,7 +140089,7 @@
     <int name="Period" value="0"/>
     <int name="Priority" value="0"/>
     <int name="Gender" value="2"/>
-    <int name="OnSale" value="1"/>
+    <int name="OnSale" value="0"/>
   </imgdir>
   <imgdir name="13783">
     <int name="SN" value="11100390"/>
@@ -140099,7 +140099,7 @@
     <int name="Period" value="0"/>
     <int name="Priority" value="0"/>
     <int name="Gender" value="2"/>
-    <int name="OnSale" value="1"/>
+    <int name="OnSale" value="0"/>
   </imgdir>
   <imgdir name="13784">
     <int name="SN" value="11100391"/>
@@ -140109,7 +140109,7 @@
     <int name="Period" value="0"/>
     <int name="Priority" value="0"/>
     <int name="Gender" value="2"/>
-    <int name="OnSale" value="1"/>
+    <int name="OnSale" value="0"/>
   </imgdir>
   <imgdir name="13785">
     <int name="SN" value="11100392"/>
@@ -140119,7 +140119,7 @@
     <int name="Period" value="0"/>
     <int name="Priority" value="0"/>
     <int name="Gender" value="2"/>
-    <int name="OnSale" value="1"/>
+    <int name="OnSale" value="0"/>
   </imgdir>
   <imgdir name="13786">
     <int name="SN" value="11100393"/>
@@ -140129,7 +140129,7 @@
     <int name="Period" value="0"/>
     <int name="Priority" value="0"/>
     <int name="Gender" value="2"/>
-    <int name="OnSale" value="1"/>
+    <int name="OnSale" value="0"/>
   </imgdir>
   <imgdir name="13787">
     <int name="SN" value="11100394"/>
@@ -140139,7 +140139,7 @@
     <int name="Period" value="0"/>
     <int name="Priority" value="0"/>
     <int name="Gender" value="2"/>
-    <int name="OnSale" value="1"/>
+    <int name="OnSale" value="0"/>
   </imgdir>
   <imgdir name="13788">
     <int name="SN" value="11100395"/>
@@ -140149,7 +140149,7 @@
     <int name="Period" value="0"/>
     <int name="Priority" value="0"/>
     <int name="Gender" value="2"/>
-    <int name="OnSale" value="1"/>
+    <int name="OnSale" value="0"/>
   </imgdir>
   <imgdir name="13789">
     <int name="SN" value="11100396"/>
@@ -140159,7 +140159,7 @@
     <int name="Period" value="0"/>
     <int name="Priority" value="0"/>
     <int name="Gender" value="2"/>
-    <int name="OnSale" value="1"/>
+    <int name="OnSale" value="0"/>
   </imgdir>
   <imgdir name="13790">
     <int name="SN" value="11100397"/>
@@ -140169,7 +140169,7 @@
     <int name="Period" value="0"/>
     <int name="Priority" value="0"/>
     <int name="Gender" value="2"/>
-    <int name="OnSale" value="1"/>
+    <int name="OnSale" value="0"/>
   </imgdir>
   <imgdir name="13791">
     <int name="SN" value="11100398"/>
@@ -140179,7 +140179,7 @@
     <int name="Period" value="0"/>
     <int name="Priority" value="0"/>
     <int name="Gender" value="2"/>
-    <int name="OnSale" value="1"/>
+    <int name="OnSale" value="0"/>
   </imgdir>
   <imgdir name="13792">
     <int name="SN" value="11100399"/>
@@ -140189,7 +140189,7 @@
     <int name="Period" value="0"/>
     <int name="Priority" value="0"/>
     <int name="Gender" value="2"/>
-    <int name="OnSale" value="1"/>
+    <int name="OnSale" value="0"/>
   </imgdir>
   <imgdir name="13793">
     <int name="SN" value="11100400"/>
@@ -140199,7 +140199,7 @@
     <int name="Period" value="0"/>
     <int name="Priority" value="0"/>
     <int name="Gender" value="2"/>
-    <int name="OnSale" value="1"/>
+    <int name="OnSale" value="0"/>
   </imgdir>
   <imgdir name="13794">
     <int name="SN" value="11100401"/>
@@ -140209,7 +140209,7 @@
     <int name="Period" value="0"/>
     <int name="Priority" value="0"/>
     <int name="Gender" value="2"/>
-    <int name="OnSale" value="1"/>
+    <int name="OnSale" value="0"/>
   </imgdir>
   <imgdir name="13795">
     <int name="SN" value="11100402"/>
@@ -140219,7 +140219,7 @@
     <int name="Period" value="0"/>
     <int name="Priority" value="0"/>
     <int name="Gender" value="2"/>
-    <int name="OnSale" value="1"/>
+    <int name="OnSale" value="0"/>
   </imgdir>
   <imgdir name="13796">
     <int name="SN" value="11100403"/>
@@ -140229,7 +140229,7 @@
     <int name="Period" value="0"/>
     <int name="Priority" value="0"/>
     <int name="Gender" value="2"/>
-    <int name="OnSale" value="1"/>
+    <int name="OnSale" value="0"/>
   </imgdir>
   <imgdir name="13797">
     <int name="SN" value="11100404"/>
@@ -140239,7 +140239,7 @@
     <int name="Period" value="0"/>
     <int name="Priority" value="0"/>
     <int name="Gender" value="2"/>
-    <int name="OnSale" value="1"/>
+    <int name="OnSale" value="0"/>
   </imgdir>
   <imgdir name="13798">
     <int name="SN" value="11100405"/>
