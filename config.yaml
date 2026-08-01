@@ -403,7 +403,14 @@ server:
     PLAYERNPC_AREA_Y: 160               #Initial height gap between PlayerNPCs.
     PLAYERNPC_AREA_STEPS: 4             #Max number of times gap is shortened to comport PlayerNPCs.
     PLAYERNPC_ORGANIZE_AREA: true   #Automatically rearranges PlayerNPCs on the map if there is no space set the new NPC. Current distance gap between NPCs is decreased to solve this issue.
-    PLAYERNPC_AUTODEPLOY: true      #Makes PlayerNPC automatically deployed on the Hall of Fame at the instant one reaches max level. If false, eligible players must talk to 1st job instructor to deploy a NPC.
+    PLAYERNPC_AUTODEPLOY: false     #Makes PlayerNPC automatically deployed on the Hall of Fame at the instant one reaches max level. If false, eligible players must talk to 1st job instructor to deploy a NPC.
+    # Turned OFF deliberately. A statue's appearance is an NPC id of PLAYER_NPC_BASE + branch*100,
+    # and PlayerNPCFactory.isExistentScriptid validates it against the SERVER's Npc.wz -- which
+    # HeavenMS padded out to 6962 entries. A stock v83 client has 1620, and the pirate branch
+    # (9901400-9901499) plus Aran/Evan (9902000+) are missing from it entirely. So the guard
+    # passes and the client is then asked to draw art it does not have. Leaving this false keeps
+    # deployment opt-in through the 1st job instructor instead of firing the instant someone
+    # hits 200. See docs/incidents.md.
 
     #Pet Auto-Pot Configuration
     USE_COMPULSORY_AUTOPOT: true    #Pets will consume as many potions as needed to fulfill the AUTOHP/MP ratio threshold.
