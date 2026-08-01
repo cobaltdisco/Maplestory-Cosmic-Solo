@@ -297,6 +297,10 @@ public class ServerConfig {
     public int MINIMUM_GM_LEVEL_TO_USE_DUEY;
     public int MINIMUM_GM_LEVEL_TO_DROP;
 
+    //Web Admin Panel Configuration
+    public boolean WEB_ADMIN_ENABLED = false;
+    public int WEB_ADMIN_PORT = 8686;
+
     //Custom NPC overrides. List of NPC IDs.
     public Map<String, String> NPCS_SCRIPTABLE = new HashMap<>();
 }

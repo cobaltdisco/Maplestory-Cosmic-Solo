@@ -1,4 +1,8 @@
 /logs/**
+
+# Web admin panel runtime assets: 15k item icons dumped out of the client wz by
+# tools-local/IconDump. Regenerable, ~9 MB of binaries, no business in git.
+/webadmin/
 .idea/*
 !.idea/codeStyles/
 *.iml

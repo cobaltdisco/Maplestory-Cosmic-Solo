@@ -59,6 +59,7 @@ import net.server.task.LoginStorageTask;
 import net.server.task.RankingCommandTask;
 import net.server.task.RankingLoginTask;
 import net.server.task.RespawnTask;
+import net.server.webadmin.WebAdminServer;
 import net.server.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.slf4j.Logger;
@@ -943,6 +944,10 @@ public class Server {
 
         OpcodeConstants.generateOpcodeNames();
         CommandsExecutor.getInstance();
+
+        if (YamlConfig.config.server.WEB_ADMIN_ENABLED) {
+            WebAdminServer.start(YamlConfig.config.server.WEB_ADMIN_PORT);
+        }
 
         for (Channel ch : this.getAllChannels()) {
             ch.reloadEventScriptManager();
@@ -1922,6 +1927,7 @@ public class Server {
         if (getWorlds() == null) {
             return;//already shutdown
         }
+        WebAdminServer.stop();  // before the worlds go away, so nobody can gift into a dying world
         for (World w : getWorlds()) {
             w.shutdown();
         }
