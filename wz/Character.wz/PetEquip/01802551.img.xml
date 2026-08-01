@@ -402,7 +402,7 @@
       </canvas>
     </imgdir>
     <imgdir name="hang">
-      <canvas name="0" width="1" height="1"/>
+      <uol name="0" value="../../5000479/hang/0"/>
     </imgdir>
     <imgdir name="hungry">
       <canvas name="0" width="29" height="9">
@@ -694,7 +694,7 @@
       </canvas>
     </imgdir>
     <imgdir name="hang">
-      <canvas name="0" width="1" height="1"/>
+      <uol name="0" value="../../5000479/hang/0"/>
     </imgdir>
     <imgdir name="hungry">
       <canvas name="0" width="29" height="9">

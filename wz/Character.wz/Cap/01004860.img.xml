@@ -18,7 +18,7 @@
     <int name="cash" value="1"/>
   </imgdir>
   <imgdir name="default">
-    <canvas name="default" width="1" height="1">
+    <canvas name="default" width="18" height="25">
       <vector name="origin" x="-9" y="14"/>
       <imgdir name="map">
         <vector name="brow" x="0" y="0"/>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <imgdir name="01004979.img">
   <imgdir name="info">
-    <canvas name="icon" width="1" height="1">
+    <canvas name="icon" width="31" height="29">
       <vector name="origin" x="-1" y="29"/>
     </canvas>
-    <canvas name="iconRaw" width="1" height="1">
+    <canvas name="iconRaw" width="31" height="28">
       <vector name="origin" x="-1" y="29"/>
     </canvas>
     <string name="islot" value="Cp"/>
@@ -35,7 +35,7 @@
     <int name="tradeBlock" value="1"/>
   </imgdir>
   <imgdir name="default">
-    <canvas name="default" width="1" height="1">
+    <canvas name="default" width="42" height="37">
       <vector name="origin" x="22" y="27"/>
       <imgdir name="map">
         <vector name="brow" x="0" y="0"/>
@@ -44,7 +44,7 @@
     </canvas>
   </imgdir>
   <imgdir name="backDefault">
-    <canvas name="default" width="1" height="1">
+    <canvas name="default" width="42" height="27">
       <vector name="origin" x="13" y="26"/>
       <imgdir name="map">
         <vector name="brow" x="0" y="0"/>

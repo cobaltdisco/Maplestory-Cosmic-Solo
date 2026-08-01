@@ -4,9 +4,7 @@
     <canvas name="icon" width="31" height="22">
       <vector name="origin" x="-1" y="24"/>
     </canvas>
-    <canvas name="iconRaw" width="1" height="1">
-      <vector name="origin" x="-1" y="24"/>
-    </canvas>
+    <uol name="iconRaw" value="icon"/>
     <string name="islot" value="Cp"/>
     <string name="vslot" value="CpH1H5"/>
     <int name="reqJob" value="0"/>

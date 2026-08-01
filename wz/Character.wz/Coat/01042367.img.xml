@@ -1314,7 +1314,7 @@
         </imgdir>
         <string name="z" value="mailChest"/>
       </canvas>
-      <canvas name="mailArm" width="1" height="1">
+      <canvas name="mailArm" width="8" height="8">
         <vector name="origin" x="12" y="9"/>
         <imgdir name="map">
           <vector name="navel" x="0" y="0"/>
