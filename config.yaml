@@ -293,6 +293,14 @@ server:
 
     EQUIP_EXP_RATE: 1.0                  #Rate for equipment exp gain, grows linearly. Set 1.0 for default (about 100~200 same-level range mobs killed to pass equip from level 1 to 2).
     PQ_BONUS_EXP_RATE: 0.5               #Rate for the PQ exp reward.
+    # EXPERIMENT. A pet's pickup makes the server send the PLAYER an "you may act again" packet,
+    # which resets the player's action state. The pet loots about every 200ms, so during a run of
+    # drops those resets arrive faster than an attack can get out -- the reported "cannot attack
+    # while the pet is looting". This stops sending it when a pet did the picking up.
+    # If instead the client is WAITING for that packet, the character will freeze solid while the
+    # pet loots. That is the point: the two outcomes cannot be mistaken for each other. Set false
+    # and restart to undo.
+    SUPPRESS_PET_LOOT_ENABLE_ACTIONS: true
     SINGLE_LEVELUP_PER_EXP_GAIN: true    #One level per exp gain, however much came in. The surplus stays on the bar, so the next kill takes the next level. With this false (stock behaviour) a single large reward chains levels until the exp runs out.
 
     EXP_SPLIT_LEVEL_INTERVAL: 5            #Non-contributing players must be within N level between the mob to receive EXP.

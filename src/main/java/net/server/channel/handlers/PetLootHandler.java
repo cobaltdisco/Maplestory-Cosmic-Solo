@@ -24,6 +24,7 @@ package net.server.channel.handlers;
 import client.Character;
 import client.Client;
 import client.inventory.Pet;
+import config.YamlConfig;
 import net.AbstractPacketHandler;
 import net.packet.InPacket;
 import server.maps.MapItem;
@@ -44,7 +45,7 @@ public final class PetLootHandler extends AbstractPacketHandler {
         int petIndex = chr.getPetIndex(p.readInt());
         Pet pet = chr.getPet(petIndex);
         if (pet == null || !pet.isSummoned()) {
-            c.sendPacket(PacketCreator.enableActions());
+            petActionsDone(c);
             return;
         }
 
@@ -55,27 +56,27 @@ public final class PetLootHandler extends AbstractPacketHandler {
             MapItem mapitem = (MapItem) ob;
             if (mapitem.getMeso() > 0) {
                 if (!chr.isEquippedMesoMagnet()) {
-                    c.sendPacket(PacketCreator.enableActions());
+                    petActionsDone(c);
                     return;
                 }
 
                 if (chr.isEquippedPetItemIgnore()) {
                     final Set<Integer> petIgnore = chr.getExcludedItems();
                     if (!petIgnore.isEmpty() && petIgnore.contains(Integer.MAX_VALUE)) {
-                        c.sendPacket(PacketCreator.enableActions());
+                        petActionsDone(c);
                         return;
                     }
                 }
             } else {
                 if (!chr.isEquippedItemPouch()) {
-                    c.sendPacket(PacketCreator.enableActions());
+                    petActionsDone(c);
                     return;
                 }
 
                 if (chr.isEquippedPetItemIgnore()) {
                     final Set<Integer> petIgnore = chr.getExcludedItems();
                     if (!petIgnore.isEmpty() && petIgnore.contains(mapitem.getItem().getItemId())) {
-                        c.sendPacket(PacketCreator.enableActions());
+                        petActionsDone(c);
                         return;
                     }
                 }
@@ -83,7 +84,18 @@ public final class PetLootHandler extends AbstractPacketHandler {
 
             chr.pickupItem(ob, petIndex);
         } catch (NullPointerException | ClassCastException e) {
-            c.sendPacket(PacketCreator.enableActions());
+            petActionsDone(c);
         }
+    }
+
+    /**
+     * Every exit here belongs to the pet, not the player, so the player's action state is only
+     * reset when SUPPRESS_PET_LOOT_ENABLE_ACTIONS says to. See the note on that setting.
+     */
+    private static void petActionsDone(Client c) {
+        if (YamlConfig.config.server.SUPPRESS_PET_LOOT_ENABLE_ACTIONS) {
+            return;
+        }
+        c.sendPacket(PacketCreator.enableActions());
     }
 }

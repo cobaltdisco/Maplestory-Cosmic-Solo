@@ -306,6 +306,9 @@ public class ServerConfig {
     //Custom NPC overrides. List of NPC IDs.
     public Map<String, String> NPCS_SCRIPTABLE = new HashMap<>();
 
+    //Leave the player's action state alone when a PET does the picking up. See config.yaml.
+    public boolean SUPPRESS_PET_LOOT_ENABLE_ACTIONS = false;
+
     //One level per exp gain, surplus carried. See config.yaml.
     public boolean SINGLE_LEVELUP_PER_EXP_GAIN = false;
 

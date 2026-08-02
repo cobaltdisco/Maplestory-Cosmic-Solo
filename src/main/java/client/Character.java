@@ -1982,7 +1982,7 @@ public class Character extends AbstractCharacterObject {
 
         if (ob instanceof MapItem mapitem) {
             if (System.currentTimeMillis() - mapitem.getDropTime() < 400 || !mapitem.canBePickedBy(this)) {
-                sendPacket(PacketCreator.enableActions());
+                finishPickup(petIndex);
                 return;
             }
 
@@ -1996,7 +1996,7 @@ public class Character extends AbstractCharacterObject {
             try {
                 if (mapitem.isPickedUp()) {
                     sendPacket(PacketCreator.showItemUnavailable());
-                    sendPacket(PacketCreator.enableActions());
+                    finishPickup(petIndex);
                     return;
                 }
 
@@ -2037,21 +2037,21 @@ public class Character extends AbstractCharacterObject {
                             } else if (InventoryManipulator.addFromDrop(client, mItem, true)) {
                                 this.getMap().pickItemDrop(pickupPacket, mapitem);
                             } else {
-                                sendPacket(PacketCreator.enableActions());
+                                finishPickup(petIndex);
                                 return;
                             }
                         } else {
                             sendPacket(PacketCreator.showItemUnavailable());
-                            sendPacket(PacketCreator.enableActions());
+                            finishPickup(petIndex);
                             return;
                         }
-                        sendPacket(PacketCreator.enableActions());
+                        finishPickup(petIndex);
                         return;
                     }
 
                     if (!this.needQuestItem(mapitem.getQuest(), mapitem.getItemId())) {
                         sendPacket(PacketCreator.showItemUnavailable());
-                        sendPacket(PacketCreator.enableActions());
+                        finishPickup(petIndex);
                         return;
                     }
 
@@ -2072,7 +2072,7 @@ public class Character extends AbstractCharacterObject {
                             itemScript = info;
                         } else {
                             if (!InventoryManipulator.addFromDrop(client, mItem, true)) {
-                                sendPacket(PacketCreator.enableActions());
+                                finishPickup(petIndex);
                                 return;
                             }
                         }
@@ -2090,7 +2090,7 @@ public class Character extends AbstractCharacterObject {
                             updateAriantScore();
                         }
                     } else {
-                        sendPacket(PacketCreator.enableActions());
+                        finishPickup(petIndex);
                         return;
                     }
 
@@ -2107,6 +2107,25 @@ public class Character extends AbstractCharacterObject {
                 ItemScriptManager ism = ItemScriptManager.getInstance();
                 ism.runItemScript(client, itemScript);
             }
+        }
+        finishPickup(petIndex);
+    }
+
+    /**
+     * Ends a pickup by telling the client it may act again.
+     *
+     * That packet is a reset of the player's action state, which is right when the player asked
+     * for the pickup and wrong when a pet did: the pet loots roughly every 200ms, so on a run of
+     * drops the player is handed a reset faster than an attack can get out of the door. Under
+     * SUPPRESS_PET_LOOT_ENABLE_ACTIONS a pet's pickup leaves the player's action state alone.
+     * <p>
+     * If the client turns out to be waiting on this packet rather than being interrupted by it,
+     * suppressing it freezes the character outright -- which is exactly what makes it a clean
+     * experiment, since the two outcomes are impossible to confuse.
+     */
+    private void finishPickup(int petIndex) {
+        if (petIndex >= 0 && YamlConfig.config.server.SUPPRESS_PET_LOOT_ENABLE_ACTIONS) {
+            return;
         }
         sendPacket(PacketCreator.enableActions());
     }
