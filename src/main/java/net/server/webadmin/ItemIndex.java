@@ -28,7 +28,8 @@ import java.util.List;
 public final class ItemIndex {
     private static final Logger log = LoggerFactory.getLogger(ItemIndex.class);
 
-    public record Entry(int id, String name, String inv, String category, int band) {
+    public record Entry(int id, String name, String inv, String category, int band,
+                        boolean placeholder) {
     }
 
     private static volatile List<Entry> entries;
@@ -55,8 +56,9 @@ public final class ItemIndex {
                     continue;
                 }
                 String name = pair.getRight();
+                boolean placeholder = Names.isPlaceholder(id, name);
                 found.add(new Entry(id, name == null || name.isEmpty() ? "NO-NAME" : name,
-                        type.name(), categoryOf(id, type), id / 10000));
+                        type.name(), categoryOf(id, type), id / 10000, placeholder));
             }
             found.sort((a, b) -> Integer.compare(a.id(), b.id()));
             entries = List.copyOf(found);

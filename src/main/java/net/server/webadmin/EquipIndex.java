@@ -60,7 +60,8 @@ public final class EquipIndex {
             "ACC", "EVA", "MHP", "MMP", "Speed", "Jump");
 
     public record Entry(int id, String name, String slot, int gender, int reqJob, int reqLevel,
-                        boolean cash, int tuc, boolean unsafe, Map<String, Integer> stats) {
+                        boolean cash, int tuc, boolean unsafe, boolean placeholder,
+                        Map<String, Integer> stats) {
     }
 
     private static volatile List<Entry> entries;
@@ -208,6 +209,7 @@ public final class EquipIndex {
             return null;
         }
 
+        boolean placeholder = Names.isPlaceholder(id, name);
         if (name == null || name.isEmpty()) {
             name = "NO-NAME";
         }
@@ -215,7 +217,7 @@ public final class EquipIndex {
             slot = "";
         }
         return new Entry(id, name, slot, genderOf(id), reqJob, reqLevel, cash > 0, tuc,
-                CLIENT_UNSAFE.contains(id), stats);
+                CLIENT_UNSAFE.contains(id), placeholder, stats);
     }
 
     /**

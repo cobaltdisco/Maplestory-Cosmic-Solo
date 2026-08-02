@@ -145,6 +145,7 @@
   <button data-tab="online">在线角色</button>
   <button data-tab="equip">赠送装备</button>
   <button data-tab="item">赠送物品</button>
+  <button data-tab="vac">吸怪</button>
 </nav>
 
 <main>
@@ -198,7 +199,9 @@
     <h2>赠送装备</h2>
     <p class="note" id="equipNote">
       按职业、性别、部位过滤，选中后可以逐项改属性再送出。
-      <b>默认不显示现金装备（时装）</b>——它们没有属性，商城里自己买就行；要看的话把「现金装备」切一下。
+      <b>默认不显示现金装备（时装）和无名装备</b>——前者没有属性、商城里自己买就行，
+      后者名字是移植时生成的占位（<code>MISSING NAME</code> / <code>Cap 1004059</code> 这种），
+      在列表里没法有意识地挑。两个下拉都能切回来。
     </p>
     <div class="row" style="margin-bottom:14px">
       <div><label>职业</label><select id="eqJob">
@@ -222,6 +225,11 @@
         <option value="hide">隐藏（时装）</option>
         <option value="all">一起显示</option>
         <option value="only">只看时装</option>
+      </select></div>
+      <div><label>无名装备</label><select id="eqNamed">
+        <option value="hide">隐藏</option>
+        <option value="all">一起显示</option>
+        <option value="only">只看无名</option>
       </select></div>
       <div><label>排序</label><select id="eqSort">
         <option value="id">按编号</option>
@@ -287,6 +295,11 @@
       </select></div>
       <div><label>用途</label><select id="itCat"><option value="">全部</option></select></div>
       <div><label>编号段</label><select id="itBand"><option value="">全部</option></select></div>
+      <div><label>无名物品</label><select id="itNamed">
+        <option value="hide">隐藏</option>
+        <option value="all">一起显示</option>
+        <option value="only">只看无名</option>
+      </select></div>
       <div style="flex:1; min-width:180px"><label>名称 / 编号</label><input id="itSearch" placeholder="输入即过滤" style="width:100%"></div>
     </div>
 
@@ -315,6 +328,41 @@
         <button class="act primary" id="giftItem" style="width:100%; margin-top:14px" disabled>赠送给目标角色</button>
       </div>
     </div>
+  </section>
+
+  <!-- ------------------------------------------------------------ 吸怪 -->
+  <section id="tab-vac">
+    <h2>吸怪</h2>
+    <p class="note">
+      开着的时候，目标角色所在地图的怪会被不断拉到角色<b>面朝方向</b>的前方。
+      角色转身、换地图都会自动跟上；<b>角色一下线就自动关掉</b>。
+    </p>
+
+    <div class="row" style="margin-bottom:14px">
+      <div><label>距离（像素）</label><input id="vacDistance" type="number" min="0" max="1000" value="80" style="width:110px"></div>
+      <div><label>生效范围（像素，0 = 整张地图）</label><input id="vacRadius" type="number" min="0" max="100000" value="0" style="width:150px"></div>
+      <div><label>间隔（毫秒）</label><input id="vacInterval" type="number" min="300" max="10000" step="100" value="800" style="width:110px"></div>
+      <div><label>&nbsp;</label><label style="display:flex; gap:6px; align-items:center; color:var(--text); margin:0; padding:7px 0">
+        <input type="checkbox" id="vacBosses" style="width:auto"> 连 BOSS 一起吸
+      </label></div>
+    </div>
+
+    <div class="row">
+      <button class="act primary" id="vacToggle" disabled>开始吸怪</button>
+      <span class="pill" id="vacStatus">未运行</span>
+    </div>
+
+    <h2 style="margin-top:28px">它是怎么做到的</h2>
+    <ul class="note" style="margin:0; padding-left:20px">
+      <li>每一次移动走的是服务端自己的 <code>Monster.resetMobPosition()</code>——
+          它会<b>先摘掉怪的控制权</b>再设坐标、广播、然后把控制权还回去。
+          摘控制权是关键：怪的移动是由某个客户端在模拟的，不摘的话它下一帧就自己走回去了。</li>
+      <li>代价也在这里：每移动一只怪，就要多发两个控制权封包。
+          所以<b>已经堆在目标点上的怪会被跳过</b>，堆稳之后基本不再产生流量。</li>
+      <li>目标点会用 <code>calcDropPos()</code> <b>贴到地面</b>。
+          如果前方是悬空（比如站在平台边缘），它会退回到角色自己的位置，而不是把怪扔进虚空。</li>
+      <li>间隔下限 300 毫秒。再快的话控制权封包的量对 2010 年的客户端不友好。</li>
+    </ul>
   </section>
 </main>
 
@@ -436,6 +484,7 @@ async function loadState() {
   renderTarget();
   renderRates(false);
   renderOnline();
+  renderVac();
   // Load each catalog once it exists; the flags stop the 5s poll from re-fetching a list that
   // is legitimately empty because of the current filters.
   if (idx.equipStatus === "ready" && !equipsLoaded) { equipsLoaded = true; loadEquips(); }
@@ -548,6 +597,7 @@ function renderOnline() {
     $("target").value = tr.dataset.chr;
     renderOnline();
     syncGiftButtons();
+    renderVac();
   }));
 }
 
@@ -557,7 +607,7 @@ async function loadEquips() {
   const params = new URLSearchParams({
     job: $("eqJob").value, gender: $("eqGender").value, slot: $("eqSlot").value,
     jobStrict: $("eqJobStrict").checked ? "true" : "false",
-    cash: $("eqCash").value, sort: $("eqSort").value,
+    cash: $("eqCash").value, sort: $("eqSort").value, named: $("eqNamed").value,
     q: $("eqSearch").value, limit: "300"
   });
   if ($("eqWeapon").value !== "") params.set("weapon", $("eqWeapon").value);
@@ -673,7 +723,7 @@ $("giftEquip").addEventListener("click", async () => {
   if (res.ok) loadState();
 });
 
-["eqJob", "eqGender", "eqSlot", "eqWeapon", "eqLevel", "eqJobStrict", "eqCash", "eqSort"]
+["eqJob", "eqGender", "eqSlot", "eqWeapon", "eqLevel", "eqJobStrict", "eqCash", "eqSort", "eqNamed"]
   .forEach(id => $(id).addEventListener("change", loadEquips));
 $("eqSearch").addEventListener("input", debounce(loadEquips, 250));
 
@@ -684,7 +734,7 @@ $("itCat").innerHTML = `<option value="">全部</option>` +
 
 async function loadItems() {
   const params = new URLSearchParams({
-    inv: $("itInv").value, category: $("itCat").value,
+    inv: $("itInv").value, category: $("itCat").value, named: $("itNamed").value,
     q: $("itSearch").value, limit: "300"
   });
   if ($("itBand").value !== "") params.set("band", $("itBand").value);
@@ -762,8 +812,73 @@ $("giftItem").addEventListener("click", async () => {
   if (res.ok) loadState();
 });
 
-["itInv", "itCat", "itBand"].forEach(id => $(id).addEventListener("change", loadItems));
+["itInv", "itCat", "itBand", "itNamed"].forEach(id => $(id).addEventListener("change", loadItems));
 $("itSearch").addEventListener("input", debounce(loadItems, 250));
+
+// -------------------------------------------------------------------- 吸怪
+
+function activeVac() {
+  const chr = targetChr();
+  return chr && state ? (state.vacs || []).find(v => v.chrId === chr.id) : null;
+}
+
+function renderVac() {
+  const chr = targetChr();
+  const vac = activeVac();
+  const btn = $("vacToggle");
+  btn.disabled = !chr;
+  // Never touch the label while a request is in flight - withBusy owns it until it resolves.
+  if (!btn.classList.contains("busy")) {
+    btn.textContent = vac ? "停止吸怪" : "开始吸怪";
+  }
+  btn.classList.toggle("primary", !vac);
+
+  if (!chr) {
+    $("vacStatus").textContent = "没有选中角色";
+  } else if (!vac) {
+    $("vacStatus").textContent = `未运行（目标：${chr.name}）`;
+  } else {
+    $("vacStatus").textContent =
+      `运行中 · ${esc(vac.mapName || vac.mapId)} · 上一轮移动 ${vac.lastMoved} / 命中 ${vac.lastSeen} 只`;
+    // Reflect what the server is actually running, which may not be what the boxes say.
+    $("vacDistance").value = vac.distance;
+    $("vacRadius").value = vac.radius;
+    $("vacInterval").value = vac.interval;
+    $("vacBosses").checked = vac.bosses;
+  }
+}
+
+$("vacToggle").addEventListener("click", async () => {
+  const chr = targetChr();
+  if (!chr) return;
+  const on = !activeVac();
+  const body = new URLSearchParams({ chrId: chr.id, enabled: on ? "true" : "false" });
+  if (on) {
+    body.set("distance", $("vacDistance").value);
+    body.set("radius", $("vacRadius").value);
+    body.set("interval", $("vacInterval").value);
+    body.set("bosses", $("vacBosses").checked ? "true" : "false");
+  }
+  const res = await withBusy($("vacToggle"), on ? "开启中…" : "停止中…",
+    async () => (await fetch("api/vac", { method: "POST", body })).json());
+  toast(res.ok ? res.message : res.error, !!res.ok);
+  if (res.ok) { state = res; renderVac(); }
+});
+
+// Changing a knob while it runs restarts it with the new value, so you do not have to
+// stop and start to try a different distance.
+["vacDistance", "vacRadius", "vacInterval", "vacBosses"].forEach(id =>
+  $(id).addEventListener("change", async () => {
+    if (!activeVac()) return;
+    const chr = targetChr();
+    const body = new URLSearchParams({
+      chrId: chr.id, enabled: "true",
+      distance: $("vacDistance").value, radius: $("vacRadius").value,
+      interval: $("vacInterval").value, bosses: $("vacBosses").checked ? "true" : "false"
+    });
+    const res = await (await fetch("api/vac", { method: "POST", body })).json();
+    if (res.ok) { state = res; renderVac(); }
+  }));
 
 // ------------------------------------------------------------------ 杂项
 
@@ -780,7 +895,7 @@ document.querySelectorAll("nav button").forEach(btn => btn.addEventListener("cli
 
 $("refresh").addEventListener("click", () => withBusy($("refresh"), "刷新中…",
   () => Promise.all([loadState(), loadEquips(), loadItems()])));
-$("target").addEventListener("change", () => { renderOnline(); syncGiftButtons(); });
+$("target").addEventListener("change", () => { renderOnline(); syncGiftButtons(); renderVac(); });
 
 loadState();
 setInterval(loadState, 5000);

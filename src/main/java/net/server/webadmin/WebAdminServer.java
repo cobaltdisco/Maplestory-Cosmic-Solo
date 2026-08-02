@@ -41,6 +41,8 @@ import java.util.TreeMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import static java.util.concurrent.TimeUnit.MINUTES;
+
 /**
  * A small admin panel served straight out of the game server process, on loopback only.
  * <p>
@@ -55,6 +57,7 @@ public class WebAdminServer {
 
     private static HttpServer server;
     private static volatile int iconCount = -1;
+    private static volatile long iconCountAt;
 
     private WebAdminServer() {
     }
@@ -75,6 +78,7 @@ public class WebAdminServer {
             server.createContext("/api/equips", WebAdminServer::handleEquips);
             server.createContext("/api/items", WebAdminServer::handleItems);
             server.createContext("/api/gift", WebAdminServer::handleGift);
+            server.createContext("/api/vac", WebAdminServer::handleVac);
             server.start();
             log.info("Web admin panel on http://{}:{}", LOOPBACK, port);
         } catch (IOException e) {
@@ -92,6 +96,7 @@ public class WebAdminServer {
     }
 
     public static synchronized void stop() {
+        MobVac.stopAll();
         if (server != null) {
             server.stop(1);
             server = null;
@@ -204,6 +209,7 @@ public class WebAdminServer {
         out.put("global", global);
         out.put("players", players);
         out.put("index", index);
+        out.put("vacs", MobVac.describe());
         return out;
     }
 
@@ -231,10 +237,13 @@ public class WebAdminServer {
 
     /**
      * How many icons IconDump has dumped, so the page can say "run the dumper" instead of showing
-     * 300 broken images. Counted once - listing 15k files on every 5-second poll would be silly.
+     * 300 broken images. Listing 16k files on every 5-second poll would be silly, but caching it
+     * for the process lifetime means re-running the dumper leaves the panel quoting a stale
+     * number - so it is re-counted at most once a minute.
      */
     private static int iconCount() {
-        if (iconCount < 0) {
+        long now = System.currentTimeMillis();
+        if (iconCount < 0 || now - iconCountAt > MINUTES.toMillis(1)) {
             int found = 0;
             try (DirectoryStream<Path> icons = Files.newDirectoryStream(ICON_DIR, "*.png")) {
                 for (Path ignored : icons) {
@@ -244,6 +253,7 @@ public class WebAdminServer {
                 found = 0;      // the directory simply isn't there yet
             }
             iconCount = found;
+            iconCountAt = now;
         }
         return iconCount;
     }
@@ -354,6 +364,8 @@ public class WebAdminServer {
         // of the hats. They carry no stats, so they are hidden unless asked for.
         String cash = q.getOrDefault("cash", "hide");
         String sort = q.getOrDefault("sort", "id");
+        // Items whose name is a generated stand-in cannot be picked out of a list on purpose.
+        String named = q.getOrDefault("named", "hide");
 
         int weapon = parseInt(q.get("weapon"), -1);     // -1 = any, otherwise an id band like 145
 
@@ -365,6 +377,9 @@ public class WebAdminServer {
                 continue;
             }
             if (cash.equals("only") && !e.cash()) {
+                continue;
+            }
+            if (!matchesNamed(named, e.placeholder())) {
                 continue;
             }
             if (!matchesJob(e.reqJob(), job, jobStrict)) {
@@ -417,6 +432,15 @@ public class WebAdminServer {
         // Weapon classes read best in id order (130 sword ... 149 gun, 170 cash), not by count.
         out.put("weapons", orderedFacetList(weaponCounts, "weapon"));
         respondJson(exchange, out);
+    }
+
+    /** "hide" drops generated names, "only" keeps just those, anything else keeps everything. */
+    private static boolean matchesNamed(String named, boolean placeholder) {
+        return switch (named) {
+            case "hide" -> !placeholder;
+            case "only" -> placeholder;
+            default -> true;
+        };
     }
 
     private static Comparator<EquipIndex.Entry> comparatorFor(String sort) {
@@ -511,6 +535,7 @@ public class WebAdminServer {
         int band = parseInt(q.get("band"), -1);
         String text = q.getOrDefault("q", "").trim().toLowerCase(Locale.ROOT);
         int limit = Math.max(1, Math.min(500, parseInt(q.get("limit"), 200)));
+        String named = q.getOrDefault("named", "hide");
 
         List<Object> results = new ArrayList<>();
         Map<Integer, Integer> bandCounts = new TreeMap<>();
@@ -519,6 +544,9 @@ public class WebAdminServer {
 
         for (ItemIndex.Entry e : all) {
             if (!inv.isEmpty() && !inv.equals(e.inv())) {
+                continue;
+            }
+            if (!matchesNamed(named, e.placeholder())) {
                 continue;
             }
             if (!text.isEmpty() && !e.name().toLowerCase(Locale.ROOT).contains(text)
@@ -569,6 +597,42 @@ public class WebAdminServer {
         respondJson(exchange, out);
     }
 
+    // ------------------------------------------------------------------- vac
+
+    private static void handleVac(HttpExchange exchange) throws IOException {
+        if (!"POST".equalsIgnoreCase(exchange.getRequestMethod())) {
+            respondJson(exchange, error("POST only"));
+            return;
+        }
+        Map<String, String> form = readForm(exchange);
+        int chrId = parseInt(form.get("chrId"), -1);
+
+        if (!"true".equalsIgnoreCase(form.get("enabled"))) {
+            MobVac.stop(chrId);
+            Map<String, Object> out = state();
+            out.put("ok", true);
+            out.put("message", "mob vac off");
+            respondJson(exchange, out);
+            return;
+        }
+
+        Character chr = MobVac.findOnlineCharacter(chrId);
+        if (chr == null) {
+            respondJson(exchange, error("that character is not online any more"));
+            return;
+        }
+        MobVac.start(chrId, new MobVac.Options(
+                parseInt(form.get("distance"), 80),
+                parseInt(form.get("radius"), 0),
+                "true".equalsIgnoreCase(form.get("bosses")),
+                parseInt(form.get("interval"), 800)));
+
+        Map<String, Object> out = state();
+        out.put("ok", true);
+        out.put("message", "mob vac on for " + chr.getName());
+        respondJson(exchange, out);
+    }
+
     // ------------------------------------------------------------------ gift
 
     private static void handleGift(HttpExchange exchange) throws IOException {
@@ -578,7 +642,7 @@ public class WebAdminServer {
         }
         Map<String, String> form = readForm(exchange);
 
-        Character chr = findCharacter(parseInt(form.get("chrId"), -1));
+        Character chr = MobVac.findOnlineCharacter(parseInt(form.get("chrId"), -1));
         if (chr == null) {
             respondJson(exchange, error("that character is not online any more"));
             return;
@@ -703,19 +767,6 @@ public class WebAdminServer {
         // MAX_EQUIPMNT_STAT is what the server itself caps equip stats at when levelling them up.
         int cap = Math.min(Short.MAX_VALUE, YamlConfig.config.server.MAX_EQUIPMNT_STAT);
         setter.set((short) Math.max(0, Math.min(cap, value)));
-    }
-
-    private static Character findCharacter(int id) {
-        if (id < 0) {
-            return null;
-        }
-        for (World world : Server.getInstance().getWorlds()) {
-            Character chr = world.getPlayerStorage().getCharacterById(id);
-            if (chr != null && chr.isLoggedin()) {
-                return chr;
-            }
-        }
-        return null;
     }
 
     // ----------------------------------------------------------------- plumbing
