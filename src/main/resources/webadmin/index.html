@@ -114,6 +114,28 @@
     background: var(--panel); border: 1px solid var(--line); border-radius: 6px;
   }
   .pickicon img { max-width: 48px; max-height: 48px; image-rendering: pixelated; }
+  /* The world map is drawn at the size the client draws it: every spot and every region
+     highlight is positioned in that picture's own pixels, so scaling it would need every
+     coordinate scaled with it. It scrolls instead. */
+  .wmscroll { overflow: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--panel2); }
+  .wm { position: relative; }
+  .wm img.base { display: block; image-rendering: pixelated; }
+  .wmlink { position: absolute; padding: 0; border: 0; background: none; cursor: pointer; }
+  /* The highlight is the client's own artwork for that region, faded in on hover - the same
+     affordance the game uses, so a clickable continent looks clickable. */
+  .wmlink img { width: 100%; height: 100%; opacity: 0; transition: opacity .12s; image-rendering: pixelated; }
+  .wmlink:hover img, .wmlink:focus-visible img { opacity: 1; }
+  .wmlink:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .wmspot {
+    position: absolute; width: 13px; height: 13px; margin: -7px 0 0 -7px; padding: 0;
+    border-radius: 50%; border: 2px solid #fff; background: var(--accent); cursor: pointer;
+    box-shadow: 0 0 0 1px rgba(20, 26, 40, .45); transition: transform .1s, background .1s;
+  }
+  .wmspot:hover { background: #fff; border-color: var(--accent); transform: scale(1.35); }
+  .wmspot:active { transform: scale(1.1); }
+  .wmspot.sel { background: var(--warn); transform: scale(1.35); }
+  .crumbs { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
+  .crumbs .sep { color: var(--dim); }
   .tag { font-size: 11px; padding: 1px 6px; border-radius: 4px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
   .tag.bad { color: var(--bad); border-color: var(--bad); }
   .tag.cash { color: var(--warn); border-color: var(--warn); }
@@ -146,6 +168,7 @@
   <button data-tab="equip">赠送装备</button>
   <button data-tab="item">赠送物品</button>
   <button data-tab="vac">吸怪</button>
+  <button data-tab="teleport">传送</button>
 </nav>
 
 <main>
@@ -364,6 +387,66 @@
       <li>间隔下限 300 毫秒。再快的话控制权封包的量对 2010 年的客户端不友好。</li>
     </ul>
   </section>
+
+  <!-- ------------------------------------------------------------ 传送 -->
+  <section id="tab-teleport">
+    <h2>传送目标角色</h2>
+    <p class="note">
+      两种选地图的方式：直接填 Map ID，或者在游戏自己的世界地图上点。
+      <b>列表里只有 Map.wz 真有数据的 5262 张地图</b>——<code>String.wz</code> 里另有 533 张
+      只有名字没有数据的，传过去只会加载失败，所以一开始就不列；反过来还有 1379 张有数据但
+      没名字的，它们在列表里显示为「（无名）」，照样能传。
+      传送前会把原来的位置存进「返回点」，玩家自己的回城卷轴不受影响。
+    </p>
+    <div class="row" style="margin-bottom:18px">
+      <span class="pill" id="tpWhere">未选中角色</span>
+    </div>
+
+    <h2>方法一：直接输入 Map ID</h2>
+    <div class="row" style="margin-bottom:6px">
+      <div><label>Map ID</label><input id="tpId" type="number" placeholder="例如 100000000" style="width:170px"></div>
+      <div><label>&nbsp;</label><button class="act primary" id="tpGo">传送</button></div>
+      <div style="flex:1; min-width:200px"><label>这是哪张图</label>
+        <div class="pill" id="tpIdName" style="display:inline-block">还没填</div></div>
+    </div>
+
+    <h2 style="margin-top:30px">方法二：从地图上找</h2>
+    <p class="note">
+      点大陆钻进去，点地图上的圆点看它代表哪些地图。这张图和上面的标记位置都是从客户端
+      <code>Map.wz</code> 里导出来的，和游戏里按世界地图键看到的是同一张。
+    </p>
+    <div class="crumbs" id="tpCrumbs"></div>
+    <div class="split">
+      <div class="wmscroll" id="tpMapWrap"><p class="empty">世界地图加载中…</p></div>
+      <div class="card">
+        <h2 id="tpSpotName">点一个圆点</h2>
+        <p class="note" id="tpSpotDesc" style="margin-bottom:10px">
+          圆点是游戏世界地图上的标记，一个标记通常对应一整片相连的地图。
+        </p>
+        <div class="scroll" style="max-height:360px">
+          <table><tbody id="tpSpotBody"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <h2 style="margin-top:30px">全部地图</h2>
+    <p class="note">
+      世界地图只标了游戏想让玩家看到的那些点，副本内部、活动图、测试图都不在上面。
+      这份列表是全的，按 <code>String.wz</code> 自己的分区分组。
+    </p>
+    <div class="row" style="margin-bottom:14px">
+      <div><label>分区</label><select id="tpRegion"><option value="">全部</option></select></div>
+      <div style="flex:1; min-width:200px"><label>名称 / 街道 / 编号</label>
+        <input id="tpSearch" placeholder="输入即过滤" style="width:100%"></div>
+    </div>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>编号</th><th>地图</th><th>街道</th><th>分区</th><th></th></tr></thead>
+        <tbody id="tpMapBody"></tbody>
+      </table>
+    </div>
+    <p class="note" id="tpMapCount" style="margin-top:8px"></p>
+  </section>
 </main>
 
 <div id="toast"></div>
@@ -401,6 +484,15 @@ const CATEGORIES = {
   rateCoupon: "倍率券", store: "商店道具", other: "其他（用编号段或搜索）"
 };
 const INV_NAMES = { USE: "消耗", SETUP: "设置", ETC: "其他", CASH: "现金" };
+// String.wz's own top-level grouping of Map.img. Translated only where the group's maps make it
+// unambiguous (weddingGL is Amoria, jp is the Mushroom Shrine set); Episode1GL keeps its raw
+// name rather than getting a guess.
+const MAP_REGIONS = {
+  maple: "枫叶岛", victoria: "维多利亚岛", ossyria: "奥斯利亚", elin: "神木村",
+  singapore: "新加坡", MasteriaGL: "马斯特里亚", weddingGL: "婚礼（Amoria）",
+  HalloweenGL: "万圣节鬼屋", jp: "日本（神社）", event: "活动", etc: "其他",
+  "": "没有名字的地图"
+};
 const WORLD_RATES = [
   ["exp", "经验倍率"], ["meso", "金钱倍率"], ["drop", "掉落倍率"],
   ["bossDrop", "BOSS 掉落倍率"], ["quest", "任务倍率"],
@@ -415,8 +507,11 @@ const GLOBAL_RATES = [
 
 let state = null;
 let equipRows = [], itemRows = [];
-let equipsLoaded = false, itemsLoaded = false;
+let equipsLoaded = false, itemsLoaded = false, mapsLoaded = false;
 let pickedEquip = null, pickedItem = null;
+// Where you are in the world map. Links only ever go downwards, so the trail is the breadcrumb.
+let tpTrail = [{ name: "WorldMap", label: "世界地图" }];
+let tpWorld = null;
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -478,17 +573,19 @@ async function loadState() {
   const online = state.players.length;
   $("statusPill").textContent =
     `在线 ${online} 人 · 装备索引 ${idx.equipStatus === "ready" ? idx.equipCount + " 件" : "建立中 " + idx.equipCount}` +
-    ` · 物品 ${idx.itemCount} 件 · 图标 ${idx.iconCount} 张`;
+    ` · 物品 ${idx.itemCount} 件 · 地图 ${idx.mapCount} 张 · 图标 ${idx.iconCount} 张`;
   $("statusPill").title = idx.iconCount
     ? "" : "图标目录是空的：跑 tools-local 的 IconDump 从客户端 wz 里导出";
   renderTarget();
   renderRates(false);
   renderOnline();
   renderVac();
+  renderWhere();
   // Load each catalog once it exists; the flags stop the 5s poll from re-fetching a list that
   // is legitimately empty because of the current filters.
   if (idx.equipStatus === "ready" && !equipsLoaded) { equipsLoaded = true; loadEquips(); }
   if (idx.itemCount && !itemsLoaded) { itemsLoaded = true; loadItems(); }
+  if (idx.mapCount && !mapsLoaded) { mapsLoaded = true; loadMaps(); loadWorldMap(); }
 }
 
 function targetChr() {
@@ -598,6 +695,7 @@ function renderOnline() {
     renderOnline();
     syncGiftButtons();
     renderVac();
+    renderWhere();
   }));
 }
 
@@ -880,6 +978,169 @@ $("vacToggle").addEventListener("click", async () => {
     if (res.ok) { state = res; renderVac(); }
   }));
 
+// -------------------------------------------------------------------- 传送
+
+function renderWhere() {
+  const chr = targetChr();
+  $("tpWhere").textContent = chr
+    ? `${chr.name} 现在在 ${chr.mapName || "?"}（${chr.mapId}）`
+    : "未选中角色";
+}
+
+async function warpTo(mapId, button) {
+  const chr = targetChr();
+  if (!chr) return toast("先选一个在线角色", false);
+  const body = new URLSearchParams({ chrId: chr.id, mapId });
+  const res = await withBusy(button, "传送中…",
+    async () => (await fetch("api/warp", { method: "POST", body })).json());
+  toast(res.ok ? res.message : res.error, !!res.ok);
+  if (res.ok) loadState();
+}
+
+// --- 方法一：直接输入 Map ID
+
+$("tpGo").addEventListener("click", () => {
+  const id = $("tpId").value.trim();
+  if (id === "") return toast("先填一个 Map ID", false);
+  warpTo(id, $("tpGo"));
+});
+$("tpId").addEventListener("keydown", e => { if (e.key === "Enter") $("tpGo").click(); });
+
+// Says what the number in the box actually is before it is used, so a typo shows up as
+// "找不到这张地图" here rather than as a failed teleport.
+$("tpId").addEventListener("input", debounce(async () => {
+  const raw = $("tpId").value.trim();
+  const el = $("tpIdName");
+  if (raw === "") { el.textContent = "还没填"; return; }
+  const data = await (await fetch("api/maps?limit=500&q=" + encodeURIComponent(raw))).json();
+  const hit = (data.results || []).find(m => String(m.id) === raw);
+  el.textContent = hit
+    ? `${hit.name || "（无名）"}${hit.street ? " · " + hit.street : ""} · ${MAP_REGIONS[hit.region] ?? hit.region}`
+    : "Map.wz 里找不到这张地图";
+}, 250));
+
+// --- 方法二：从地图上找
+
+function renderCrumbs() {
+  $("tpCrumbs").innerHTML = tpTrail.map((node, i) =>
+    (i ? `<span class="sep">›</span>` : "") +
+    (i === tpTrail.length - 1
+      ? `<span class="pill">${esc(node.label)}</span>`
+      : `<button class="act" data-crumb="${i}">${esc(node.label)}</button>`)).join("");
+  $("tpCrumbs").querySelectorAll("[data-crumb]").forEach(btn =>
+    btn.addEventListener("click", () => {
+      tpTrail = tpTrail.slice(0, Number(btn.dataset.crumb) + 1);
+      loadWorldMap();
+    }));
+}
+
+async function loadWorldMap() {
+  const node = tpTrail[tpTrail.length - 1];
+  renderCrumbs();
+  const data = await (await fetch("api/worldmap?name=" + encodeURIComponent(node.name))).json();
+  const wrap = $("tpMapWrap");
+  if (!data.ok) {
+    wrap.innerHTML = `<p class="empty">${esc(data.error)}</p>`;
+    return;
+  }
+  tpWorld = data;
+
+  // Everything is absolutely positioned in the base image's own pixels - the server already
+  // turned the wz canvas origins into plain top-left coordinates.
+  wrap.innerHTML = `<div class="wm" style="width:${data.width}px; height:${data.height}px">
+    <img class="base" src="worldmap/${data.image}" alt="" width="${data.width}" height="${data.height}">
+    ${data.links.filter(l => l.known).map(l => `
+      <button class="wmlink" data-link="${esc(l.target)}" data-label="${esc(l.label)}"
+        style="left:${l.x}px; top:${l.y}px; width:${l.w}px; height:${l.h}px"
+        title="${esc(l.label)}"><img src="worldmap/${l.image}" alt=""></button>`).join("")}
+    ${data.spots.map((s, i) => `
+      <button class="wmspot" data-spot="${i}" style="left:${s.x}px; top:${s.y}px"
+        title="${esc(s.label)}（${s.maps.length} 张地图）"></button>`).join("")}
+  </div>`;
+
+  wrap.querySelectorAll("[data-link]").forEach(btn => btn.addEventListener("click", () => {
+    tpTrail.push({ name: btn.dataset.link, label: btn.dataset.label || btn.dataset.link });
+    loadWorldMap();
+  }));
+  wrap.querySelectorAll("[data-spot]").forEach(btn =>
+    btn.addEventListener("click", () => pickSpot(Number(btn.dataset.spot))));
+
+  $("tpSpotName").textContent = "点一个圆点";
+  $("tpSpotBody").innerHTML = "";
+}
+
+function pickSpot(index) {
+  const spot = tpWorld.spots[index];
+  if (!spot) return;
+  document.querySelectorAll("#tpMapWrap .wmspot").forEach(b =>
+    b.classList.toggle("sel", b.dataset.spot === String(index)));
+
+  $("tpSpotName").textContent = `${spot.label || "这个标记"}（${spot.maps.length} 张）`;
+  $("tpSpotDesc").textContent = spot.desc || "";
+  $("tpSpotBody").innerHTML = spot.maps.map(m => `
+    <tr data-map="${m.id}">
+      <td>${m.id}</td>
+      <td style="white-space:normal">${esc(m.name || "（无名）")}</td>
+      <td><button class="act" data-warp="${m.id}">传送</button></td>
+    </tr>`).join("");
+  bindWarpButtons($("tpSpotBody"));
+}
+
+// --- 全部地图
+
+async function loadMaps() {
+  const params = new URLSearchParams({
+    region: $("tpRegion").value, q: $("tpSearch").value, limit: "300"
+  });
+  const data = await (await fetch("api/maps?" + params)).json();
+  if (data.building) {
+    $("tpMapBody").innerHTML = `<tr><td colspan="5" class="empty">地图索引建立中…</td></tr>`;
+    setTimeout(loadMaps, 1200);
+    return;
+  }
+
+  // Same rule as the other facets: counted with the search applied but not the region itself,
+  // and a selected region that now counts zero is kept so it can be undone.
+  const sel = $("tpRegion");
+  const keep = sel.value;
+  const regions = data.regions || [];
+  if (keep && !regions.some(r => r.region === keep)) {
+    regions.push({ region: keep, count: 0 });
+  }
+  sel.innerHTML = `<option value="">全部（${regions.reduce((n, r) => n + r.count, 0)}）</option>` +
+    regions.map(r => `<option value="${esc(r.region)}">${esc(MAP_REGIONS[r.region] ?? r.region)}（${r.count}）</option>`).join("");
+  sel.value = keep;
+
+  $("tpMapCount").textContent =
+    `匹配 ${data.total} 张，显示前 ${data.shown} 张` + (data.total > data.shown ? "（再收窄条件可看到其余的）" : "");
+
+  $("tpMapBody").innerHTML = data.results.length ? data.results.map(m => `
+    <tr data-map="${m.id}">
+      <td>${m.id}</td>
+      <td>${esc(m.name || "（无名）")}</td>
+      <td>${esc(m.street)}</td>
+      <td>${esc(MAP_REGIONS[m.region] ?? m.region)}</td>
+      <td><button class="act" data-warp="${m.id}">传送</button></td>
+    </tr>`).join("") : `<tr><td colspan="5" class="empty">没有符合条件的地图</td></tr>`;
+  bindWarpButtons($("tpMapBody"));
+}
+
+// A row click loads the id into the Map ID box (so you can see and edit it); the button in the
+// row teleports straight away.
+function bindWarpButtons(body) {
+  body.querySelectorAll("[data-warp]").forEach(btn => btn.addEventListener("click", e => {
+    e.stopPropagation();
+    warpTo(btn.dataset.warp, btn);
+  }));
+  body.querySelectorAll("tr[data-map]").forEach(tr => tr.addEventListener("click", () => {
+    $("tpId").value = tr.dataset.map;
+    $("tpId").dispatchEvent(new Event("input"));
+  }));
+}
+
+$("tpRegion").addEventListener("change", loadMaps);
+$("tpSearch").addEventListener("input", debounce(loadMaps, 250));
+
 // ------------------------------------------------------------------ 杂项
 
 function debounce(fn, ms) {
@@ -894,8 +1155,9 @@ document.querySelectorAll("nav button").forEach(btn => btn.addEventListener("cli
 }));
 
 $("refresh").addEventListener("click", () => withBusy($("refresh"), "刷新中…",
-  () => Promise.all([loadState(), loadEquips(), loadItems()])));
-$("target").addEventListener("change", () => { renderOnline(); syncGiftButtons(); renderVac(); });
+  () => Promise.all([loadState(), loadEquips(), loadItems(), loadMaps()])));
+$("target").addEventListener("change",
+  () => { renderOnline(); syncGiftButtons(); renderVac(); renderWhere(); });
 
 loadState();
 setInterval(loadState, 5000);

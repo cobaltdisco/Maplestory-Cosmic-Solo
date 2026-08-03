@@ -54,6 +54,7 @@ public class WebAdminServer {
     private static final Logger log = LoggerFactory.getLogger(WebAdminServer.class);
     private static final String LOOPBACK = "127.0.0.1";
     private static final Path ICON_DIR = Path.of("webadmin", "icons");
+    private static final Path WORLD_MAP_DIR = Path.of("webadmin", "worldmap");
 
     private static HttpServer server;
     private static volatile int iconCount = -1;
@@ -73,12 +74,16 @@ public class WebAdminServer {
             server.setExecutor(Executors.newFixedThreadPool(4));
             server.createContext("/", WebAdminServer::handlePage);
             server.createContext("/icons/", WebAdminServer::handleIcon);
+            server.createContext("/worldmap/", WebAdminServer::handleWorldMapImage);
             server.createContext("/api/state", exchange -> respondJson(exchange, state()));
             server.createContext("/api/rates", WebAdminServer::handleRates);
             server.createContext("/api/equips", WebAdminServer::handleEquips);
             server.createContext("/api/items", WebAdminServer::handleItems);
             server.createContext("/api/gift", WebAdminServer::handleGift);
             server.createContext("/api/vac", WebAdminServer::handleVac);
+            server.createContext("/api/maps", WebAdminServer::handleMaps);
+            server.createContext("/api/worldmap", WebAdminServer::handleWorldMap);
+            server.createContext("/api/warp", WebAdminServer::handleWarp);
             server.start();
             log.info("Web admin panel on http://{}:{}", LOOPBACK, port);
         } catch (IOException e) {
@@ -88,6 +93,7 @@ public class WebAdminServer {
         }
 
         Thread indexer = new Thread(() -> {
+            MapIndex.build();
             ItemIndex.build();
             EquipIndex.build();
         }, "webadmin-indexer");
@@ -128,13 +134,19 @@ public class WebAdminServer {
     private static void handleIcon(HttpExchange exchange) throws IOException {
         String name = exchange.getRequestURI().getPath().substring("/icons/".length());
         // The name goes straight into a path, so accept only what the dumper ever writes.
-        if (!name.matches("[0-9]{1,8}\\.png")) {
-            exchange.sendResponseHeaders(404, -1);
-            exchange.close();
-            return;
-        }
-        Path file = ICON_DIR.resolve(name);
-        if (!Files.isReadable(file)) {
+        sendPng(exchange, ICON_DIR, name, "[0-9]{1,8}\\.png");
+    }
+
+    /** The world map artwork, dumped by tools-local/WorldMapDump. Same deal as the icons. */
+    private static void handleWorldMapImage(HttpExchange exchange) throws IOException {
+        String name = exchange.getRequestURI().getPath().substring("/worldmap/".length());
+        sendPng(exchange, WORLD_MAP_DIR, name, "WorldMap[0-9]{0,3}(\\.link[0-9]{1,3})?\\.png");
+    }
+
+    private static void sendPng(HttpExchange exchange, Path dir, String name, String allowed)
+            throws IOException {
+        Path file = dir.resolve(name);
+        if (!name.matches(allowed) || !Files.isReadable(file)) {
             exchange.sendResponseHeaders(404, -1);
             exchange.close();
             return;
@@ -202,6 +214,8 @@ public class WebAdminServer {
         index.put("equipStatus", EquipIndex.status());
         index.put("equipCount", EquipIndex.get() == null ? EquipIndex.progress() : EquipIndex.get().size());
         index.put("itemCount", ItemIndex.get() == null ? 0 : ItemIndex.get().size());
+        index.put("mapCount", MapIndex.get() == null ? 0 : MapIndex.get().size());
+        index.put("worldMapCount", MapIndex.worlds().size());
         index.put("iconCount", iconCount());
 
         Map<String, Object> out = Json.obj();
@@ -630,6 +644,214 @@ public class WebAdminServer {
         Map<String, Object> out = state();
         out.put("ok", true);
         out.put("message", "mob vac on for " + chr.getName());
+        respondJson(exchange, out);
+    }
+
+    // ------------------------------------------------------------------- 传送
+
+    private static void handleMaps(HttpExchange exchange) throws IOException {
+        List<MapIndex.Entry> all = MapIndex.get();
+        if (all == null) {
+            Map<String, Object> out = Json.obj();
+            out.put("building", true);
+            out.put("results", List.of());
+            respondJson(exchange, out);
+            return;
+        }
+
+        Map<String, String> q = queryOf(exchange);
+        String region = q.getOrDefault("region", "");
+        String text = q.getOrDefault("q", "").trim().toLowerCase(Locale.ROOT);
+        int limit = Math.max(1, Math.min(500, parseInt(q.get("limit"), 200)));
+
+        List<Object> results = new ArrayList<>();
+        Map<String, Integer> regionCounts = new HashMap<>();
+        int matched = 0;
+
+        for (MapIndex.Entry e : all) {
+            if (!text.isEmpty() && !matchesText(e, text)) {
+                continue;
+            }
+            // The region facet is counted before the region filter, so each option says how many
+            // it would yield rather than collapsing to whatever is already selected.
+            regionCounts.merge(e.region(), 1, Integer::sum);
+            if (!region.isEmpty() && !region.equals(e.region())) {
+                continue;
+            }
+            matched++;
+            if (results.size() < limit) {
+                results.add(mapJson(e));
+            }
+        }
+
+        Map<String, Object> out = Json.obj();
+        out.put("building", false);
+        out.put("total", matched);
+        out.put("shown", results.size());
+        out.put("results", results);
+        out.put("regions", facetList(regionCounts, "region"));
+        respondJson(exchange, out);
+    }
+
+    private static boolean matchesText(MapIndex.Entry e, String text) {
+        return e.name().toLowerCase(Locale.ROOT).contains(text)
+                || e.street().toLowerCase(Locale.ROOT).contains(text)
+                || String.valueOf(e.id()).contains(text);
+    }
+
+    private static Map<String, Object> mapJson(MapIndex.Entry e) {
+        Map<String, Object> m = Json.obj();
+        m.put("id", e.id());
+        m.put("name", e.name());
+        m.put("street", e.street());
+        m.put("region", e.region());
+        return m;
+    }
+
+    /**
+     * One node of the game's own world map, with the map ids behind each spot resolved to names.
+     * Small enough (a few hundred spots at most) to send whole, so the page holds no state the
+     * server does not.
+     */
+    private static void handleWorldMap(HttpExchange exchange) throws IOException {
+        Map<String, MapIndex.World> worlds = MapIndex.worlds();
+        Map<String, Object> out = Json.obj();
+
+        String name = queryOf(exchange).getOrDefault("name", "WorldMap");
+        MapIndex.World world = worlds.get(name);
+        if (world == null) {
+            out.put("ok", false);
+            out.put("error", worlds.isEmpty()
+                    ? "the world map has not been dumped yet - run tools-local/WorldMapDump"
+                    : "no such world map: " + name);
+            respondJson(exchange, out);
+            return;
+        }
+
+        List<Object> spots = new ArrayList<>();
+        for (MapIndex.Spot spot : world.spots()) {
+            List<Object> maps = new ArrayList<>();
+            for (int id : spot.maps()) {
+                MapIndex.Entry e = MapIndex.byId(id);
+                if (e != null) {
+                    maps.add(mapJson(e));
+                }
+            }
+            Map<String, Object> m = Json.obj();
+            m.put("x", spot.x());
+            m.put("y", spot.y());
+            m.put("type", spot.type());
+            m.put("title", spot.title());
+            m.put("desc", spot.desc());
+            // Most spots carry no title of their own; the street name is what the game itself
+            // shows for a cluster of maps, so it is the label rather than an invented one.
+            m.put("label", label(spot, maps));
+            m.put("maps", maps);
+            spots.add(m);
+        }
+
+        List<Object> links = new ArrayList<>();
+        for (MapIndex.Link link : world.links()) {
+            Map<String, Object> m = Json.obj();
+            m.put("x", link.x());
+            m.put("y", link.y());
+            m.put("w", link.w());
+            m.put("h", link.h());
+            m.put("label", link.toolTip());
+            m.put("target", link.target());
+            m.put("image", name + ".link" + link.index() + ".png");
+            m.put("known", worlds.containsKey(link.target()));
+            links.add(m);
+        }
+
+        out.put("ok", true);
+        out.put("name", name);
+        out.put("image", name + ".png");
+        out.put("width", world.width());
+        out.put("height", world.height());
+        out.put("spots", spots);
+        out.put("links", links);
+        respondJson(exchange, out);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static String label(MapIndex.Spot spot, List<Object> maps) {
+        if (!spot.title().isEmpty()) {
+            return spot.title();
+        }
+        if (maps.isEmpty()) {
+            return "";
+        }
+        Map<String, Object> first = (Map<String, Object>) maps.get(0);
+        String street = String.valueOf(first.get("street"));
+        return street.isEmpty() ? String.valueOf(first.get("name")) : street;
+    }
+
+    private static void handleWarp(HttpExchange exchange) throws IOException {
+        if (!"POST".equalsIgnoreCase(exchange.getRequestMethod())) {
+            respondJson(exchange, error("POST only"));
+            return;
+        }
+        Map<String, String> form = readForm(exchange);
+
+        Character chr = MobVac.findOnlineCharacter(parseInt(form.get("chrId"), -1));
+        if (chr == null) {
+            respondJson(exchange, error("that character is not online any more"));
+            return;
+        }
+        Client client = chr.getClient();
+        if (client == null) {
+            respondJson(exchange, error("that character has no live session"));
+            return;
+        }
+        // In the cash shop or the MTS the character is online but not standing on a map, and
+        // changing the map underneath it there leaves the client in a state it cannot draw.
+        if (!chr.isLoggedinWorld()) {
+            respondJson(exchange, error(chr.getName() + " is in the cash shop or the MTS,"
+                    + " not standing on a map"));
+            return;
+        }
+        if (!chr.isAlive()) {
+            respondJson(exchange, error(chr.getName() + " is dead - revive first"));
+            return;
+        }
+
+        int mapId = parseInt(form.get("mapId"), -1);
+        if (MapIndex.get() != null && MapIndex.byId(mapId) == null) {
+            respondJson(exchange, error("Map.wz has no data for map " + form.get("mapId")));
+            return;
+        }
+
+        MapleMap target;
+        try {
+            target = client.getChannelServer().getMapFactory().getMap(mapId);
+        } catch (RuntimeException e) {
+            // A map the index accepted can still fail to build - a broken link node, a portal
+            // the factory cannot make. Better a message than a stack trace on the console.
+            log.warn("Web admin: map {} failed to load", mapId, e);
+            target = null;
+        }
+        if (target == null) {
+            respondJson(exchange, error("map " + mapId + " failed to load - see the server log"));
+            return;
+        }
+
+        // Moving a player from a thread that is not their own connection's is what the server
+        // already does for the ferry rides (MapleMap schedules changeMap on a TimerManager
+        // thread), so the HTTP thread is no different.
+        //
+        // saveLocationOnWarp is what the !warp command does, so the player's own return-scroll
+        // location still points at where they were before the panel moved them.
+        chr.saveLocationOnWarp();
+        chr.changeMap(target, target.getRandomPlayerSpawnpoint());
+
+        MapIndex.Entry entry = MapIndex.byId(mapId);
+        String name = entry == null || entry.name().isEmpty() ? String.valueOf(mapId) : entry.name();
+        log.info("Web admin: warped {} to {} ({})", chr.getName(), name, mapId);
+
+        Map<String, Object> out = Json.obj();
+        out.put("ok", true);
+        out.put("message", chr.getName() + " → " + name + "（" + mapId + "）");
         respondJson(exchange, out);
     }
 
