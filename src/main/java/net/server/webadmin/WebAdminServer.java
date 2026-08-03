@@ -462,12 +462,13 @@ public class WebAdminServer {
 
     private static Comparator<EquipIndex.Entry> comparatorFor(String sort) {
         Comparator<EquipIndex.Entry> byId = Comparator.comparingInt(EquipIndex.Entry::id);
+        // Ties broken by id so the order is stable and the same request always looks the same.
         return switch (sort) {
-            // Ties broken by id so the order is stable and the same request always looks the same.
-            case "level" -> Comparator.comparingInt(EquipIndex.Entry::reqLevel).thenComparing(byId);
             case "-level" -> Comparator.comparingInt(EquipIndex.Entry::reqLevel).reversed().thenComparing(byId);
             case "name" -> Comparator.comparing(EquipIndex.Entry::name, String.CASE_INSENSITIVE_ORDER).thenComparing(byId);
-            default -> byId;
+            // Lowest level first by default: an id is not something you browse by, and the index
+            // is already in id order underneath if you ever want it.
+            default -> Comparator.comparingInt(EquipIndex.Entry::reqLevel).thenComparing(byId);
         };
     }
 
@@ -549,13 +550,11 @@ public class WebAdminServer {
         Map<String, String> q = queryOf(exchange);
         String inv = q.getOrDefault("inv", "");
         String category = q.getOrDefault("category", "");
-        int band = parseInt(q.get("band"), -1);
         String text = q.getOrDefault("q", "").trim().toLowerCase(Locale.ROOT);
         int limit = Math.max(1, Math.min(500, parseInt(q.get("limit"), 200)));
         String named = q.getOrDefault("named", "hide");
 
         List<Object> results = new ArrayList<>();
-        Map<Integer, Integer> bandCounts = new TreeMap<>();
         Map<String, Integer> categoryCounts = new HashMap<>();
         int matched = 0;
 
@@ -570,18 +569,10 @@ public class WebAdminServer {
                     && !String.valueOf(e.id()).contains(text)) {
                 continue;
             }
-            // Each facet is counted with every filter applied except its own, so its numbers say
-            // "pick me and you get this many" instead of collapsing to the current selection.
-            if (band < 0 || e.band() == band) {
-                categoryCounts.merge(e.category(), 1, Integer::sum);
-            }
-            if (category.isEmpty() || category.equals(e.category())) {
-                bandCounts.merge(e.band(), 1, Integer::sum);
-            }
+            // Counted before the category filter, so each option says how many it would yield
+            // instead of collapsing to whatever is already selected.
+            categoryCounts.merge(e.category(), 1, Integer::sum);
             if (!category.isEmpty() && !category.equals(e.category())) {
-                continue;
-            }
-            if (band >= 0 && e.band() != band) {
                 continue;
             }
             matched++;
@@ -589,27 +580,18 @@ public class WebAdminServer {
                 Map<String, Object> m = Json.obj();
                 m.put("id", e.id());
                 m.put("name", e.name());
+                m.put("desc", e.desc());
                 m.put("inv", e.inv());
                 m.put("category", e.category());
-                m.put("band", e.band());
                 results.add(m);
             }
         }
-
-        List<Object> bands = new ArrayList<>();
-        bandCounts.forEach((key, count) -> {
-            Map<String, Object> m = Json.obj();
-            m.put("band", key);
-            m.put("count", count);
-            bands.add(m);
-        });
 
         Map<String, Object> out = Json.obj();
         out.put("building", false);
         out.put("total", matched);
         out.put("shown", results.size());
         out.put("results", results);
-        out.put("bands", bands);
         out.put("categories", facetList(categoryCounts, "category"));
         respondJson(exchange, out);
     }

@@ -6,9 +6,6 @@ import provider.wz.WZFiles;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.CodingErrorAction;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -142,7 +139,7 @@ public final class MapIndex {
     private static Map<Integer, String[]> readNames() {
         Map<Integer, String[]> out = new HashMap<>();
         Path file = WZFiles.STRING.getFile().resolve("Map.img.xml");
-        try (BufferedReader reader = utf8Reader(file)) {
+        try (BufferedReader reader = Wz.reader(file)) {
             String line;
             int depth = 0;
             String region = "";
@@ -152,7 +149,7 @@ public final class MapIndex {
                 String trimmed = line.trim();
                 if (trimmed.startsWith("<imgdir")) {
                     depth++;
-                    String label = attr(trimmed, "name");
+                    String label = Wz.attr(trimmed, "name");
                     if (depth == 2) {
                         region = label == null ? "" : label;
                     } else if (depth == 3) {
@@ -166,11 +163,11 @@ public final class MapIndex {
                     }
                     depth--;
                 } else if (depth == 3) {
-                    String key = attr(trimmed, "name");
+                    String key = Wz.attr(trimmed, "name");
                     if ("mapName".equals(key)) {
-                        name = unescape(attr(trimmed, "value"));
+                        name = Wz.unescape(Wz.attr(trimmed, "value"));
                     } else if ("streetName".equals(key)) {
-                        street = unescape(attr(trimmed, "value"));
+                        street = Wz.unescape(Wz.attr(trimmed, "value"));
                     }
                 }
             }
@@ -193,7 +190,7 @@ public final class MapIndex {
         int width = 0, height = 0;
         List<Spot> spots = new ArrayList<>();
         List<Link> links = new ArrayList<>();
-        try (BufferedReader reader = utf8Reader(file)) {
+        try (BufferedReader reader = Wz.reader(file)) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] f = line.split("\t", -1);
@@ -240,17 +237,6 @@ public final class MapIndex {
         return Map.copyOf(out);
     }
 
-    /**
-     * A stray byte in a wz dump should cost one character, not the whole file - the star in
-     * "G&#9733; Coconut Season" is a reminder these files are not pure ASCII.
-     */
-    private static BufferedReader utf8Reader(Path file) throws IOException {
-        return new BufferedReader(new InputStreamReader(Files.newInputStream(file),
-                StandardCharsets.UTF_8.newDecoder()
-                        .onMalformedInput(CodingErrorAction.REPLACE)
-                        .onUnmappableCharacter(CodingErrorAction.REPLACE)));
-    }
-
     private static int parseId(String raw) {
         if (raw == null) {
             return -1;
@@ -260,27 +246,5 @@ public final class MapIndex {
         } catch (NumberFormatException e) {
             return -1;
         }
-    }
-
-    private static String attr(String tag, String key) {
-        String needle = key + "=\"";
-        int i = tag.indexOf(needle);
-        if (i < 0) {
-            return null;
-        }
-        int end = tag.indexOf('"', i + needle.length());
-        return end < 0 ? null : tag.substring(i + needle.length(), end);
-    }
-
-    private static String unescape(String raw) {
-        if (raw == null) {
-            return "";
-        }
-        if (raw.indexOf('&') < 0) {
-            return raw;
-        }
-        return raw.replace("&lt;", "<").replace("&gt;", ">")
-                .replace("&quot;", "\"").replace("&apos;", "'")
-                .replace("&amp;", "&");
     }
 }
