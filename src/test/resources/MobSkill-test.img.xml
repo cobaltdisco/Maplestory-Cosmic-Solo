@@ -519,4 +519,17 @@
       </imgdir>
     </imgdir>
   </imgdir>
+  <imgdir name="125">
+    <imgdir name="level">
+      <imgdir name="1">
+        <int name="mpCon" value="5"/>
+        <int name="interval" value="10"/>
+        <int name="time" value="60"/>
+        <int name="prop" value="50"/>
+        <int name="x" value="15"/>
+        <vector name="lt" x="-150" y="-90"/>
+        <vector name="rb" x="0" y="0"/>
+      </imgdir>
+    </imgdir>
+  </imgdir>
 </imgdir>

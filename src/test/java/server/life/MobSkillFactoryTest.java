@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MobSkillFactoryTest {
+    private static final int TRIALS = 1000;
 
     @TempDir
     private Path wzPath;
@@ -68,6 +69,39 @@ class MobSkillFactoryTest {
     @Test
     void shouldThrowExceptionOnNonExisting() {
         assertThrows(IllegalArgumentException.class, () -> MobSkillFactory.getMobSkillOrThrow(MobSkillType.DEFENSE_UP, 1));
+    }
+
+    /**
+     * The wz writes prop as a percentage. Reading it with integer division rounded every value under
+     * 100 down to zero, and Math.random() is never below zero, so 86 of the 509 skill levels -- almost
+     * all of them debuffs -- could not fire at all. Coolie Zombie's poison is prop 50, which is the
+     * value in the test fixture.
+     */
+    @Test
+    void chanceBasedSkillShouldFireAboutAsOftenAsPropSays() {
+        MobSkill poison = MobSkillFactory.getMobSkillOrThrow(MobSkillType.POISON, 1);
+
+        int successes = 0;
+        for (int i = 0; i < TRIALS; i++) {
+            if (poison.makeChanceResult()) {
+                successes++;
+            }
+        }
+
+        // prop 50 out of 1000 tries lands within a hair of 500. The bounds are loose enough that a
+        // correct reading never trips them, and tight enough to catch the two ways this has broken:
+        // always-off (the integer division) and always-on.
+        assertTrue(successes > 300 && successes < 700,
+                "expected roughly 500 of %d tries to fire, got %d".formatted(TRIALS, successes));
+    }
+
+    @Test
+    void skillWithNoPropShouldAlwaysFire() {
+        MobSkill attackUp = MobSkillFactory.getMobSkillOrThrow(MobSkillType.ATTACK_UP, 1);
+
+        for (int i = 0; i < TRIALS; i++) {
+            assertTrue(attackUp.makeChanceResult(), "a skill with no prop defaults to 100% and must always fire");
+        }
     }
 
 }
