@@ -1,12 +1,14 @@
-var windowTime = 10 * 1000;
-
+// See davy2_hd1.js -- same room, the second one along.
 function enter(pi) {
     var eim = pi.getEventInstance();
-    var level = eim.getProperty("level");
-    if (eim.getProperty("stage3b") == "0") {
-        pi.getMap(925100302).spawnAllMonstersFromMapSpawnList(level, true);
-        eim.setProperty("stage3b", "1");
+    if (eim == null) {
+        return false;
     }
+
+    var map = pi.getMap(925100302);
+    map.killAllMonsters();
+    map.restoreMapSpawnPoints();
+    map.instanceMapForceRespawn();
 
     pi.playPortalSound();
     pi.warp(925100302, 0);

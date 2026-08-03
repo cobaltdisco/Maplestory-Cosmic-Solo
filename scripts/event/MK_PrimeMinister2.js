@@ -125,12 +125,14 @@ function playerExit(eim, player) {
 }
 
 function changedMap(eim, chr, mapid) {
+    // The player is called chr here, not player. Referring to a name that was never bound
+    // throws the moment anyone steps outside the map range, which is every single exit.
     if (mapid < minMapId || mapid > maxMapId) {
-        if (eim.isEventTeamLackingNow(true, minPlayers, player)) {
-            eim.unregisterPlayer(player);
+        if (eim.isEventTeamLackingNow(true, minPlayers, chr)) {
+            eim.unregisterPlayer(chr);
             end(eim);
         } else {
-            eim.unregisterPlayer(player);
+            eim.unregisterPlayer(chr);
         }
     }
 }

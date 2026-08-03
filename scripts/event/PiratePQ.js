@@ -110,8 +110,8 @@ function setup(level, lobbyid) {
     eim.setProperty("stage2", "0");
     eim.setProperty("stage2a", "0");
     eim.setProperty("stage3a", "0");
-    eim.setProperty("stage2b", "0");
-    eim.setProperty("stage3b", "0");
+    // stage2b / stage3b are gone: they existed only to let the two servant-room portals spawn
+    // their mobs once, which is what kept those rooms empty for the rest of the run.
     eim.setProperty("stage4", "0");
     eim.setProperty("stage5", "0");
 
@@ -212,6 +212,12 @@ function respawnStages(eim) {
     }
 
     eim.getMapInstance(925100400).instanceMapRespawn();
+
+    // The two servant rooms empty themselves out by design -- their mobs carry removeAfter --
+    // so keep topping them up here as well, or they go quiet the moment the first wave expires.
+    eim.getMapInstance(925100202).instanceMapForceRespawn();
+    eim.getMapInstance(925100302).instanceMapForceRespawn();
+
     eim.schedule("respawnStages", 10 * 1000);
 }
 
@@ -359,6 +365,14 @@ function passedGrindMode(map, eim) {
 
 function monsterKilled(mob, eim) {
     var map = mob.getMap();
+    var mapId = map.getId();
+
+    // The servant rooms are side rooms, not stages. Their mobs come and go on their own, so
+    // an empty room there means nothing -- and the stage formula below would read a fraction
+    // out of those map ids anyway.
+    if (mapId == 925100202 || mapId == 925100302) {
+        return;
+    }
 
     if (isLordPirate(mob)) {  // lord pirate defeated, spawn the little fella!
         map.broadcastStringMessage(5, "As Lord Pirate dies, Wu Yang is released!");
@@ -366,13 +380,13 @@ function monsterKilled(mob, eim) {
     }
 
     if (map.countMonsters() == 0) {
-        var stage = ((map.getId() % 1000) / 100) + 1;
+        var stage = ((mapId % 1000) / 100) + 1;
 
         if ((stage == 1 || stage == 3 || stage == 4) && passedGrindMode(map, eim)) {
-            eim.showClearEffect(map.getId());
+            eim.showClearEffect(mapId);
         } else if (stage == 5) {
             if (map.getReactorByName("sMob1").getState() >= 1 && map.getReactorByName("sMob2").getState() >= 1 && map.getReactorByName("sMob3").getState() >= 1 && map.getReactorByName("sMob4").getState() >= 1) {
-                eim.showClearEffect(map.getId());
+                eim.showClearEffect(mapId);
             }
         }
     }

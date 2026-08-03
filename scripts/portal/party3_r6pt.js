@@ -49,7 +49,11 @@ function enter(pi) {
     } else {    //fail
         pRow--;
         pi.playPortalSound();
-        pi.warp(pi.getMapId(), (pRow / 4) > 1 ? (pRow / 4) : 5);  // thanks Chloek3, seth1 for noticing next plaform issues
+        // parseInt, because pRow here is whatever the row was minus one and the division is
+        // rarely exact. warp only takes (int, int) or (int, String), and the engine will not
+        // narrow a fractional double to either -- the call throws and nobody gets moved.
+        // The climb branch above is safe: it only divides when pRow % 4 == 0.
+        pi.warp(pi.getMapId(), (pRow / 4) > 1 ? parseInt(pRow / 4) : 5);  // thanks Chloek3, seth1 for noticing next plaform issues
     }
 
     return true;

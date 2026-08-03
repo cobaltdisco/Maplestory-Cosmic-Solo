@@ -242,10 +242,18 @@ function givePrize() {
     } else {
         var rnd = Math.floor(Math.random() * lvTarget.length);
 
+        // Skip the zeroes. -1 * 0 is -0, a double, and the engine will not narrow it to the
+        // short gainItem takes -- the call throws and the loop dies partway, after the earlier
+        // tickets have already been taken and before the prize is handed over. getPoints()
+        // above already skips them for its own reasons.
         for (var i = 0; i < tickets.length; i++) {
-            cm.gainItem(4001009 + i, -1 * tickets[i]);
+            if (tickets[i] > 0) {
+                cm.gainItem(4001009 + i, -1 * tickets[i]);
+            }
         }
-        cm.gainItem(coinId, -1 * coins);
+        if (coins > 0) {
+            cm.gainItem(coinId, -1 * coins);
+        }
 
         cm.gainItem(lvTarget[rnd], lvQty[rnd]);
     }

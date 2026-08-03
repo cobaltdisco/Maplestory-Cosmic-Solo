@@ -66,13 +66,19 @@ function action(mode, type, selection) {
             } else if (chosen == 1) {
                 cm.gainItem(4001101, -10);
 
+                // The instance is gone once its timer runs out, but the player stays standing
+                // on the map and can still open this dialogue. Without the guard the null eim
+                // throws on the next line, the exception escapes, and the client is left
+                // waiting for a reply that never comes.
                 var eim = cm.getEventInstance();
-                clearStage(1, eim);
+                if (eim != null) {
+                    clearStage(1, eim);
 
-                var map = eim.getMapInstance(cm.getPlayer().getMapId());
-                map.killAllMonstersNotFriendly();
+                    var map = eim.getMapInstance(cm.getPlayer().getMapId());
+                    map.killAllMonstersNotFriendly();
 
-                eim.clearPQ();
+                    eim.clearPQ();
+                }
                 cm.dispose();
             } else {
                 if (mode == 1) {
