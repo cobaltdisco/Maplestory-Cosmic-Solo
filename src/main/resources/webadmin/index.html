@@ -169,6 +169,7 @@
   <button data-tab="item">赠送物品</button>
   <button data-tab="vac">吸怪</button>
   <button data-tab="teleport">传送</button>
+  <button data-tab="scroll">砸卷</button>
 </nav>
 
 <main>
@@ -447,6 +448,43 @@
     </div>
     <p class="note" id="tpMapCount" style="margin-top:8px"></p>
   </section>
+
+  <!-- ------------------------------------------------------------ 砸卷 -->
+  <section id="tab-scroll">
+    <h2>砸卷必成</h2>
+    <p class="note">
+      开着的时候，目标角色砸卷<b>必定成功</b>。只改成功判定这一件事，其余照旧：
+      <b>孔照扣</b>、没孔了还是砸不了、卷轴照消耗。也就是「必中，但不是无限」。
+      <b>角色一下线就自动关掉</b>，重启也不留。
+    </p>
+
+    <div class="row">
+      <button class="act primary" id="scrollToggle" disabled>开启必成</button>
+      <span class="pill" id="scrollStatus">未运行</span>
+    </div>
+
+    <h2 style="margin-top:28px">具体会变什么、不会变什么</h2>
+    <table style="max-width:640px">
+      <thead><tr><th>项目</th><th>行为</th></tr></thead>
+      <tbody>
+        <tr><td>成功率</td><td>100%（跳过掷骰，卷轴自己的 <code>success</code> 不再起作用）</td></tr>
+        <tr><td>诅咒炸装备</td><td>不会再发生——诅咒只在失败分支里判</td></tr>
+        <tr><td>可升级次数（孔）</td><td>照扣，一张卷一个孔，<code>tuc</code> 仍然是上限</td></tr>
+        <tr><td>没孔的装备</td><td>还是砸不了，服务端的门槛不动</td></tr>
+        <tr><td>卷轴 / 白卷</td><td>照消耗。白卷只在失败时才有意义，开着的时候纯属浪费</td></tr>
+        <tr><td>精通书 / 制作催化剂</td><td><b>不受影响</b>，它们走的是另一条路</td></tr>
+        <tr><td>其他角色</td><td>不受影响，这个开关按角色生效</td></tr>
+      </tbody>
+    </table>
+
+    <h2 style="margin-top:28px">和 GM 的「完美卷轴」有什么不一样</h2>
+    <ul class="note" style="margin:0; padding-left:20px">
+      <li><code>USE_PERFECT_GM_SCROLL</code> 现在是<b>开着</b>的：GM 角色砸卷本来就必成，
+          而且<b>不扣孔</b>——孔永远不减、等级照加，等于一个孔无限刷。</li>
+      <li>这个开关<b>只接管成功判定</b>，扣孔和「必须有孔」的门槛都原样保留，
+          所以普通角色不用提权也能用，而且装备的强化上限还在。</li>
+    </ul>
+  </section>
 </main>
 
 <div id="toast"></div>
@@ -581,6 +619,7 @@ async function loadState() {
   renderOnline();
   renderVac();
   renderWhere();
+  renderScroll();
   // Load each catalog once it exists; the flags stop the 5s poll from re-fetching a list that
   // is legitimately empty because of the current filters.
   if (idx.equipStatus === "ready" && !equipsLoaded) { equipsLoaded = true; loadEquips(); }
@@ -696,6 +735,7 @@ function renderOnline() {
     syncGiftButtons();
     renderVac();
     renderWhere();
+    renderScroll();
   }));
 }
 
@@ -978,6 +1018,38 @@ $("vacToggle").addEventListener("click", async () => {
     if (res.ok) { state = res; renderVac(); }
   }));
 
+// -------------------------------------------------------------------- 砸卷
+
+function scrollOn() {
+  const chr = targetChr();
+  return !!(chr && state && (state.scrolls || []).includes(chr.id));
+}
+
+function renderScroll() {
+  const chr = targetChr();
+  const on = scrollOn();
+  const btn = $("scrollToggle");
+  btn.disabled = !chr;
+  // Never touch the label while a request is in flight - withBusy owns it until it resolves.
+  if (!btn.classList.contains("busy")) {
+    btn.textContent = on ? "关闭必成" : "开启必成";
+  }
+  btn.classList.toggle("primary", !on);
+  $("scrollStatus").textContent = !chr ? "没有选中角色"
+    : on ? `运行中 · ${chr.name} 砸卷必成` : `未运行（目标：${chr.name}）`;
+}
+
+$("scrollToggle").addEventListener("click", async () => {
+  const chr = targetChr();
+  if (!chr) return;
+  const on = !scrollOn();
+  const body = new URLSearchParams({ chrId: chr.id, enabled: on ? "true" : "false" });
+  const res = await withBusy($("scrollToggle"), on ? "开启中…" : "关闭中…",
+    async () => (await fetch("api/scroll", { method: "POST", body })).json());
+  toast(res.ok ? res.message : res.error, !!res.ok);
+  if (res.ok) { state = res; renderScroll(); }
+});
+
 // -------------------------------------------------------------------- 传送
 
 function renderWhere() {
@@ -1157,7 +1229,7 @@ document.querySelectorAll("nav button").forEach(btn => btn.addEventListener("cli
 $("refresh").addEventListener("click", () => withBusy($("refresh"), "刷新中…",
   () => Promise.all([loadState(), loadEquips(), loadItems(), loadMaps()])));
 $("target").addEventListener("change",
-  () => { renderOnline(); syncGiftButtons(); renderVac(); renderWhere(); });
+  () => { renderOnline(); syncGiftButtons(); renderVac(); renderWhere(); renderScroll(); });
 
 loadState();
 setInterval(loadState, 5000);

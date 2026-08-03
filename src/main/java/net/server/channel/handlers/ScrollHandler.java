@@ -36,6 +36,7 @@ import constants.id.ItemId;
 import constants.inventory.ItemConstants;
 import net.AbstractPacketHandler;
 import net.packet.InPacket;
+import net.server.webadmin.PerfectScroll;
 import server.ItemInformationProvider;
 import tools.PacketCreator;
 
@@ -103,7 +104,8 @@ public final class ScrollHandler extends AbstractPacketHandler {
                     }
                 }
 
-                Equip scrolled = (Equip) ii.scrollEquipWithId(toScroll, scroll.getItemId(), whiteScroll, 0, chr.isGM());
+                Equip scrolled = (Equip) ii.scrollEquipWithId(toScroll, scroll.getItemId(), whiteScroll, 0,
+                        chr.isGM(), PerfectScroll.isOn(chr.getId()));
                 ScrollResult scrollSuccess = Equip.ScrollResult.FAIL; // fail
                 if (scrolled == null) {
                     scrollSuccess = Equip.ScrollResult.CURSE;

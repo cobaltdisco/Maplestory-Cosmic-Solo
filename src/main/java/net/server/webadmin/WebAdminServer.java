@@ -81,6 +81,7 @@ public class WebAdminServer {
             server.createContext("/api/items", WebAdminServer::handleItems);
             server.createContext("/api/gift", WebAdminServer::handleGift);
             server.createContext("/api/vac", WebAdminServer::handleVac);
+            server.createContext("/api/scroll", WebAdminServer::handleScroll);
             server.createContext("/api/maps", WebAdminServer::handleMaps);
             server.createContext("/api/worldmap", WebAdminServer::handleWorldMap);
             server.createContext("/api/warp", WebAdminServer::handleWarp);
@@ -103,6 +104,7 @@ public class WebAdminServer {
 
     public static synchronized void stop() {
         MobVac.stopAll();
+        PerfectScroll.stopAll();
         if (server != null) {
             server.stop(1);
             server = null;
@@ -224,6 +226,7 @@ public class WebAdminServer {
         out.put("players", players);
         out.put("index", index);
         out.put("vacs", MobVac.describe());
+        out.put("scrolls", PerfectScroll.describe());
         return out;
     }
 
@@ -644,6 +647,38 @@ public class WebAdminServer {
         Map<String, Object> out = state();
         out.put("ok", true);
         out.put("message", "mob vac on for " + chr.getName());
+        respondJson(exchange, out);
+    }
+
+    // ---------------------------------------------------------------- 砸卷必成
+
+    private static void handleScroll(HttpExchange exchange) throws IOException {
+        if (!"POST".equalsIgnoreCase(exchange.getRequestMethod())) {
+            respondJson(exchange, error("POST only"));
+            return;
+        }
+        Map<String, String> form = readForm(exchange);
+        int chrId = parseInt(form.get("chrId"), -1);
+
+        if (!"true".equalsIgnoreCase(form.get("enabled"))) {
+            PerfectScroll.stop(chrId);
+            Map<String, Object> out = state();
+            out.put("ok", true);
+            out.put("message", "scrolls roll normally again");
+            respondJson(exchange, out);
+            return;
+        }
+
+        Character chr = MobVac.findOnlineCharacter(chrId);
+        if (chr == null) {
+            respondJson(exchange, error("that character is not online any more"));
+            return;
+        }
+        PerfectScroll.start(chrId);
+
+        Map<String, Object> out = state();
+        out.put("ok", true);
+        out.put("message", "scrolls always succeed for " + chr.getName());
         respondJson(exchange, out);
     }
 

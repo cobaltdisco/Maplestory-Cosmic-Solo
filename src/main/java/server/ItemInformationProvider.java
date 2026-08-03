@@ -1067,6 +1067,18 @@ public class ItemInformationProvider {
     }
 
     public Item scrollEquipWithId(Item equip, int scrollId, boolean usingWhiteScroll, int vegaItemId, boolean isGM) {
+        return scrollEquipWithId(equip, scrollId, usingWhiteScroll, vegaItemId, isGM, false);
+    }
+
+    /**
+     * @param forceSuccess skip the success roll and treat the scroll as landed. Deliberately
+     *                     separate from {@code isGM}: a GM's perfect scroll also skips the slot
+     *                     cost and the "needs a free slot" guard, so it turns one slot into
+     *                     unlimited scrolling. This one only decides success, leaving the slot
+     *                     cost and the ceiling alone. Curses take care of themselves - the roll
+     *                     for one only happens in the failure branch.
+     */
+    public Item scrollEquipWithId(Item equip, int scrollId, boolean usingWhiteScroll, int vegaItemId, boolean isGM, boolean forceSuccess) {
         boolean assertGM = (isGM && YamlConfig.config.server.USE_PERFECT_GM_SCROLL);
 
         if (equip instanceof Equip nEquip) {
@@ -1091,7 +1103,7 @@ public class ItemInformationProvider {
                         break;
                 }
 
-                if (assertGM || rollSuccessChance(prop)) {
+                if (assertGM || forceSuccess || rollSuccessChance(prop)) {
                     short flag = nEquip.getFlag();
                     switch (scrollId) {
                         case ItemId.SPIKES_SCROLL:
