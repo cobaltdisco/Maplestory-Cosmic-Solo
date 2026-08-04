@@ -64,6 +64,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -98,7 +99,7 @@ public class ItemInformationProvider {
     protected Map<Integer, StatEffect> itemEffects = new HashMap<>();
     protected Map<Integer, Map<String, Integer>> equipStatsCache = new HashMap<>();
     protected Map<Integer, Equip> equipCache = new HashMap<>();
-    protected Map<Integer, Data> equipLevelInfoCache = new HashMap<>();
+    protected Map<Integer, EquipLevelInfo> equipLevelInfoCache = new HashMap<>();
     protected Map<Integer, Integer> equipLevelReqCache = new HashMap<>();
     protected Map<Integer, Integer> equipMaxLevelCache = new HashMap<>();
     protected Map<Integer, List<Integer>> scrollReqsCache = new HashMap<>();
@@ -126,6 +127,7 @@ public class ItemInformationProvider {
     protected Map<Integer, Integer> levelCache = new HashMap<>();
     protected Map<Integer, Pair<Integer, List<RewardItem>>> rewardCache = new HashMap<>();
     protected List<Pair<Integer, String>> itemNameCache = new ArrayList<>();
+    protected List<Pair<Integer, String>> etcItemNameCache = new ArrayList<>();
     protected Map<Integer, Boolean> consumeOnPickupCache = new HashMap<>();
     protected Map<Integer, Boolean> isQuestItemCache = new HashMap<>();
     protected Map<Integer, Boolean> isPartyQuestItemCache = new HashMap<>();
@@ -137,7 +139,7 @@ public class ItemInformationProvider {
     protected Map<Integer, MakerItemFactory.MakerItemCreateEntry> makerItemCache = new HashMap<>();
     protected Map<Integer, Integer> makerCatalystCache = new HashMap<>();
     protected Map<Integer, Map<String, Integer>> skillUpgradeCache = new HashMap<>();
-    protected Map<Integer, Data> skillUpgradeInfoCache = new HashMap<>();
+    protected Map<Integer, List<Integer>> skillUpgradeInfoCache = new HashMap<>();
     protected Map<Integer, Pair<Integer, Set<Integer>>> cashPetFoodCache = new HashMap<>();
     protected Map<Integer, QuestConsItem> questItemConsCache = new HashMap<>();
 
@@ -191,12 +193,21 @@ public class ItemInformationProvider {
         for (Data itemFolder : itemsData.getChildren()) {
             itemPairs.add(new Pair<>(Integer.parseInt(itemFolder.getName()), DataTool.getString("name", itemFolder, "NO-NAME")));
         }
-        return itemPairs;
+
+        // The guard at the top reads this field, but nothing ever filled it, so every caller
+        // re-parsed all six String.wz files -- and Eqp.img alone is 2.8 MB here, since the
+        // ported cosmetics put 27k names in it. Unmodifiable because the list is now shared:
+        // a caller that edited it would be editing the cache.
+        itemNameCache = Collections.unmodifiableList(itemPairs);
+        return itemNameCache;
     }
 
     public List<Pair<Integer, String>> getAllEtcItems() {
-        if (!itemNameCache.isEmpty()) {
-            return itemNameCache;
+        // Its own cache. This used to guard on itemNameCache, which returns every item there is,
+        // so once that one was populated this method would have handed back the whole catalogue
+        // instead of just the Etc entries.
+        if (!etcItemNameCache.isEmpty()) {
+            return etcItemNameCache;
         }
 
         List<Pair<Integer, String>> itemPairs = new ArrayList<>();
@@ -206,7 +217,9 @@ public class ItemInformationProvider {
         for (Data itemFolder : itemsData.getChildren()) {
             itemPairs.add(new Pair<>(Integer.parseInt(itemFolder.getName()), DataTool.getString("name", itemFolder, "NO-NAME")));
         }
-        return itemPairs;
+
+        etcItemNameCache = Collections.unmodifiableList(itemPairs);
+        return etcItemNameCache;
     }
 
     private Data getStringData(int itemId) {
@@ -1449,9 +1462,15 @@ public class ItemInformationProvider {
         return bRestricted;
     }
 
-    private Pair<Map<String, Integer>, Data> getSkillStatsInternal(int itemId) {
+    /**
+     * The right half used to be the wz "skill" node itself, which pinned the skill book's whole
+     * parsed document on the heap for good. All the caller ever did with it was read the skill
+     * ids at 0, 1, 2 ... until a zero, so that list is what gets kept now. Null still means the
+     * item had no skill subtree, exactly as before.
+     */
+    private Pair<Map<String, Integer>, List<Integer>> getSkillStatsInternal(int itemId) {
         Map<String, Integer> ret = skillUpgradeCache.get(itemId);
-        Data retSkill = skillUpgradeInfoCache.get(itemId);
+        List<Integer> retSkill = skillUpgradeInfoCache.get(itemId);
 
         if (ret != null) {
             return new Pair<>(ret, retSkill);
@@ -1472,7 +1491,17 @@ public class ItemInformationProvider {
                 ret.put("reqSkillLevel", DataTool.getInt("reqSkillLevel", info, 0));
                 ret.put("success", DataTool.getInt("success", info, 0));
 
-                retSkill = info.getChildByPath("skill");
+                Data skill = info.getChildByPath("skill");
+                if (skill != null) {
+                    retSkill = new ArrayList<>();
+                    for (int i = 0; i < skill.getChildren().size(); i++) {
+                        int curskill = DataTool.getInt(Integer.toString(i), skill, 0);
+                        if (curskill == 0) {
+                            break;      // the reader stopped at the first zero; so does this
+                        }
+                        retSkill.add(curskill);
+                    }
+                }
             }
         }
 
@@ -1482,19 +1511,13 @@ public class ItemInformationProvider {
     }
 
     public Map<String, Integer> getSkillStats(int itemId, double playerJob) {
-        Pair<Map<String, Integer>, Data> retData = getSkillStatsInternal(itemId);
+        Pair<Map<String, Integer>, List<Integer>> retData = getSkillStatsInternal(itemId);
         if (retData.getLeft().isEmpty()) {
             return null;
         }
 
         Map<String, Integer> ret = new LinkedHashMap<>(retData.getLeft());
-        Data skill = retData.getRight();
-        int curskill;
-        for (int i = 0; i < skill.getChildren().size(); i++) {
-            curskill = DataTool.getInt(Integer.toString(i), skill, 0);
-            if (curskill == 0) {
-                break;
-            }
+        for (int curskill : retData.getRight()) {
             if (curskill / 10000 == playerJob) {
                 ret.put("skillid", curskill);
                 break;
@@ -1922,9 +1945,32 @@ public class ItemInformationProvider {
         return ret;
     }
 
-    private Data getEquipLevelInfo(int itemId) {
-        Data equipLevelData = equipLevelInfoCache.get(itemId);
-        if (equipLevelData == null) {
+    /** The stat names an equip can roll on levelling, as the wz spells them minus the Min/Max. */
+    private static final List<String> LEVELUP_STATS = List.of(
+            "incDEX", "incSTR", "incINT", "incLUK", "incMHP", "incMMP", "incPAD",
+            "incMAD", "incPDD", "incMDD", "incACC", "incEVA", "incSpeed", "incJump");
+
+    /**
+     * What an equip gains as it levels up, read out of the wz once and kept as plain values.
+     *
+     * @param childCounts how many children each level node has, which is all getEquipLevel
+     *                    ever asked the node
+     * @param statRanges  the incXxxMin/incXxxMax pairs per level, in the order the wz lists them
+     */
+    private record EquipLevelInfo(Map<Integer, Integer> childCounts,
+                                  Map<Integer, List<StatRange>> statRanges) {}
+
+    private record StatRange(String stat, int min, int max) {}
+
+    /**
+     * Deliberately returns values rather than the wz node it read them from. A {@link Data} is a
+     * view onto a DOM node and a DOM node owns its Document, so caching one kept that equip's
+     * entire parsed .img.xml on the heap for the life of the process -- and this cache is filled
+     * for every equip that ever gets instantiated, since the Equip constructor asks for the level.
+     */
+    private EquipLevelInfo getEquipLevelInfo(int itemId) {
+        EquipLevelInfo cached = equipLevelInfoCache.get(itemId);
+        if (cached == null) {
             if (equipLevelInfoCache.containsKey(itemId)) {
                 return null;
             }
@@ -1933,14 +1979,48 @@ public class ItemInformationProvider {
             if (iData != null) {
                 Data data = iData.getChildByPath("info/level");
                 if (data != null) {
-                    equipLevelData = data.getChildByPath("info");
+                    Data levelInfo = data.getChildByPath("info");
+                    if (levelInfo != null) {
+                        cached = readEquipLevelInfo(levelInfo);
+                    }
                 }
             }
 
-            equipLevelInfoCache.put(itemId, equipLevelData);
+            equipLevelInfoCache.put(itemId, cached);
         }
 
-        return equipLevelData;
+        return cached;
+    }
+
+    private static EquipLevelInfo readEquipLevelInfo(Data levelInfo) {
+        Map<Integer, Integer> childCounts = new HashMap<>();
+        Map<Integer, List<StatRange>> statRanges = new HashMap<>();
+
+        for (Data levelData : levelInfo.getChildren()) {
+            int level;
+            try {
+                level = Integer.parseInt(levelData.getName());
+            } catch (NumberFormatException e) {
+                continue;   // the level subtree is numbered; anything else is not a level
+            }
+
+            childCounts.put(level, levelData.getChildren().size());
+
+            List<StatRange> ranges = new ArrayList<>();
+            for (Data stat : levelData.getChildren()) {
+                for (String key : LEVELUP_STATS) {
+                    if (stat.getName().startsWith(key + "Min")) {
+                        // getInt yields 0 for a missing node, same as reading it at use time did.
+                        ranges.add(new StatRange(key, DataTool.getInt(stat),
+                                DataTool.getInt(levelData.getChildByPath(key + "Max"))));
+                        break;
+                    }
+                }
+            }
+            statRanges.put(level, ranges);
+        }
+
+        return new EquipLevelInfo(childCounts, statRanges);
     }
 
     public int getEquipLevel(int itemId, boolean getMaxLevel) {
@@ -1948,14 +2028,14 @@ public class ItemInformationProvider {
         if (eqLevel == null) {
             eqLevel = 1;    // greater than 1 means that it was supposed to levelup on GMS
 
-            Data data = getEquipLevelInfo(itemId);
-            if (data != null) {
+            EquipLevelInfo info = getEquipLevelInfo(itemId);
+            if (info != null) {
                 if (getMaxLevel) {
                     int curLevel = 1;
 
                     while (true) {
-                        Data data2 = data.getChildByPath(Integer.toString(curLevel));
-                        if (data2 == null || data2.getChildren().size() <= 1) {
+                        Integer children = info.childCounts().get(curLevel);
+                        if (children == null || children <= 1) {
                             eqLevel = curLevel;
                             equipMaxLevelCache.put(itemId, eqLevel);
                             break;
@@ -1964,8 +2044,8 @@ public class ItemInformationProvider {
                         curLevel++;
                     }
                 } else {
-                    Data data2 = data.getChildByPath("1");
-                    if (data2 != null && data2.getChildren().size() > 1) {
+                    Integer children = info.childCounts().get(1);
+                    if (children != null && children > 1) {
                         eqLevel = 2;
                     }
                 }
@@ -1977,41 +2057,16 @@ public class ItemInformationProvider {
 
     public List<Pair<String, Integer>> getItemLevelupStats(int itemId, int level) {
         List<Pair<String, Integer>> list = new LinkedList<>();
-        Data data = getEquipLevelInfo(itemId);
-        if (data != null) {
-            Data data2 = data.getChildByPath(Integer.toString(level));
-            if (data2 != null) {
-                for (Data da : data2.getChildren()) {
+        EquipLevelInfo info = getEquipLevelInfo(itemId);
+        if (info != null) {
+            List<StatRange> ranges = info.statRanges().get(level);
+            if (ranges != null) {
+                // One roll per stat the wz offers at this level, same 90% as before -- the old
+                // code rolled once per child node, but only the incXxxMin children could ever
+                // add anything, so the odds per stat are unchanged.
+                for (StatRange range : ranges) {
                     if (Math.random() < 0.9) {
-                        if (da.getName().startsWith("incDEXMin")) {
-                            list.add(new Pair<>("incDEX", Randomizer.rand(DataTool.getInt(da), DataTool.getInt(data2.getChildByPath("incDEXMax")))));
-                        } else if (da.getName().startsWith("incSTRMin")) {
-                            list.add(new Pair<>("incSTR", Randomizer.rand(DataTool.getInt(da), DataTool.getInt(data2.getChildByPath("incSTRMax")))));
-                        } else if (da.getName().startsWith("incINTMin")) {
-                            list.add(new Pair<>("incINT", Randomizer.rand(DataTool.getInt(da), DataTool.getInt(data2.getChildByPath("incINTMax")))));
-                        } else if (da.getName().startsWith("incLUKMin")) {
-                            list.add(new Pair<>("incLUK", Randomizer.rand(DataTool.getInt(da), DataTool.getInt(data2.getChildByPath("incLUKMax")))));
-                        } else if (da.getName().startsWith("incMHPMin")) {
-                            list.add(new Pair<>("incMHP", Randomizer.rand(DataTool.getInt(da), DataTool.getInt(data2.getChildByPath("incMHPMax")))));
-                        } else if (da.getName().startsWith("incMMPMin")) {
-                            list.add(new Pair<>("incMMP", Randomizer.rand(DataTool.getInt(da), DataTool.getInt(data2.getChildByPath("incMMPMax")))));
-                        } else if (da.getName().startsWith("incPADMin")) {
-                            list.add(new Pair<>("incPAD", Randomizer.rand(DataTool.getInt(da), DataTool.getInt(data2.getChildByPath("incPADMax")))));
-                        } else if (da.getName().startsWith("incMADMin")) {
-                            list.add(new Pair<>("incMAD", Randomizer.rand(DataTool.getInt(da), DataTool.getInt(data2.getChildByPath("incMADMax")))));
-                        } else if (da.getName().startsWith("incPDDMin")) {
-                            list.add(new Pair<>("incPDD", Randomizer.rand(DataTool.getInt(da), DataTool.getInt(data2.getChildByPath("incPDDMax")))));
-                        } else if (da.getName().startsWith("incMDDMin")) {
-                            list.add(new Pair<>("incMDD", Randomizer.rand(DataTool.getInt(da), DataTool.getInt(data2.getChildByPath("incMDDMax")))));
-                        } else if (da.getName().startsWith("incACCMin")) {
-                            list.add(new Pair<>("incACC", Randomizer.rand(DataTool.getInt(da), DataTool.getInt(data2.getChildByPath("incACCMax")))));
-                        } else if (da.getName().startsWith("incEVAMin")) {
-                            list.add(new Pair<>("incEVA", Randomizer.rand(DataTool.getInt(da), DataTool.getInt(data2.getChildByPath("incEVAMax")))));
-                        } else if (da.getName().startsWith("incSpeedMin")) {
-                            list.add(new Pair<>("incSpeed", Randomizer.rand(DataTool.getInt(da), DataTool.getInt(data2.getChildByPath("incSpeedMax")))));
-                        } else if (da.getName().startsWith("incJumpMin")) {
-                            list.add(new Pair<>("incJump", Randomizer.rand(DataTool.getInt(da), DataTool.getInt(data2.getChildByPath("incJumpMax")))));
-                        }
+                        list.add(new Pair<>(range.stat(), Randomizer.rand(range.min(), range.max())));
                     }
                 }
             }
