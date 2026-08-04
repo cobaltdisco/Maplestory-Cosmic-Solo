@@ -52,9 +52,13 @@ public final class MapIndex {
     public record World(String name, int width, int height, List<Spot> spots, List<Link> links) {
     }
 
+    /** String.wz's own name for a map you can only reach through a hidden portal. */
+    private static final String HIDDEN = "Hidden Street";
+
     private static volatile List<Entry> entries;
     private static volatile Map<Integer, Entry> byId = Map.of();
     private static volatile Map<String, World> worlds = Map.of();
+    private static volatile Map<Integer, List<Integer>> hiddenByParent = Map.of();
     private static final Object buildLock = new Object();
 
     private MapIndex() {
@@ -70,6 +74,11 @@ public final class MapIndex {
 
     public static Map<String, World> worlds() {
         return worlds;
+    }
+
+    /** The hidden streets that lead back to the given map, or an empty list. */
+    public static List<Integer> hiddenBehind(int mapId) {
+        return hiddenByParent.getOrDefault(mapId, List.of());
     }
 
     public static void build() {
@@ -93,6 +102,7 @@ public final class MapIndex {
             found.sort((a, b) -> Integer.compare(a.id(), b.id()));
             entries = List.copyOf(found);
             byId = Map.copyOf(index);
+            hiddenByParent = readHiddenStreets();
             worlds = readWorldMaps();
 
             int unnamed = (int) entries.stream().filter(e -> e.name().isEmpty()).count();
@@ -175,6 +185,68 @@ public final class MapIndex {
             log.error("Web admin: could not read {}", file, e);
         }
         return out;
+    }
+
+    /**
+     * Which hidden streets hang off which ordinary map.
+     * <p>
+     * The world map does not show hidden streets - that is the whole point of them - so browsing
+     * it would never reach the 1,485 maps String.wz files under the street name "Hidden Street".
+     * The link back is real data rather than something inferred from id ranges: a hidden street's
+     * {@code info/returnMap} is the map it drops you back into, which is the map its portal hides
+     * on. It sits in the first block of the file, so this reads a few KB per map and stops.
+     */
+    private static Map<Integer, List<Integer>> readHiddenStreets() {
+        Map<Integer, List<Integer>> out = new HashMap<>();
+        int hidden = 0, orphan = 0;
+        for (Entry entry : entries) {
+            if (!HIDDEN.equals(entry.street())) {
+                continue;
+            }
+            hidden++;
+            int parent = readReturnMap(entry.id());
+            // MapId.NONE, and anything pointing at a map this server has no data for, would be a
+            // row you could never get to from the world map anyway.
+            if (parent <= 0 || parent == 999999999 || !byId.containsKey(parent)) {
+                orphan++;
+                continue;
+            }
+            out.computeIfAbsent(parent, k -> new ArrayList<>()).add(entry.id());
+        }
+        out.replaceAll((k, v) -> List.copyOf(v));
+        log.info("Web admin: {} of {} hidden streets hang off {} maps; the other {} have no"
+                        + " reachable returnMap and are only findable through the search list",
+                hidden - orphan, hidden, out.size(), orphan);
+        return Map.copyOf(out);
+    }
+
+    /** The {@code info/returnMap} of one map, or -1. The info block is the first in the file. */
+    private static int readReturnMap(int mapId) {
+        Path file = WZFiles.MAP.getFile().resolve("Map")
+                .resolve("Map" + mapId / 100000000)
+                .resolve(String.format("%09d.img.xml", mapId));
+        try (BufferedReader reader = Wz.reader(file)) {
+            String line;
+            boolean inInfo = false;
+            while ((line = reader.readLine()) != null) {
+                String trimmed = line.trim();
+                if (!inInfo) {
+                    if (trimmed.startsWith("<imgdir name=\"info\"")) {
+                        inInfo = true;
+                    }
+                    continue;
+                }
+                if (trimmed.startsWith("</imgdir>")) {
+                    return -1;              // info closed without one
+                }
+                if ("returnMap".equals(Wz.attr(trimmed, "name"))) {
+                    return parseId(Wz.attr(trimmed, "value"));
+                }
+            }
+        } catch (IOException e) {
+            log.warn("Web admin: could not read {}", file, e);
+        }
+        return -1;
     }
 
     /** Reads the layout WorldMapDump wrote, keeping only the maps this server can actually load. */

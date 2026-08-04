@@ -750,9 +750,21 @@ public class WebAdminServer {
             List<Object> maps = new ArrayList<>();
             for (int id : spot.maps()) {
                 MapIndex.Entry e = MapIndex.byId(id);
-                if (e != null) {
-                    maps.add(mapJson(e));
+                if (e == null) {
+                    continue;
                 }
+                Map<String, Object> m = mapJson(e);
+                // The world map never marks a hidden street, so clicking around it would
+                // otherwise never reach one. They hang off the map their portal hides on.
+                List<Object> hidden = new ArrayList<>();
+                for (int child : MapIndex.hiddenBehind(id)) {
+                    MapIndex.Entry h = MapIndex.byId(child);
+                    if (h != null) {
+                        hidden.add(mapJson(h));
+                    }
+                }
+                m.put("hidden", hidden);
+                maps.add(m);
             }
             Map<String, Object> m = Json.obj();
             m.put("x", spot.x());
@@ -760,9 +772,11 @@ public class WebAdminServer {
             m.put("type", spot.type());
             m.put("title", spot.title());
             m.put("desc", spot.desc());
-            // Most spots carry no title of their own; the street name is what the game itself
-            // shows for a cluster of maps, so it is the label rather than an invented one.
+            // Most spots carry no title of their own, and the street name a cluster shares is too
+            // vague to tell two markers apart ("Victoria Road" covers half the island). The first
+            // map's own name is what the marker actually stands for.
             m.put("label", label(spot, maps));
+            m.put("street", street(maps));
             m.put("maps", maps);
             spots.add(m);
         }
@@ -791,17 +805,24 @@ public class WebAdminServer {
         respondJson(exchange, out);
     }
 
-    @SuppressWarnings("unchecked")
     private static String label(MapIndex.Spot spot, List<Object> maps) {
         if (!spot.title().isEmpty()) {
             return spot.title();
         }
+        String name = firstField(maps, "name");
+        return name.isEmpty() ? firstField(maps, "street") : name;
+    }
+
+    private static String street(List<Object> maps) {
+        return firstField(maps, "street");
+    }
+
+    @SuppressWarnings("unchecked")
+    private static String firstField(List<Object> maps, String key) {
         if (maps.isEmpty()) {
             return "";
         }
-        Map<String, Object> first = (Map<String, Object>) maps.get(0);
-        String street = String.valueOf(first.get("street"));
-        return street.isEmpty() ? String.valueOf(first.get("name")) : street;
+        return String.valueOf(((Map<String, Object>) maps.get(0)).getOrDefault(key, ""));
     }
 
     private static void handleWarp(HttpExchange exchange) throws IOException {

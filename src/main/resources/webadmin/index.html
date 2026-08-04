@@ -119,13 +119,19 @@
      coordinate scaled with it. It scrolls instead. */
   .wmscroll { overflow: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--panel2); }
   .wm { position: relative; }
+  /* Zoom is a transform on the whole layer, so every marker and hotspot scales with the picture
+     and none of the coordinates need touching. Integer steps + nearest-neighbour, because 640x470
+     is the only size the client has - a smooth upscale would just be a blurrier version. */
+  .wmscale { transform-origin: top left; }
   .wm img.base { display: block; image-rendering: pixelated; }
   .wmlink { position: absolute; padding: 0; border: 0; background: none; cursor: pointer; }
   /* The highlight is the client's own artwork for that region, faded in on hover - the same
-     affordance the game uses, so a clickable continent looks clickable. */
+     affordance the game uses. The dashed outline is ours: without it the clickable continents
+     are completely invisible until the pointer happens to cross one. */
+  .wmlink { outline: 1px dashed rgba(37, 99, 235, .55); outline-offset: -1px; }
   .wmlink img { width: 100%; height: 100%; opacity: 0; transition: opacity .12s; image-rendering: pixelated; }
   .wmlink:hover img, .wmlink:focus-visible img { opacity: 1; }
-  .wmlink:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .wmlink:hover, .wmlink:focus-visible { outline: 2px solid var(--accent); }
   .wmspot {
     position: absolute; width: 13px; height: 13px; margin: -7px 0 0 -7px; padding: 0;
     border-radius: 50%; border: 2px solid #fff; background: var(--accent); cursor: pointer;
@@ -136,6 +142,10 @@
   .wmspot.sel { background: var(--warn); transform: scale(1.35); }
   .crumbs { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
   .crumbs .sep { color: var(--dim); }
+  /* Sized by its contents, never reserving an empty box: before you hover anything this is one
+     line of text, not a card-shaped hole next to the map. */
+  #tpSpotPanel .scroll { max-height: 460px; }
+  #tpSpotPanel tr.hidden td:first-child { padding-left: 22px; box-shadow: inset 3px 0 0 var(--warn); }
   /* The tooltip text runs from a few words to several paragraphs. In the list it gets one line
      and an ellipsis so every row stays the same height; the full text lives in the card, where
      pre-wrap keeps the line breaks the game itself puts in. */
@@ -421,21 +431,22 @@
 
     <h2 style="margin-top:30px">方法二：从地图上找</h2>
     <p class="note">
-      点大陆钻进去，点地图上的圆点看它代表哪些地图。这张图和上面的标记位置都是从客户端
-      <code>Map.wz</code> 里导出来的，和游戏里按世界地图键看到的是同一张。
+      <b>鼠标移到圆点上</b>就会在右边列出它是哪些地图，点一下钉住。虚线框是能钻进去的大陆。
+      这张图和上面的标记位置都是从客户端 <code>Map.wz</code> 里导出来的，
+      和游戏里按世界地图键看到的是同一张——<b>所以它只有 640×470 这一个尺寸</b>，
+      放大是按整数倍的最近邻，保持像素清晰而不是糊成一团。
     </p>
     <div class="crumbs" id="tpCrumbs"></div>
+    <div class="row" style="margin-bottom:10px">
+      <div><label>放大</label><select id="tpZoom">
+        <option value="1">1×（原始 640×470）</option>
+        <option value="2" selected>2×</option>
+        <option value="3">3×</option>
+      </select></div>
+    </div>
     <div class="split">
       <div class="wmscroll" id="tpMapWrap"><p class="empty">世界地图加载中…</p></div>
-      <div class="card">
-        <h2 id="tpSpotName">点一个圆点</h2>
-        <p class="note" id="tpSpotDesc" style="margin-bottom:10px">
-          圆点是游戏世界地图上的标记，一个标记通常对应一整片相连的地图。
-        </p>
-        <div class="scroll" style="max-height:360px">
-          <table><tbody id="tpSpotBody"></tbody></table>
-        </div>
-      </div>
+      <div id="tpSpotPanel"></div>
     </div>
 
     <h2 style="margin-top:30px">全部地图</h2>
@@ -558,6 +569,8 @@ let pickedEquip = null, pickedItem = null;
 // Where you are in the world map. Links only ever go downwards, so the trail is the breadcrumb.
 let tpTrail = [{ name: "WorldMap", label: "世界地图" }];
 let tpWorld = null;
+// The spot a click pinned, if any. Hovering only previews while nothing is pinned.
+let tpPinned = null;
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -1107,6 +1120,14 @@ function renderCrumbs() {
     }));
 }
 
+// The names behind a marker, for its native tooltip. Capped, and it says so rather than just
+// stopping - a silent cut would read as "that is all of them".
+function spotTitle(spot) {
+  const names = spot.maps.map(m => m.name || "（无名 " + m.id + "）");
+  const shown = names.slice(0, 12).join("\n");
+  return names.length > 12 ? `${shown}\n…还有 ${names.length - 12} 张` : shown;
+}
+
 async function loadWorldMap() {
   const node = tpTrail[tpTrail.length - 1];
   renderCrumbs();
@@ -1117,46 +1138,79 @@ async function loadWorldMap() {
     return;
   }
   tpWorld = data;
+  tpPinned = null;
 
-  // Everything is absolutely positioned in the base image's own pixels - the server already
-  // turned the wz canvas origins into plain top-left coordinates.
-  wrap.innerHTML = `<div class="wm" style="width:${data.width}px; height:${data.height}px">
-    <img class="base" src="worldmap/${data.image}" alt="" width="${data.width}" height="${data.height}">
-    ${data.links.filter(l => l.known).map(l => `
-      <button class="wmlink" data-link="${esc(l.target)}" data-label="${esc(l.label)}"
-        style="left:${l.x}px; top:${l.y}px; width:${l.w}px; height:${l.h}px"
-        title="${esc(l.label)}"><img src="worldmap/${l.image}" alt=""></button>`).join("")}
-    ${data.spots.map((s, i) => `
-      <button class="wmspot" data-spot="${i}" style="left:${s.x}px; top:${s.y}px"
-        title="${esc(s.label)}（${s.maps.length} 张地图）"></button>`).join("")}
+  const z = Number($("tpZoom").value) || 1;
+  // Everything inside the scaled layer is positioned in the base image's own pixels - the server
+  // already turned the wz canvas origins into plain top-left coordinates, and the transform on
+  // the wrapper takes care of the zoom.
+  wrap.innerHTML = `<div class="wm" style="width:${data.width * z}px; height:${data.height * z}px">
+    <div class="wmscale" style="transform:scale(${z}); width:${data.width}px; height:${data.height}px">
+      <img class="base" src="worldmap/${data.image}" alt="" width="${data.width}" height="${data.height}">
+      ${data.links.filter(l => l.known).map(l => `
+        <button class="wmlink" data-link="${esc(l.target)}" data-label="${esc(l.label)}"
+          style="left:${l.x}px; top:${l.y}px; width:${l.w}px; height:${l.h}px"
+          title="${esc(l.label)}"><img src="worldmap/${l.image}" alt=""></button>`).join("")}
+      ${data.spots.map((s, i) => `
+        <button class="wmspot" data-spot="${i}" style="left:${s.x}px; top:${s.y}px"
+          title="${esc(spotTitle(s))}"></button>`).join("")}
+    </div>
   </div>`;
 
   wrap.querySelectorAll("[data-link]").forEach(btn => btn.addEventListener("click", () => {
     tpTrail.push({ name: btn.dataset.link, label: btn.dataset.label || btn.dataset.link });
     loadWorldMap();
   }));
-  wrap.querySelectorAll("[data-spot]").forEach(btn =>
-    btn.addEventListener("click", () => pickSpot(Number(btn.dataset.spot))));
+  // Hover previews, click pins. Without the preview you would have to click every marker in turn
+  // just to find out which one you wanted.
+  wrap.querySelectorAll("[data-spot]").forEach(btn => {
+    const index = Number(btn.dataset.spot);
+    btn.addEventListener("mouseenter", () => { if (tpPinned === null) renderSpotPanel(index); });
+    btn.addEventListener("click", () => { tpPinned = index; renderSpotPanel(index); });
+  });
+  // Assigned, not added: loadWorldMap runs again on every zoom and every drill-down, and
+  // addEventListener would stack a new handler each time.
+  wrap.onmouseleave = () => renderSpotPanel(tpPinned);
 
-  $("tpSpotName").textContent = "点一个圆点";
-  $("tpSpotBody").innerHTML = "";
+  renderSpotPanel(null);
 }
 
-function pickSpot(index) {
-  const spot = tpWorld.spots[index];
-  if (!spot) return;
+function renderSpotPanel(index) {
+  const el = $("tpSpotPanel");
   document.querySelectorAll("#tpMapWrap .wmspot").forEach(b =>
-    b.classList.toggle("sel", b.dataset.spot === String(index)));
+    b.classList.toggle("sel", b.dataset.spot === String(tpPinned)));
 
-  $("tpSpotName").textContent = `${spot.label || "这个标记"}（${spot.maps.length} 张）`;
-  $("tpSpotDesc").textContent = spot.desc || "";
-  $("tpSpotBody").innerHTML = spot.maps.map(m => `
+  const spot = index === null || !tpWorld ? null : tpWorld.spots[index];
+  if (!spot) {
+    el.innerHTML = `<p class="note">鼠标移到地图上的圆点上，这里就会列出它是哪些地图；
+      点一下钉住，钉住之后移开鼠标也不会变。</p>`;
+    return;
+  }
+
+  const hiddenCount = spot.maps.reduce((n, m) => n + (m.hidden || []).length, 0);
+  const rows = spot.maps.map(m => `
     <tr data-map="${m.id}">
       <td>${m.id}</td>
       <td style="white-space:normal">${esc(m.name || "（无名）")}</td>
       <td><button class="act" data-warp="${m.id}">传送</button></td>
-    </tr>`).join("");
-  bindWarpButtons($("tpSpotBody"));
+    </tr>` + (m.hidden || []).map(h => `
+    <tr data-map="${h.id}" class="hidden">
+      <td>${h.id}</td>
+      <td style="white-space:normal"><span class="tag">隐藏</span> ${esc(h.name || "（无名）")}</td>
+      <td><button class="act" data-warp="${h.id}">传送</button></td>
+    </tr>`).join("")).join("");
+
+  el.innerHTML = `
+    <h2 style="margin-bottom:4px">${esc(spot.label || "这个标记")}</h2>
+    <p class="note" style="margin-bottom:8px">
+      ${spot.street ? esc(spot.street) + " · " : ""}${spot.maps.length} 张地图${hiddenCount ? ` · <b>${hiddenCount} 张隐藏地图</b>` : ""}
+      ${tpPinned === index ? " · 已钉住" : ""}
+      ${spot.desc ? "<br>" + esc(spot.desc) : ""}
+    </p>
+    <div class="scroll"><table><tbody>${rows}</tbody></table></div>
+    ${hiddenCount ? `<p class="note" style="margin-top:8px">带「隐藏」的是世界地图上<b>不会标出来</b>的
+      隐藏地图。挂在这里的依据是它自己的 <code>returnMap</code>——也就是从里面出来会回到哪张图。</p>` : ""}`;
+  bindWarpButtons(el);
 }
 
 // --- 全部地图
@@ -1211,6 +1265,7 @@ function bindWarpButtons(body) {
   }));
 }
 
+$("tpZoom").addEventListener("change", loadWorldMap);
 $("tpRegion").addEventListener("change", loadMaps);
 $("tpSearch").addEventListener("input", debounce(loadMaps, 250));
 
