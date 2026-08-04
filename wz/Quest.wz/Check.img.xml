@@ -39188,6 +39188,7 @@
     </imgdir>
     <imgdir name="0">
       <int name="npc" value="2060005"/>
+      <int name="interval" value="0"/>
       <int name="lvmin" value="30"/>
       <imgdir name="quest">
         <imgdir name="0">
@@ -56608,6 +56609,7 @@
   <imgdir name="6030">
     <imgdir name="0">
       <int name="npc" value="2110004"/>
+      <int name="interval" value="0"/>
       <int name="lvmin" value="45"/>
       <imgdir name="quest">
         <imgdir name="0">
@@ -56707,6 +56709,7 @@
     </imgdir>
     <imgdir name="0">
       <int name="npc" value="2110004"/>
+      <int name="interval" value="0"/>
       <int name="lvmin" value="45"/>
       <imgdir name="quest">
         <imgdir name="0">
@@ -56796,6 +56799,7 @@
   <imgdir name="6032">
     <imgdir name="0">
       <int name="npc" value="2110004"/>
+      <int name="interval" value="0"/>
       <int name="lvmin" value="45"/>
       <imgdir name="quest">
         <imgdir name="0">
@@ -63024,6 +63028,7 @@
   <imgdir name="8220">
     <imgdir name="0">
       <int name="npc" value="9201055"/>
+      <int name="interval" value="0"/>
       <imgdir name="quest">
         <imgdir name="0">
           <int name="id" value="8228"/>
@@ -63814,7 +63819,8 @@
   <imgdir name="8255">
     <imgdir name="0">
       <int name="npc" value="9201106"/>
-      <int name="lvmin" value="50"/>
+      <int name="lvmin" value="30"/>
+      <string name="startscript" value="q8255s"/>
     </imgdir>
     <imgdir name="1">
       <int name="npc" value="9201106"/>
