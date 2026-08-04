@@ -128,7 +128,10 @@
      below it, so at 3x the map scrolls inside its own box instead of pushing the page sideways. */
   .mapsplit { display: grid; grid-template-columns: minmax(0, auto) minmax(260px, 1fr); gap: 16px; align-items: start; }
   @media (max-width: 900px) { .mapsplit { grid-template-columns: minmax(0, 1fr); } }
-  .wm { position: relative; }
+  /* overflow:hidden because .wm is exactly the picture: nothing should be drawn outside it, and
+     without this the inline strut under the image adds 3px, which is enough to put a vertical
+     scrollbar on a box that fits perfectly. */
+  .wm { position: relative; overflow: hidden; }
   /* Zoom is a transform on the whole layer, so every marker and hotspot scales with the picture
      and none of the coordinates need touching. Integer steps + nearest-neighbour, because 640x470
      is the only size the client has - a smooth upscale would just be a blurrier version. */
@@ -445,12 +448,14 @@
       这张图和上面的标记位置都是从客户端 <code>Map.wz</code> 里导出来的，
       和游戏里按世界地图键看到的是同一张——<b>所以它只有 640×470 这一个尺寸</b>，
       放大是按整数倍的最近邻，保持像素清晰而不是糊成一团。
+      默认<b>自动挑装得下的最大整数倍</b>，所以屏幕够宽的时候图是撑满的、也不用拖滚动条。
     </p>
     <div class="crumbs" id="tpCrumbs"></div>
     <div class="row" style="margin-bottom:10px">
       <div><label>放大</label><select id="tpZoom">
+        <option value="auto" selected>自动（撑满可用宽度）</option>
         <option value="1">1×（原始 640×470）</option>
-        <option value="2" selected>2×</option>
+        <option value="2">2×</option>
         <option value="3">3×</option>
       </select></div>
     </div>
@@ -581,6 +586,8 @@ let tpTrail = [{ name: "WorldMap", label: "世界地图" }];
 let tpWorld = null;
 // The spot a click pinned, if any. Hovering only previews while nothing is pinned.
 let tpPinned = null;
+// The multiple the map is currently drawn at, so a resize only redraws when it would change.
+let tpDrawnZoom = 0;
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -1138,6 +1145,21 @@ function spotTitle(spot) {
   return names.length > 12 ? `${shown}\n…还有 ${names.length - 12} 张` : shown;
 }
 
+// Whole multiples only, because that is the only way to enlarge 640x470 pixel art without
+// blurring it. "auto" takes the biggest one that still fits beside the panel, so on a wide
+// screen the picture fills the space and there is nothing left to scroll.
+const MAX_ZOOM = 3;
+
+function zoomFor(mapWidth) {
+  const chosen = $("tpZoom").value;
+  if (chosen !== "auto") return Number(chosen) || 1;
+  const row = document.querySelector(".mapsplit");
+  // Measured off the grid container rather than off the map's own box, which is sized by the
+  // map and would make this circular. 260 is the panel's minimum, 16 the gap, 2 the border.
+  const room = (row ? row.clientWidth : 0) - 260 - 16 - 2;
+  return Math.max(1, Math.min(MAX_ZOOM, Math.floor(room / mapWidth) || 1));
+}
+
 async function loadWorldMap() {
   const node = tpTrail[tpTrail.length - 1];
   renderCrumbs();
@@ -1150,7 +1172,8 @@ async function loadWorldMap() {
   tpWorld = data;
   tpPinned = null;
 
-  const z = Number($("tpZoom").value) || 1;
+  const z = zoomFor(data.width);
+  tpDrawnZoom = z;
   // Everything inside the scaled layer is positioned in the base image's own pixels - the server
   // already turned the wz canvas origins into plain top-left coordinates, and the transform on
   // the wrapper takes care of the zoom.
@@ -1276,6 +1299,12 @@ function bindWarpButtons(body) {
 }
 
 $("tpZoom").addEventListener("change", loadWorldMap);
+// On "auto" the right multiple depends on how much room there is, so it has to be recomputed
+// when the window changes size. Only redraws if the answer actually moved.
+window.addEventListener("resize", debounce(() => {
+  if ($("tpZoom").value !== "auto" || !tpWorld) return;
+  if (zoomFor(tpWorld.width) !== tpDrawnZoom) loadWorldMap();
+}, 200));
 $("tpRegion").addEventListener("change", loadMaps);
 $("tpSearch").addEventListener("input", debounce(loadMaps, 250));
 
@@ -1290,6 +1319,12 @@ document.querySelectorAll("nav button").forEach(btn => btn.addEventListener("cli
   document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b === btn));
   document.querySelectorAll("main section").forEach(s =>
     s.classList.toggle("on", s.id === "tab-" + btn.dataset.tab));
+  // A hidden section measures zero, so the automatic zoom cannot be worked out until the tab is
+  // actually on screen - and the map is drawn long before anyone opens it.
+  if (btn.dataset.tab === "teleport" && $("tpZoom").value === "auto"
+      && tpWorld && zoomFor(tpWorld.width) !== tpDrawnZoom) {
+    loadWorldMap();
+  }
 }));
 
 $("refresh").addEventListener("click", () => withBusy($("refresh"), "刷新中…",
