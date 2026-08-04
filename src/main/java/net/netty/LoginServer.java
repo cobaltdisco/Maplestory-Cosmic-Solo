@@ -10,6 +10,11 @@ public class LoginServer extends AbstractServer {
     public static final int WORLD_ID = -1;
     public static final int CHANNEL_ID = -1;
     private Channel channel;
+    // Kept so stop() can shut them down. As locals they outlived the server they belonged to:
+    // closing the bound channel leaves both groups running, and every restart added another
+    // two-per-core worth of threads that nothing would ever collect.
+    private EventLoopGroup parentGroup;
+    private EventLoopGroup childGroup;
 
     public LoginServer(int port) {
         super(port);
@@ -17,8 +22,8 @@ public class LoginServer extends AbstractServer {
 
     @Override
     public void start() {
-        EventLoopGroup parentGroup = new NioEventLoopGroup();
-        EventLoopGroup childGroup = new NioEventLoopGroup();
+        parentGroup = new NioEventLoopGroup();
+        childGroup = new NioEventLoopGroup();
         ServerBootstrap bootstrap = new ServerBootstrap()
                 .group(parentGroup, childGroup)
                 .channel(NioServerSocketChannel.class)
@@ -35,5 +40,7 @@ public class LoginServer extends AbstractServer {
         }
 
         channel.close().syncUninterruptibly();
+        parentGroup.shutdownGracefully();
+        childGroup.shutdownGracefully();
     }
 }

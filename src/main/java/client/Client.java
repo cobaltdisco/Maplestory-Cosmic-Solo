@@ -947,20 +947,29 @@ public class Client extends ChannelInboundHandlerAdapter {
                 }
             }
 
+        } catch (final Throwable t) {
+            log.error("Account stuck", t);
+        }
+
+        // Taking the character off its map gets its own attempt. Sharing the block above meant
+        // that anything throwing during the cleanup -- a buff, a party, an event instance --
+        // skipped this too, and the character stayed in the map's roster: still drawn to whoever
+        // else is standing there, and still holding the monsters it controlled, because
+        // MapleMap.removePlayer is what calls leaveMap() and leaveMap() is what hands them back.
+        try {
             if (player.getMap() != null) {
                 int mapId = player.getMapId();
                 player.getMap().removePlayer(player);
                 if (MapId.isDojo(mapId)) {
                     this.getChannelServer().freeDojoSectionIfEmpty(mapId);
                 }
-                
+
                 if (player.getMap().getHPDec() > 0) {
                     getWorldServer().removePlayerHpDecrease(player);
                 }
             }
-
         } catch (final Throwable t) {
-            log.error("Account stuck", t);
+            log.error("Failed to remove chr {} from its map on disconnect", player.getName(), t);
         }
     }
 

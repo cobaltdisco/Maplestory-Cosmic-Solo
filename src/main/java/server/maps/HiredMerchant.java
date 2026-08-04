@@ -75,6 +75,11 @@ public class HiredMerchant extends AbstractMapObject {
     private final List<Pair<String, Byte>> messages = new LinkedList<>();
     private final List<SoldItem> sold = new LinkedList<>();
     private final AtomicBoolean open = new AtomicBoolean();
+    // forceClose() is single-shot: it ends by setting map to null. Three paths can reach the same
+    // merchant -- the owner logging out, the 24h expiry sweep, and channel shutdown -- and the
+    // second one through used to NPE on that null map, having first saved the stock it had
+    // already cleared.
+    private final AtomicBoolean closed = new AtomicBoolean(false);
     private boolean published = false;
     private MapleMap map;
     private final Visitor[] visitors = new Visitor[3];
@@ -370,6 +375,10 @@ public class HiredMerchant extends AbstractMapObject {
     }
 
     public void forceClose() {
+        if (!closed.compareAndSet(false, true)) {
+            return;     // somebody else already closed this one; see the note on `closed`
+        }
+
         //Server.getInstance().getChannel(world, channel).removeHiredMerchant(ownerId);
         map.broadcastMessage(PacketCreator.removeHiredMerchantBox(getOwnerId()));
         map.removeMapObject(this);

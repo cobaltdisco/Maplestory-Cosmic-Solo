@@ -80,9 +80,39 @@ public enum ItemFactory {
         saveItems(items, null, id, con);
     }
 
+    /**
+     * Both save paths below delete every row they are about to rewrite, so the delete and the
+     * inserts are only safe together. Character.saveCharToDB opens a transaction and commits it
+     * itself, so when one is already open we leave it in charge. The other callers -- hired
+     * merchants, Duey, marriage -- hand us a plain autocommit connection, where the delete lands
+     * on its own and an insert failing afterwards takes the items with it. Open a transaction for
+     * those.
+     */
     public void saveItems(List<Pair<Item, InventoryType>> items, List<Short> bundlesList, int id, Connection con) throws SQLException {
         // thanks Arufonsu, MedicOP, BHB for pointing a "synchronized" bottleneck here
 
+        if (!con.getAutoCommit()) {
+            saveItemsInternal(items, bundlesList, id, con);
+            return;
+        }
+
+        con.setAutoCommit(false);
+        try {
+            saveItemsInternal(items, bundlesList, id, con);
+            con.commit();
+        } catch (SQLException | RuntimeException e) {
+            try {
+                con.rollback();
+            } catch (SQLException rollbackFailure) {
+                e.addSuppressed(rollbackFailure);
+            }
+            throw e;
+        } finally {
+            con.setAutoCommit(true);
+        }
+    }
+
+    private void saveItemsInternal(List<Pair<Item, InventoryType>> items, List<Short> bundlesList, int id, Connection con) throws SQLException {
         if (value != 6) {
             saveItemsCommon(items, id, con);
         } else {

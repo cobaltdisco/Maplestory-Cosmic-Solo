@@ -231,22 +231,25 @@ public final class Channel {
     }
 
     private void closeAllMerchants() {
+        List<HiredMerchant> merchs;
+
+        merchWlock.lock();
         try {
-            List<HiredMerchant> merchs;
+            merchs = new ArrayList<>(hiredMerchants.values());
+            hiredMerchants.clear();
+        } finally {
+            merchWlock.unlock();
+        }
 
-            merchWlock.lock();
+        // One merchant per iteration, each with its own catch. The single catch this used to
+        // have sat outside the loop, so the first store that failed to close took every store
+        // after it down with it -- none of them got to persist their stock.
+        for (HiredMerchant merch : merchs) {
             try {
-                merchs = new ArrayList<>(hiredMerchants.values());
-                hiredMerchants.clear();
-            } finally {
-                merchWlock.unlock();
-            }
-
-            for (HiredMerchant merch : merchs) {
                 merch.forceClose();
+            } catch (Exception e) {
+                log.error("Failed to close hired merchant of chr {} on channel {}", merch.getOwnerId(), channel, e);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

@@ -129,25 +129,27 @@ public class Storage {
         }
     }
 
-    public void saveToDB(Connection con) {
-        try {
-            try (PreparedStatement ps = con.prepareStatement("UPDATE storages SET slots = ?, meso = ? WHERE storageid = ?")) {
-                ps.setInt(1, slots);
-                ps.setInt(2, meso);
-                ps.setInt(3, id);
-                ps.executeUpdate();
-            }
-            List<Pair<Item, InventoryType>> itemsWithType = new ArrayList<>();
-
-            List<Item> list = getItems();
-            for (Item item : list) {
-                itemsWithType.add(new Pair<>(item, item.getInventoryType()));
-            }
-
-            ItemFactory.STORAGE.saveItems(itemsWithType, id, con);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+    /**
+     * Runs inside the caller's transaction -- {@link client.Character#saveCharToDB} opens one and
+     * commits after this returns. The failure must therefore reach the caller: swallowing it here
+     * left the outer commit to go ahead after saveItems had already deleted every stored row,
+     * which is how a failed storage write emptied the storage instead of leaving it alone.
+     */
+    public void saveToDB(Connection con) throws SQLException {
+        try (PreparedStatement ps = con.prepareStatement("UPDATE storages SET slots = ?, meso = ? WHERE storageid = ?")) {
+            ps.setInt(1, slots);
+            ps.setInt(2, meso);
+            ps.setInt(3, id);
+            ps.executeUpdate();
         }
+        List<Pair<Item, InventoryType>> itemsWithType = new ArrayList<>();
+
+        List<Item> list = getItems();
+        for (Item item : list) {
+            itemsWithType.add(new Pair<>(item, item.getInventoryType()));
+        }
+
+        ItemFactory.STORAGE.saveItems(itemsWithType, id, con);
     }
 
     public Item getItem(byte slot) {

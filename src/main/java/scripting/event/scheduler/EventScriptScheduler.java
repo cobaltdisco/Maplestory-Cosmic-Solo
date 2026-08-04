@@ -21,6 +21,8 @@ package scripting.event.scheduler;
 
 import config.YamlConfig;
 import net.server.Server;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import server.ThreadManager;
 import server.TimerManager;
 
@@ -37,6 +39,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Ronan
  */
 public class EventScriptScheduler {
+    private static final Logger log = LoggerFactory.getLogger(EventScriptScheduler.class);
 
     private boolean disposed = false;
     private int idleProcs = 0;
@@ -77,7 +80,15 @@ public class EventScriptScheduler {
             if (rmd.getValue() < timeNow) {
                 Runnable r = rmd.getKey();
 
-                r.run();  // runs the scheduled action
+                // An entry that throws must still be taken off the list. Letting the exception
+                // out skipped both its own removal and every remaining entry in this round, and
+                // the one that threw stayed in registeredEntries to throw again on every tick
+                // from then on.
+                try {
+                    r.run();  // runs the scheduled action
+                } catch (Exception e) {
+                    log.error("Scheduled event action failed", e);
+                }
                 toRemove.add(r);
             }
         }
