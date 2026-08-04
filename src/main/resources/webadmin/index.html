@@ -117,7 +117,17 @@
   /* The world map is drawn at the size the client draws it: every spot and every region
      highlight is positioned in that picture's own pixels, so scaling it would need every
      coordinate scaled with it. It scrolls instead. */
-  .wmscroll { overflow: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--panel2); }
+  /* Hugs the picture instead of filling the column: stretched to the full grid track it drew a
+     long grey slab to the right of a 640px map. max-width keeps it inside the track at 3x, where
+     the picture is wider than the space and has to scroll. */
+  .wmscroll {
+    overflow: auto; border: 1px solid var(--line); border-radius: 8px;
+    background: var(--panel2); width: max-content; max-width: 100%;
+  }
+  /* minmax(0, auto), not plain auto: the track then prefers the picture's width but may shrink
+     below it, so at 3x the map scrolls inside its own box instead of pushing the page sideways. */
+  .mapsplit { display: grid; grid-template-columns: minmax(0, auto) minmax(260px, 1fr); gap: 16px; align-items: start; }
+  @media (max-width: 900px) { .mapsplit { grid-template-columns: minmax(0, 1fr); } }
   .wm { position: relative; }
   /* Zoom is a transform on the whole layer, so every marker and hotspot scales with the picture
      and none of the coordinates need touching. Integer steps + nearest-neighbour, because 640x470
@@ -125,13 +135,12 @@
   .wmscale { transform-origin: top left; }
   .wm img.base { display: block; image-rendering: pixelated; }
   .wmlink { position: absolute; padding: 0; border: 0; background: none; cursor: pointer; }
-  /* The highlight is the client's own artwork for that region, faded in on hover - the same
-     affordance the game uses. The dashed outline is ours: without it the clickable continents
-     are completely invisible until the pointer happens to cross one. */
-  .wmlink { outline: 1px dashed rgba(37, 99, 235, .55); outline-offset: -1px; }
-  .wmlink img { width: 100%; height: 100%; opacity: 0; transition: opacity .12s; image-rendering: pixelated; }
+  /* The highlight is the client's own artwork for that region. Left faintly on at rest so the
+     clickable continents are not invisible, full strength on hover - no box drawn over the map,
+     the hint is the game's own picture. */
+  .wmlink img { width: 100%; height: 100%; opacity: .22; transition: opacity .12s; image-rendering: pixelated; }
   .wmlink:hover img, .wmlink:focus-visible img { opacity: 1; }
-  .wmlink:hover, .wmlink:focus-visible { outline: 2px solid var(--accent); }
+  .wmlink:focus-visible { outline: 2px solid var(--accent); }
   .wmspot {
     position: absolute; width: 13px; height: 13px; margin: -7px 0 0 -7px; padding: 0;
     border-radius: 50%; border: 2px solid #fff; background: var(--accent); cursor: pointer;
@@ -431,7 +440,8 @@
 
     <h2 style="margin-top:30px">方法二：从地图上找</h2>
     <p class="note">
-      <b>鼠标移到圆点上</b>就会在右边列出它是哪些地图，点一下钉住。虚线框是能钻进去的大陆。
+      <b>鼠标移到圆点上</b>就会在右边列出它是哪些地图，点一下钉住。
+      淡淡浮着一层色块的地方是能钻进去的大陆，鼠标移上去会变亮。
       这张图和上面的标记位置都是从客户端 <code>Map.wz</code> 里导出来的，
       和游戏里按世界地图键看到的是同一张——<b>所以它只有 640×470 这一个尺寸</b>，
       放大是按整数倍的最近邻，保持像素清晰而不是糊成一团。
@@ -444,7 +454,7 @@
         <option value="3">3×</option>
       </select></div>
     </div>
-    <div class="split">
+    <div class="mapsplit">
       <div class="wmscroll" id="tpMapWrap"><p class="empty">世界地图加载中…</p></div>
       <div id="tpSpotPanel"></div>
     </div>
