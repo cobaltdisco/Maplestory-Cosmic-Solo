@@ -58,15 +58,6 @@ public final class ItemConstants {
         }
     }
 
-    public static int getFlagByInt(int type) {
-        if (type == 128) {
-            return PET_COME;
-        } else if (type == 256) {
-            return ACCOUNT_SHARING;
-        }
-        return 0;
-    }
-
     public static boolean isThrowingStar(int itemId) {
         return itemId / 10000 == 207;
     }

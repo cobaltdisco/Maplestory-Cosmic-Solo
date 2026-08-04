@@ -22,18 +22,32 @@
 package server.quest.actions;
 
 import client.Character;
-import client.QuestStatus;
-import constants.inventory.ItemConstants;
+import client.Client;
+import client.inventory.Pet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import provider.Data;
 import provider.DataTool;
 import server.quest.Quest;
 import server.quest.QuestActionType;
 
 /**
+ * Teaches the pet leader one of the skills sold by Mr. Wetbottom -- quests 4660 and 4661.
+ *
+ * Both were uncompletable, and each layer had to be undone to get here. check() demanded
+ * NOT_STARTED, which a quest being completed can never be, so it was constantly false and
+ * Quest.complete() returned before forceComplete. Behind that, run() wrote to Item.flag, which for
+ * a pet is never sent -- addItemInfo returns out of the pet branch before it reaches the flag --
+ * and it went through ItemConstants.getFlagByInt, which maps petskill values onto *item* flags,
+ * then truncated the result to a byte: 128 became -128 and 256 became 0. The word the client
+ * actually reads is Pet.petAttribute, which is what PetSpeedAction has been using all along.
+ *
  * @author Tyler (Twdtwd)
  */
 public class PetSkillAction extends AbstractQuestAction {
-    int flag;
+    private static final Logger log = LoggerFactory.getLogger(PetSkillAction.class);
+
+    private Pet.PetAttribute attribute;
 
     public PetSkillAction(Quest quest, Data data) {
         super(QuestActionType.PETSKILL, quest);
@@ -41,24 +55,34 @@ public class PetSkillAction extends AbstractQuestAction {
         processData(data);
     }
 
-
     @Override
     public void processData(Data data) {
-        flag = DataTool.getInt("petskill", data);
-    }
-
-    @Override
-    public boolean check(Character chr, Integer extSelection) {
-        QuestStatus status = chr.getQuest(Quest.getInstance(questID));
-        if (!(status.getStatus() == QuestStatus.Status.NOT_STARTED && status.getForfeited() > 0)) {
-            return false;
+        // the node handed to us IS the petskill node, so its own value is the bit -- asking for a
+        // child by that name only ever returned the 0 default, which is how this stayed hidden
+        int petskill = DataTool.getInt(data);
+        attribute = Pet.PetAttribute.from(petskill).orElse(null);
+        if (attribute == null) {
+            log.warn("Quest {} teaches pet skill {}, which is not a known pet attribute", questID, petskill);
         }
-
-        return chr.getPet(0) != null;
     }
 
     @Override
     public void run(Character chr, Integer extSelection) {
-        chr.getPet(0).setFlag((byte) ItemConstants.getFlagByInt(flag));
+        if (attribute == null) {
+            return;
+        }
+
+        Client c = chr.getClient();
+        Pet pet = chr.getPet(0);   // as in PetSpeedAction, only the pet leader learns it
+        if (pet == null) {
+            return;
+        }
+
+        c.lockClient();
+        try {
+            pet.addPetAttribute(c.getPlayer(), attribute);
+        } finally {
+            c.unlockClient();
+        }
     }
-} 
+}

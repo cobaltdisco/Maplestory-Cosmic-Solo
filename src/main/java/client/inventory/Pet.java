@@ -37,7 +37,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Matze
@@ -54,8 +56,18 @@ public class Pet extends Item {
     private boolean summoned;
     private int petAttribute = 0;
 
+    /**
+     * Bits of the pet attribute word, the one PacketCreator sends as "PetAttribute".
+     *
+     * The values are the wz's own: a quest teaches one of these through its Act, and the number
+     * written there is the bit itself -- OWNER_SPEED is granted by `petspeed 1`. The two taught by
+     * `petskill` are named after the quests that teach them, 4660 "Educating Smart Pets (Pet
+     * Summon)" and 4661 "(Speech by Itself)".
+     */
     public enum PetAttribute {
-        OWNER_SPEED(0x01);
+        OWNER_SPEED(0x01),
+        PET_SUMMON(0x80),
+        SELF_SPEAKING(0x100);
 
         private final int i;
 
@@ -65,6 +77,12 @@ public class Pet extends Item {
 
         public int getValue() {
             return i;
+        }
+
+        public static Optional<PetAttribute> from(int value) {
+            return Arrays.stream(values())
+                    .filter(attribute -> attribute.i == value)
+                    .findAny();
         }
     }
 
