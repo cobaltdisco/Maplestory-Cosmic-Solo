@@ -63835,8 +63835,9 @@
   <imgdir name="8256">
     <imgdir name="0">
       <int name="npc" value="9201106"/>
-      <int name="lvmin" value="50"/>
+      <int name="lvmin" value="30"/>
       <int name="interval" value="1440"/>
+      <string name="startscript" value="q8256s"/>
       <imgdir name="quest">
         <imgdir name="0">
           <int name="id" value="8255"/>
