@@ -7,7 +7,12 @@ worlds:
     server_message: Welcome to Scania!
     event_message: Scania!
     why_am_i_recommended: Welcome to Scania!
-    channels: 3
+    # One channel. This is a single-player server, so channels 2 and 3 were never entered --
+    # but each one built its own EventScriptManager, and that compiles every script in
+    # scripts/event: 3 x 107 = 322 GraalJS contexts at startup, 200k function objects, two
+    # thirds of them for channels nobody visits. Each also kept its own map cache.
+    # WORLDS is 1, so only this world's setting is read; the 20 templates below are inert.
+    channels: 1
     exp_rate: 8
     meso_rate: 5
     drop_rate: 3
