@@ -83,6 +83,7 @@ public class WebAdminServer {
             server.createContext("/api/vac", WebAdminServer::handleVac);
             server.createContext("/api/scroll", WebAdminServer::handleScroll);
             server.createContext("/api/fame", WebAdminServer::handleFame);
+            server.createContext("/api/attack", WebAdminServer::handleAttack);
             server.createContext("/api/maps", WebAdminServer::handleMaps);
             server.createContext("/api/worldmap", WebAdminServer::handleWorldMap);
             server.createContext("/api/warp", WebAdminServer::handleWarp);
@@ -105,6 +106,7 @@ public class WebAdminServer {
 
     public static synchronized void stop() {
         MobVac.stopAll();
+        AutoAttack.stopAll();
         PerfectScroll.stopAll();
         if (server != null) {
             server.stop(1);
@@ -227,6 +229,7 @@ public class WebAdminServer {
         out.put("players", players);
         out.put("index", index);
         out.put("vacs", MobVac.describe());
+        out.put("attacks", AutoAttack.describe());
         out.put("scrolls", PerfectScroll.describe());
         return out;
     }
@@ -631,6 +634,43 @@ public class WebAdminServer {
         Map<String, Object> out = state();
         out.put("ok", true);
         out.put("message", "mob vac on for " + chr.getName());
+        respondJson(exchange, out);
+    }
+
+    // --------------------------------------------------------------- 自动攻击
+
+    private static void handleAttack(HttpExchange exchange) throws IOException {
+        if (!"POST".equalsIgnoreCase(exchange.getRequestMethod())) {
+            respondJson(exchange, error("POST only"));
+            return;
+        }
+        Map<String, String> form = readForm(exchange);
+        int chrId = parseInt(form.get("chrId"), -1);
+
+        if (!"true".equalsIgnoreCase(form.get("enabled"))) {
+            AutoAttack.stop(chrId);
+            Map<String, Object> out = state();
+            out.put("ok", true);
+            out.put("message", "auto attack off");
+            respondJson(exchange, out);
+            return;
+        }
+
+        Character chr = MobVac.findOnlineCharacter(chrId);
+        if (chr == null) {
+            respondJson(exchange, error("that character is not online any more"));
+            return;
+        }
+        AutoAttack.start(chrId, new AutoAttack.Options(
+                parseInt(form.get("radius"), 400),
+                parseInt(form.get("damage"), 0),
+                parseInt(form.get("interval"), 800),
+                "true".equalsIgnoreCase(form.get("bosses")),
+                parseInt(form.get("maxPerTick"), 20)));
+
+        Map<String, Object> out = state();
+        out.put("ok", true);
+        out.put("message", "auto attack on for " + chr.getName());
         respondJson(exchange, out);
     }
 

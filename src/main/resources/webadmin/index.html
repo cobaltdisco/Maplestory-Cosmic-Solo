@@ -198,6 +198,7 @@
   <button data-tab="equip">赠送装备</button>
   <button data-tab="item">赠送物品</button>
   <button data-tab="vac">吸怪</button>
+  <button data-tab="attack">自动攻击</button>
   <button data-tab="teleport">传送</button>
   <button data-tab="scroll">砸卷</button>
 </nav>
@@ -436,6 +437,48 @@
       <li>目标点会用 <code>calcDropPos()</code> <b>贴到地面</b>。
           如果前方是悬空（比如站在平台边缘），它会退回到角色自己的位置，而不是把怪扔进虚空。</li>
       <li>间隔下限 300 毫秒。再快的话控制权封包的量对 2010 年的客户端不友好。</li>
+    </ul>
+  </section>
+
+  <!-- ------------------------------------------------------------ 自动攻击 -->
+  <section id="tab-attack">
+    <h2>自动攻击</h2>
+    <p class="note">
+      开着的时候，目标角色周围的怪会被不断打掉。<b>经验、掉落、任务计数、装备熟练度全都正常</b>——
+      走的就是真实战斗最后落到的那个方法。配合<b>吸怪</b>一起开就是挂机刷图。
+      <b>角色一下线就自动关掉</b>，死亡或进商城会暂停。
+    </p>
+
+    <div class="row" style="margin-bottom:14px">
+      <div><label>伤害（0 = 一下打死）</label><input id="atkDamage" type="number" min="0" max="999999999" value="0" style="width:160px"></div>
+      <div><label>生效范围（像素，0 = 整张地图）</label><input id="atkRadius" type="number" min="0" max="100000" value="400" style="width:160px"></div>
+      <div><label>间隔（毫秒）</label><input id="atkInterval" type="number" min="300" max="10000" step="100" value="800" style="width:110px"></div>
+      <div><label>每轮最多打几只</label><input id="atkMax" type="number" min="1" max="200" value="20" style="width:130px"></div>
+      <div><label>&nbsp;</label><label style="display:flex; gap:6px; align-items:center; color:var(--text); margin:0; padding:7px 0">
+        <input type="checkbox" id="atkBosses" style="width:auto"> 连 BOSS 一起打
+      </label></div>
+    </div>
+
+    <div class="row">
+      <button class="act primary" id="atkToggle" disabled>开始自动攻击</button>
+      <span class="pill" id="atkStatus">未运行</span>
+    </div>
+
+    <h2 style="margin-top:28px">它是怎么做到的，以及它不做什么</h2>
+    <ul class="note" style="margin:0; padding-left:20px">
+      <li>伤害走的是 <code>MapleMap.damageMonster()</code>——<b>真实攻击的封包被校验完之后，
+          最后也是落到这个方法</b>。所以下游全都照常发生：伤害记在怪的 <code>takenDamage</code> 表里，
+          经验<b>按伤害占比</b>分给角色（有队伍就按队伍规则分），击杀掉落、任务计数、装备熟练度一样不少。</li>
+      <li><b>但它不是"挥刀"。</b>真实攻击是<b>客户端发起</b>的——伤害数字和动作都由客户端算好上报，
+          服务端这边<b>没有"让某个角色攻击"这种接口</b>。所以你会看到怪正常地死掉、血条正常地掉，
+          但<b>没有人挥武器、也不会飘伤害数字</b>。伪造攻击封包要手工拼一个客户端会严格解析的结构，
+          不值得为了动画去冒客户端错乱的风险。</li>
+      <li>「伤害填 0」= 用怪当前剩余的血量当伤害，一下一只。
+          <code>damageMonster</code> 记的是<b>实际打进去的伤害</b>，所以经验占比还是准的。</li>
+      <li>「每轮最多打几只」是有意露出来的。一轮打死几十只会同时产生几十份掉落和死亡封包，
+          所以有上限；状态栏会同时显示<b>这轮打了几只</b>和<b>范围内有几只</b>，被上限挡下的看得见。</li>
+      <li>角色死了会<b>暂停而不是继续打</b>——死人拿不到经验（<code>giveExpToCharacter</code> 直接跳过），
+          继续打等于白白清图。</li>
     </ul>
   </section>
 
@@ -682,6 +725,7 @@ async function loadState() {
   renderVac();
   renderWhere();
   renderScroll();
+  renderAttack();
   renderFame();
   // Load each catalog once it exists; the flags stop the 5s poll from re-fetching a list that
   // is legitimately empty because of the current filters.
@@ -801,6 +845,7 @@ function renderOnline() {
     renderWhere();
     renderScroll();
     renderFame();
+    renderAttack();
   }));
 }
 
@@ -1100,6 +1145,73 @@ $("vacToggle").addEventListener("click", async () => {
     if (res.ok) { state = res; renderVac(); }
   }));
 
+// ---------------------------------------------------------------- 自动攻击
+
+function activeAttack() {
+  const chr = targetChr();
+  return chr && state ? (state.attacks || []).find(a => a.chrId === chr.id) : null;
+}
+
+function renderAttack() {
+  const chr = targetChr();
+  const atk = activeAttack();
+  const btn = $("atkToggle");
+  btn.disabled = !chr;
+  // Never touch the label while a request is in flight - withBusy owns it until it resolves.
+  if (!btn.classList.contains("busy")) {
+    btn.textContent = atk ? "停止自动攻击" : "开始自动攻击";
+  }
+  btn.classList.toggle("primary", !atk);
+
+  if (!chr) {
+    $("atkStatus").textContent = "没有选中角色";
+  } else if (!atk) {
+    $("atkStatus").textContent = `未运行（目标：${chr.name}）`;
+  } else {
+    // Both numbers, so the per-tick cap is visible rather than silently swallowing targets.
+    $("atkStatus").textContent = atk.note
+      ? `运行中 · ${atk.note} · 累计击杀 ${atk.totalKilled}`
+      : `运行中 · 上一轮打了 ${atk.lastHit} 只 / 范围内 ${atk.lastSeen} 只 · `
+        + `击杀 ${atk.lastKilled} · 累计 ${atk.totalKilled}`;
+    // Reflect what the server is actually running, which may not be what the boxes say.
+    $("atkDamage").value = atk.damage;
+    $("atkRadius").value = atk.radius;
+    $("atkInterval").value = atk.interval;
+    $("atkMax").value = atk.maxPerTick;
+    $("atkBosses").checked = atk.bosses;
+  }
+}
+
+function attackBody(chr) {
+  return new URLSearchParams({
+    chrId: chr.id, enabled: "true",
+    damage: $("atkDamage").value, radius: $("atkRadius").value,
+    interval: $("atkInterval").value, maxPerTick: $("atkMax").value,
+    bosses: $("atkBosses").checked ? "true" : "false"
+  });
+}
+
+$("atkToggle").addEventListener("click", async () => {
+  const chr = targetChr();
+  if (!chr) return;
+  const on = !activeAttack();
+  const body = on ? attackBody(chr)
+    : new URLSearchParams({ chrId: chr.id, enabled: "false" });
+  const res = await withBusy($("atkToggle"), on ? "开启中…" : "停止中…",
+    async () => (await fetch("api/attack", { method: "POST", body })).json());
+  toast(res.ok ? res.message : res.error, !!res.ok);
+  if (res.ok) { state = res; renderAttack(); }
+});
+
+// Same as the vac: changing a knob while it runs restarts it with the new value.
+["atkDamage", "atkRadius", "atkInterval", "atkMax", "atkBosses"].forEach(id =>
+  $(id).addEventListener("change", async () => {
+    if (!activeAttack()) return;
+    const res = await (await fetch("api/attack",
+      { method: "POST", body: attackBody(targetChr()) })).json();
+    if (res.ok) { state = res; renderAttack(); }
+  }));
+
 // -------------------------------------------------------------------- 砸卷
 
 function scrollOn() {
@@ -1381,7 +1493,7 @@ document.querySelectorAll("nav button").forEach(btn => btn.addEventListener("cli
 $("refresh").addEventListener("click", () => withBusy($("refresh"), "刷新中…",
   () => Promise.all([loadState(), loadEquips(), loadItems(), loadMaps()])));
 $("target").addEventListener("change",
-  () => { renderOnline(); syncGiftButtons(); renderVac(); renderWhere(); renderScroll(); renderFame(); });
+  () => { renderOnline(); syncGiftButtons(); renderVac(); renderWhere(); renderScroll(); renderFame(); renderAttack(); });
 
 loadState();
 setInterval(loadState, 5000);
