@@ -35,6 +35,8 @@ public final class AutoLoot {
 
     private static final int MIN_INTERVAL = 300;
     private static final int MAX_INTERVAL = 10_000;
+    /** pickupItem refuses a drop younger than this; it is not ours to change. */
+    private static final int PICKUP_DELAY = 400;
 
     /** {@code radius} 0 is the whole map; the screen is roughly 800 by 600 around the character. */
     public record Options(int radius, int interval, int maxPerTick) {
@@ -51,6 +53,8 @@ public final class AutoLoot {
         volatile ScheduledFuture<?> task;
         volatile int lastPicked;
         volatile int lastSeen;
+        volatile int lastFresh;
+        volatile int lastStuck;
         volatile long totalPicked;
         volatile String note = "";
 
@@ -102,6 +106,8 @@ public final class AutoLoot {
             m.put("maxPerTick", s.options.maxPerTick());
             m.put("lastPicked", s.lastPicked);
             m.put("lastSeen", s.lastSeen);
+            m.put("lastFresh", s.lastFresh);
+            m.put("lastStuck", s.lastStuck);
             m.put("totalPicked", s.totalPicked);
             m.put("note", s.note);
             out.add(m);
@@ -128,7 +134,8 @@ public final class AutoLoot {
             session.note = "";
 
             long radiusSq = (long) session.options.radius() * session.options.radius();
-            int picked = 0, seen = 0;
+            long now = System.currentTimeMillis();
+            int picked = 0, seen = 0, fresh = 0, stuck = 0, attempts = 0;
 
             for (MapObject object : map.getMapObjects()) {
                 if (!(object instanceof MapItem drop)) {
@@ -137,18 +144,35 @@ public final class AutoLoot {
                 if (radiusSq > 0 && drop.getPosition().distanceSq(chr.getPosition()) > radiusSq) {
                     continue;
                 }
+                if (drop.isPickedUp()) {
+                    continue;               // already gone, just not swept out of the map yet
+                }
                 seen++;
-                if (picked >= session.options.maxPerTick()) {
-                    continue;               // counted, not taken - the panel shows both numbers
+                // pickupItem refuses anything dropped less than 400ms ago. Attempting it anyway
+                // would burn a slot from this tick's budget on something that was always going to
+                // be refused, and the next tick gets it regardless.
+                if (now - drop.getDropTime() < PICKUP_DELAY) {
+                    fresh++;
+                    continue;
+                }
+                if (attempts >= session.options.maxPerTick()) {
+                    continue;               // counted, not attempted - the panel shows both
                 }
                 // Whether this character may have it - owner, loot lock, party rules, a full
-                // inventory - is pickupItem's decision, not ours.
+                // inventory, a quest item it does not need - is pickupItem's decision, not ours.
+                attempts++;
                 chr.pickupItem(drop);
-                picked++;
+                if (drop.isPickedUp()) {
+                    picked++;
+                } else {
+                    stuck++;                // refused, and it will be refused again next tick
+                }
             }
 
             session.lastPicked = picked;
             session.lastSeen = seen;
+            session.lastFresh = fresh;
+            session.lastStuck = stuck;
             session.totalPicked += picked;
         } catch (Exception e) {
             log.error("Web admin: auto loot tick failed for chr {}, switching it off",

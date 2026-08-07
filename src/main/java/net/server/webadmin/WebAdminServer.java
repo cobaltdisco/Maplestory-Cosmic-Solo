@@ -797,7 +797,16 @@ public class WebAdminServer {
         ItemInformationProvider ii = ItemInformationProvider.getInstance();
         List<Object> potions = new ArrayList<>();
         for (Item item : chr.getInventory(InventoryType.USE).list()) {
-            StatEffect effect = ii.getItemEffect(item.getItemId());
+            StatEffect effect;
+            try {
+                effect = ii.getItemEffect(item.getItemId());
+            } catch (RuntimeException e) {
+                // getItemEffect only returns null when the item has no data at all; when the item
+                // exists but has no spec node it hands that null straight to the effect loader,
+                // which dereferences it. Scrolls and arrows live in the USE tab and are exactly
+                // that shape, so one in the bag used to take the whole list down with it.
+                continue;
+            }
             if (effect == null) {
                 continue;
             }

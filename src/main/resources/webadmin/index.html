@@ -1247,7 +1247,16 @@ async function loadPotions() {
     return;
   }
   const keepHp = $("potHpItem").value, keepMp = $("potMpItem").value;
-  const data = await (await fetch("api/potions?chrId=" + chr.id)).json();
+  let data;
+  try {
+    data = await (await fetch("api/potions?chrId=" + chr.id)).json();
+  } catch (e) {
+    // A 500 comes back as HTML, so .json() throws and the whole function used to reject
+    // silently - leaving the dropdowns empty with no hint that anything had gone wrong.
+    $("potHpItem").innerHTML = $("potMpItem").innerHTML =
+      `<option value="0">读取失败，服务端日志里有原因</option>`;
+    return;
+  }
   if (!data.ok || !data.potions.length) {
     const msg = `<option value="0">${data.ok ? "消耗背包里没有回血/回蓝的药" : esc(data.error)}</option>`;
     $("potHpItem").innerHTML = $("potMpItem").innerHTML = msg;
@@ -1296,7 +1305,14 @@ function renderAssist() {
   $("lootStatus").textContent = !chr ? "没有选中角色"
     : !loot ? `未运行（目标：${chr.name}）`
     : loot.note ? `运行中 · ${loot.note} · 累计 ${loot.totalPicked} 件`
-    : `运行中 · 上一轮捡了 ${loot.lastPicked} / 范围内 ${loot.lastSeen} 件 · 累计 ${loot.totalPicked} 件`;
+    // Every reason an item is still on the ground gets its own number, so "漏掉了" turns into
+    // something you can read off instead of guess at.
+    : `运行中 · 上一轮捡了 ${loot.lastPicked} / 范围内 ${loot.lastSeen} 件`
+      + (loot.lastFresh ? ` · ${loot.lastFresh} 件刚掉下来（0.4 秒保护期，下一轮就捡）` : "")
+      + (loot.lastStuck ? ` · ${loot.lastStuck} 件捡不动（背包满 / 不需要的任务物品 / 不归你）` : "")
+      + (loot.lastSeen > loot.lastPicked + loot.lastFresh + loot.lastStuck
+          ? ` · ${loot.lastSeen - loot.lastPicked - loot.lastFresh - loot.lastStuck} 件被「每轮上限」挡下` : "")
+      + ` · 累计 ${loot.totalPicked} 件`;
   if (loot) {
     $("lootRadius").value = loot.radius;
     $("lootInterval").value = loot.interval;
