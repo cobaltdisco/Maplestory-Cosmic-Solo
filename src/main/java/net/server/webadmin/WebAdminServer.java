@@ -1,6 +1,9 @@
 package net.server.webadmin;
 
 import client.Character;
+import client.Job;
+import client.Skill;
+import client.SkillFactory;
 import client.Client;
 import client.inventory.Equip;
 import client.inventory.Inventory;
@@ -19,6 +22,7 @@ import net.server.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import server.ItemInformationProvider;
+import server.StatEffect;
 import server.maps.MapleMap;
 
 import java.io.IOException;
@@ -84,6 +88,7 @@ public class WebAdminServer {
             server.createContext("/api/scroll", WebAdminServer::handleScroll);
             server.createContext("/api/fame", WebAdminServer::handleFame);
             server.createContext("/api/attack", WebAdminServer::handleAttack);
+            server.createContext("/api/skills", WebAdminServer::handleSkills);
             server.createContext("/api/maps", WebAdminServer::handleMaps);
             server.createContext("/api/worldmap", WebAdminServer::handleWorldMap);
             server.createContext("/api/warp", WebAdminServer::handleWarp);
@@ -662,8 +667,10 @@ public class WebAdminServer {
             return;
         }
         AutoAttack.start(chrId, new AutoAttack.Options(
+                form.getOrDefault("mode", "oneshot"),
+                parseInt(form.get("skillId"), 0),
                 parseInt(form.get("radius"), 400),
-                parseInt(form.get("damage"), 0),
+                parseInt(form.get("damage"), 1),
                 parseInt(form.get("interval"), 800),
                 "true".equalsIgnoreCase(form.get("bosses")),
                 parseInt(form.get("maxPerTick"), 20)));
@@ -671,6 +678,51 @@ public class WebAdminServer {
         Map<String, Object> out = state();
         out.put("ok", true);
         out.put("message", "auto attack on for " + chr.getName());
+        respondJson(exchange, out);
+    }
+
+    /**
+     * The attack skills a character has actually learnt, for the auto attack to pick from.
+     * <p>
+     * "Attack skill" is decided by the skill's own data rather than by an id range: an effect
+     * with a damage percentage or a magic multiplier is one that hits something. Buffs, passives
+     * and boosters all come out as zero and are left off the list.
+     */
+    private static void handleSkills(HttpExchange exchange) throws IOException {
+        Character chr = MobVac.findOnlineCharacter(parseInt(queryOf(exchange).get("chrId"), -1));
+        if (chr == null) {
+            respondJson(exchange, error("that character is not online any more"));
+            return;
+        }
+
+        List<Object> skills = new ArrayList<>();
+        for (Map.Entry<Skill, Character.SkillEntry> entry : chr.getSkills().entrySet()) {
+            Skill skill = entry.getKey();
+            int level = entry.getValue().skillevel;
+            if (level <= 0) {
+                continue;
+            }
+            StatEffect effect = skill.getEffect(level);
+            if (effect == null || (effect.getDamage() <= 0 && effect.getMatk() <= 0)) {
+                continue;
+            }
+            Map<String, Object> m = Json.obj();
+            m.put("id", skill.getId());
+            m.put("name", SkillFactory.getSkillName(skill.getId()));
+            m.put("level", level);
+            m.put("damage", effect.getDamage());
+            m.put("matk", effect.getMatk());
+            m.put("attackCount", effect.getAttackCount());
+            m.put("mobCount", effect.getMobCount());
+            m.put("mpCon", effect.getMpCon());
+            skills.add(m);
+        }
+        skills.sort(Comparator.comparingInt(s -> (Integer) ((Map<?, ?>) s).get("id")));
+
+        Map<String, Object> out = Json.obj();
+        out.put("ok", true);
+        out.put("magic", chr.getJob().isA(Job.MAGICIAN));
+        out.put("skills", skills);
         respondJson(exchange, out);
     }
 

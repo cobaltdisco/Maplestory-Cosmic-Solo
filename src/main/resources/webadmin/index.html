@@ -450,7 +450,15 @@
     </p>
 
     <div class="row" style="margin-bottom:14px">
-      <div><label>伤害（0 = 一下打死）</label><input id="atkDamage" type="number" min="0" max="999999999" value="0" style="width:160px"></div>
+      <div><label>方式</label><select id="atkMode">
+        <option value="oneshot">一下打死</option>
+        <option value="fixed">固定伤害</option>
+        <option value="skill">用角色自己的技能</option>
+      </select></div>
+      <div id="atkSkillWrap" style="display:none; min-width:260px"><label>技能</label>
+        <select id="atkSkill" style="width:100%"></select></div>
+      <div id="atkDamageWrap" style="display:none"><label>每下伤害</label>
+        <input id="atkDamage" type="number" min="1" max="999999999" value="100000" style="width:160px"></div>
       <div><label>生效范围（像素，0 = 整张地图）</label><input id="atkRadius" type="number" min="0" max="100000" value="400" style="width:160px"></div>
       <div><label>间隔（毫秒）</label><input id="atkInterval" type="number" min="300" max="10000" step="100" value="800" style="width:110px"></div>
       <div><label>每轮最多打几只</label><input id="atkMax" type="number" min="1" max="200" value="20" style="width:130px"></div>
@@ -473,8 +481,21 @@
           服务端这边<b>没有"让某个角色攻击"这种接口</b>。所以你会看到怪正常地死掉、血条正常地掉，
           但<b>没有人挥武器、也不会飘伤害数字</b>。伪造攻击封包要手工拼一个客户端会严格解析的结构，
           不值得为了动画去冒客户端错乱的风险。</li>
-      <li>「伤害填 0」= 用怪当前剩余的血量当伤害，一下一只。
-          <code>damageMonster</code> 记的是<b>实际打进去的伤害</b>，所以经验占比还是准的。</li>
+      <li><b>三种方式</b>：「一下打死」用怪剩余血量当伤害；「固定伤害」用你填的数；
+          <b>「用角色自己的技能」</b>按角色的属性和该技能的倍率算伤害，
+          <b>扣该技能的 MP</b>（走的是真实攻击同一个 <code>applyTo()</code>），
+          并且尊重技能自己的<b>攻击次数</b>和<b>攻击怪数</b>上限。
+          <code>damageMonster</code> 记的是实际打进去的伤害，所以三种方式的经验占比都准。</li>
+      <li>技能列表只列<b>角色真的学了、而且会造成伤害</b>的技能——判据是技能数据里
+          有伤害倍率或魔法倍率，不是按编号猜的，所以增益和被动不会混进来。
+          MP 不够、或者技能没点，会<b>暂停并在状态栏说明原因</b>。</li>
+      <li>⚠️ <b>技能伤害用的是"这个角色打得出的上限"</b>，用公开的
+          <code>calculateMaxBaseDamage()</code> × 技能倍率组出来（法师走魔攻公式）。
+          它<b>不是</b>攻击处理器自己那套——那套写死在 <code>parseDamage()</code> 里面，
+          要共用就得动实时战斗代码，而那里改错会影响<b>每一次真实攻击</b>的伤害上限判定，
+          在我没法进游戏验证的情况下不值得动。代价是<b>几个有专属公式的技能会偏</b>：
+          飞镖（Lucky Seven / Triple Throw）、龙吼、毒星/毒刺、影分身钱袋、治愈术，
+          以及元素增幅和连击球加成——这些会按普通倍率算，其余技能是准的。</li>
       <li>「每轮最多打几只」是有意露出来的。一轮打死几十只会同时产生几十份掉落和死亡封包，
           所以有上限；状态栏会同时显示<b>这轮打了几只</b>和<b>范围内有几只</b>，被上限挡下的看得见。</li>
       <li>角色死了会<b>暂停而不是继续打</b>——死人拿不到经验（<code>giveExpToCharacter</code> 直接跳过），
@@ -1163,6 +1184,10 @@ function renderAttack() {
   }
   btn.classList.toggle("primary", !atk);
 
+  if (chr && $("atkMode").value === "skill" && atkSkillsFor !== chr.id) {
+    loadSkills();
+  }
+
   if (!chr) {
     $("atkStatus").textContent = "没有选中角色";
   } else if (!atk) {
@@ -1174,6 +1199,11 @@ function renderAttack() {
       : `运行中 · 上一轮打了 ${atk.lastHit} 只 / 范围内 ${atk.lastSeen} 只 · `
         + `击杀 ${atk.lastKilled} · 累计 ${atk.totalKilled}`;
     // Reflect what the server is actually running, which may not be what the boxes say.
+    $("atkMode").value = atk.mode;
+    showAttackFields(atk.mode);
+    if (atk.mode === "skill" && [...$("atkSkill").options].some(o => o.value === String(atk.skillId))) {
+      $("atkSkill").value = atk.skillId;
+    }
     $("atkDamage").value = atk.damage;
     $("atkRadius").value = atk.radius;
     $("atkInterval").value = atk.interval;
@@ -1185,10 +1215,56 @@ function renderAttack() {
 function attackBody(chr) {
   return new URLSearchParams({
     chrId: chr.id, enabled: "true",
+    mode: $("atkMode").value, skillId: $("atkSkill").value || "0",
     damage: $("atkDamage").value, radius: $("atkRadius").value,
     interval: $("atkInterval").value, maxPerTick: $("atkMax").value,
     bosses: $("atkBosses").checked ? "true" : "false"
   });
+}
+
+// Only the field the chosen mode actually uses is shown - a damage box that the server ignores
+// is worse than no box at all.
+function showAttackFields(mode) {
+  $("atkSkillWrap").style.display = mode === "skill" ? "" : "none";
+  $("atkDamageWrap").style.display = mode === "fixed" ? "" : "none";
+}
+
+function renderAttackMode() {
+  showAttackFields($("atkMode").value);
+  if ($("atkMode").value === "skill") loadSkills();
+}
+
+// Which character the list in the dropdown belongs to, so the 5s poll can notice the target
+// changed without refetching the skills on every single tick.
+let atkSkillsFor = null;
+
+async function loadSkills() {
+  const chr = targetChr();
+  const sel = $("atkSkill");
+  atkSkillsFor = chr ? chr.id : null;
+  if (!chr) {
+    sel.innerHTML = `<option value="0">（先选一个在线角色）</option>`;
+    return;
+  }
+  const keep = sel.value;
+  const data = await (await fetch("api/skills?chrId=" + chr.id)).json();
+  if (!data.ok) {
+    sel.innerHTML = `<option value="0">${esc(data.error)}</option>`;
+    return;
+  }
+  if (!data.skills.length) {
+    sel.innerHTML = `<option value="0">这个角色还没有会造成伤害的技能</option>`;
+    return;
+  }
+  sel.innerHTML = data.skills.map(s => {
+    const power = data.magic && s.matk ? `魔攻 ×${s.matk}` : `${s.damage}%`;
+    const extra = [s.attackCount > 1 ? s.attackCount + " 段" : "",
+                   s.mobCount > 1 ? "最多 " + s.mobCount + " 只" : "",
+                   s.mpCon ? "MP " + s.mpCon : ""].filter(Boolean).join(" · ");
+    return `<option value="${s.id}">${esc(s.name || s.id)} Lv.${s.level} · ${power}`
+      + (extra ? " · " + extra : "") + `</option>`;
+  }).join("");
+  if (keep && data.skills.some(s => String(s.id) === keep)) sel.value = keep;
 }
 
 $("atkToggle").addEventListener("click", async () => {
@@ -1203,8 +1279,10 @@ $("atkToggle").addEventListener("click", async () => {
   if (res.ok) { state = res; renderAttack(); }
 });
 
+$("atkMode").addEventListener("change", renderAttackMode);
+
 // Same as the vac: changing a knob while it runs restarts it with the new value.
-["atkDamage", "atkRadius", "atkInterval", "atkMax", "atkBosses"].forEach(id =>
+["atkMode", "atkSkill", "atkDamage", "atkRadius", "atkInterval", "atkMax", "atkBosses"].forEach(id =>
   $(id).addEventListener("change", async () => {
     if (!activeAttack()) return;
     const res = await (await fetch("api/attack",
