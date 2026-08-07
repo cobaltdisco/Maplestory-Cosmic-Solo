@@ -89,6 +89,9 @@ public class WebAdminServer {
             server.createContext("/api/fame", WebAdminServer::handleFame);
             server.createContext("/api/attack", WebAdminServer::handleAttack);
             server.createContext("/api/skills", WebAdminServer::handleSkills);
+            server.createContext("/api/pot", WebAdminServer::handlePot);
+            server.createContext("/api/loot", WebAdminServer::handleLoot);
+            server.createContext("/api/potions", WebAdminServer::handlePotions);
             server.createContext("/api/maps", WebAdminServer::handleMaps);
             server.createContext("/api/worldmap", WebAdminServer::handleWorldMap);
             server.createContext("/api/warp", WebAdminServer::handleWarp);
@@ -112,6 +115,8 @@ public class WebAdminServer {
     public static synchronized void stop() {
         MobVac.stopAll();
         AutoAttack.stopAll();
+        AutoPot.stopAll();
+        AutoLoot.stopAll();
         PerfectScroll.stopAll();
         if (server != null) {
             server.stop(1);
@@ -235,6 +240,8 @@ public class WebAdminServer {
         out.put("index", index);
         out.put("vacs", MobVac.describe());
         out.put("attacks", AutoAttack.describe());
+        out.put("pots", AutoPot.describe());
+        out.put("loots", AutoLoot.describe());
         out.put("scrolls", PerfectScroll.describe());
         return out;
     }
@@ -723,6 +730,112 @@ public class WebAdminServer {
         out.put("ok", true);
         out.put("magic", chr.getJob().isA(Job.MAGICIAN));
         out.put("skills", skills);
+        respondJson(exchange, out);
+    }
+
+    // ------------------------------------------------------- 自动喝药 / 自动捡取
+
+    private static void handlePot(HttpExchange exchange) throws IOException {
+        Map<String, String> form = takeToggle(exchange);
+        if (form == null) {
+            return;                     // takeToggle already answered
+        }
+        int chrId = parseInt(form.get("chrId"), -1);
+        if (!"true".equalsIgnoreCase(form.get("enabled"))) {
+            AutoPot.stop(chrId);
+            respondToggled(exchange, "auto pot off");
+            return;
+        }
+        Character chr = MobVac.findOnlineCharacter(chrId);
+        if (chr == null) {
+            respondJson(exchange, error("that character is not online any more"));
+            return;
+        }
+        AutoPot.start(chrId, new AutoPot.Options(
+                parseInt(form.get("hpPercent"), 0), parseInt(form.get("hpItemId"), 0),
+                parseInt(form.get("mpPercent"), 0), parseInt(form.get("mpItemId"), 0),
+                parseInt(form.get("interval"), 800)));
+        respondToggled(exchange, "auto pot on for " + chr.getName());
+    }
+
+    private static void handleLoot(HttpExchange exchange) throws IOException {
+        Map<String, String> form = takeToggle(exchange);
+        if (form == null) {
+            return;
+        }
+        int chrId = parseInt(form.get("chrId"), -1);
+        if (!"true".equalsIgnoreCase(form.get("enabled"))) {
+            AutoLoot.stop(chrId);
+            respondToggled(exchange, "auto loot off");
+            return;
+        }
+        Character chr = MobVac.findOnlineCharacter(chrId);
+        if (chr == null) {
+            respondJson(exchange, error("that character is not online any more"));
+            return;
+        }
+        AutoLoot.start(chrId, new AutoLoot.Options(
+                parseInt(form.get("radius"), 0),
+                parseInt(form.get("interval"), 800),
+                parseInt(form.get("maxPerTick"), 50)));
+        respondToggled(exchange, "auto loot on for " + chr.getName());
+    }
+
+    /**
+     * The potions actually in the character's USE bag, for the auto-pot to pick from.
+     * <p>
+     * Listed from the inventory rather than from the item catalogue because you can only drink
+     * what you are carrying, and decided by the item's own effect restoring HP or MP - flat or by
+     * percentage - rather than by an id range.
+     */
+    private static void handlePotions(HttpExchange exchange) throws IOException {
+        Character chr = MobVac.findOnlineCharacter(parseInt(queryOf(exchange).get("chrId"), -1));
+        if (chr == null) {
+            respondJson(exchange, error("that character is not online any more"));
+            return;
+        }
+        ItemInformationProvider ii = ItemInformationProvider.getInstance();
+        List<Object> potions = new ArrayList<>();
+        for (Item item : chr.getInventory(InventoryType.USE).list()) {
+            StatEffect effect = ii.getItemEffect(item.getItemId());
+            if (effect == null) {
+                continue;
+            }
+            boolean hp = effect.getHp() > 0 || effect.getHpRate() > 0;
+            boolean mp = effect.getMp() > 0 || effect.getMpRate() > 0;
+            if (!hp && !mp) {
+                continue;
+            }
+            Map<String, Object> m = Json.obj();
+            m.put("id", item.getItemId());
+            m.put("name", ii.getName(item.getItemId()));
+            m.put("quantity", item.getQuantity());
+            m.put("hp", effect.getHp());
+            m.put("mp", effect.getMp());
+            m.put("hpRate", (int) Math.round(effect.getHpRate() * 100));
+            m.put("mpRate", (int) Math.round(effect.getMpRate() * 100));
+            potions.add(m);
+        }
+
+        Map<String, Object> out = Json.obj();
+        out.put("ok", true);
+        out.put("potions", potions);
+        respondJson(exchange, out);
+    }
+
+    /** Reads a toggle request, or answers "POST only" and returns null. */
+    private static Map<String, String> takeToggle(HttpExchange exchange) throws IOException {
+        if (!"POST".equalsIgnoreCase(exchange.getRequestMethod())) {
+            respondJson(exchange, error("POST only"));
+            return null;
+        }
+        return readForm(exchange);
+    }
+
+    private static void respondToggled(HttpExchange exchange, String message) throws IOException {
+        Map<String, Object> out = state();
+        out.put("ok", true);
+        out.put("message", message);
         respondJson(exchange, out);
     }
 

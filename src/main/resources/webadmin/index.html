@@ -199,6 +199,7 @@
   <button data-tab="item">赠送物品</button>
   <button data-tab="vac">吸怪</button>
   <button data-tab="attack">自动攻击</button>
+  <button data-tab="assist">喝药 / 捡取</button>
   <button data-tab="teleport">传送</button>
   <button data-tab="scroll">砸卷</button>
 </nav>
@@ -503,6 +504,58 @@
     </ul>
   </section>
 
+  <!-- ------------------------------------------------------ 喝药 / 捡取 -->
+  <section id="tab-assist">
+    <h2>自动喝药</h2>
+    <p class="note">
+      血量或蓝量掉到设定的百分比以下，就自动喝你选的药。
+      <b>百分比填 0 = 关掉那一半</b>。药从<b>目标角色自己的消耗背包</b>里选，喝完了会在状态栏说明。
+    </p>
+    <div class="row" style="margin-bottom:14px">
+      <div><label>血量低于（%）</label><input id="potHpPct" type="number" min="0" max="99" value="50" style="width:120px"></div>
+      <div style="min-width:260px"><label>喝这个（HP）</label><select id="potHpItem" style="width:100%"></select></div>
+      <div><label>蓝量低于（%）</label><input id="potMpPct" type="number" min="0" max="99" value="30" style="width:120px"></div>
+      <div style="min-width:260px"><label>喝这个（MP）</label><select id="potMpItem" style="width:100%"></select></div>
+      <div><label>间隔（毫秒）</label><input id="potInterval" type="number" min="300" max="10000" step="100" value="800" style="width:110px"></div>
+    </div>
+    <div class="row">
+      <button class="act primary" id="potToggle" disabled>开始自动喝药</button>
+      <span class="pill" id="potStatus">未运行</span>
+      <button class="act" id="potRefresh">重新读取背包里的药</button>
+    </div>
+
+    <h2 style="margin-top:30px">全屏捡取</h2>
+    <p class="note">
+      把地图上的掉落<b>全部捡起来</b>，不管掉在多远。范围填 0 = 整张地图（比一屏还大）。
+    </p>
+    <div class="row" style="margin-bottom:14px">
+      <div><label>范围（像素，0 = 整张地图）</label><input id="lootRadius" type="number" min="0" max="100000" value="0" style="width:170px"></div>
+      <div><label>间隔（毫秒）</label><input id="lootInterval" type="number" min="300" max="10000" step="100" value="800" style="width:110px"></div>
+      <div><label>每轮最多捡几件</label><input id="lootMax" type="number" min="1" max="200" value="50" style="width:130px"></div>
+    </div>
+    <div class="row">
+      <button class="act primary" id="lootToggle" disabled>开始全屏捡取</button>
+      <span class="pill" id="lootStatus">未运行</span>
+    </div>
+
+    <h2 style="margin-top:30px">它们是怎么做到的</h2>
+    <ul class="note" style="margin:0; padding-left:20px">
+      <li>喝药走的是 <code>PetAutopotProcessor.runAutopotAction()</code>——宠物自动喝药用的就是它。
+          名字里带 pet，<b>但它根本不需要宠物</b>：给个格子和物品编号，剩下的（格子里还是不是这瓶、
+          这一叠喝完了换下一叠、加血、扣数量、刷新背包）它全包了。所以这里没有重写任何一段。</li>
+      <li>阈值是<b>定时轮询</b>判断的，不是走角色自带的 <code>autopotHpAlert</code>——
+          那个要靠客户端在挨打时来请求，<b>站着不动回不了血</b>。轮询则是掉下去就补。</li>
+      <li>捡取走的是 <code>Character.pickupItem()</code>——玩家自己捡和宠物捡，
+          最后都落到这一个方法。归属、拾取锁、组队分配、背包满了怎么办，<b>全按服务端自己的规则来</b>。</li>
+      <li><b>「全屏」这个限制根本不在那个方法里。</b>它在上面的封包处理器里：
+          客户端来要一件超出 800×600 的东西会被拒绝——因为客户端本来就不该看得见它。
+          服务端自己的循环<b>不是那个处理器</b>，所以不用"解除"什么，直接把整张地图的掉落交给同一个方法就行。</li>
+      <li>这条也顺带回答了宠物：<b>宠物的拾取范围是客户端决定的</b>（它把宠物走过去、然后请求拾取），
+          服务端伸不长它的手。但这个循环让<b>宠物变得不必要</b>——东西掉在哪都会被收进背包。
+          代价是<b>看不到宠物弯腰捡的动作</b>。</li>
+    </ul>
+  </section>
+
   <!-- ------------------------------------------------------------ 传送 -->
   <section id="tab-teleport">
     <h2>传送目标角色</h2>
@@ -747,6 +800,7 @@ async function loadState() {
   renderWhere();
   renderScroll();
   renderAttack();
+  renderAssist();
   renderFame();
   // Load each catalog once it exists; the flags stop the 5s poll from re-fetching a list that
   // is legitimately empty because of the current filters.
@@ -867,6 +921,7 @@ function renderOnline() {
     renderScroll();
     renderFame();
     renderAttack();
+    renderAssist();
   }));
 }
 
@@ -1164,6 +1219,145 @@ $("vacToggle").addEventListener("click", async () => {
     });
     const res = await (await fetch("api/vac", { method: "POST", body })).json();
     if (res.ok) { state = res; renderVac(); }
+  }));
+
+// ------------------------------------------------------------ 喝药 / 捡取
+
+// Which character the potion dropdowns were filled for. Starts undefined rather than null so
+// the very first render also fills them - with no target that is the "pick a character" hint.
+let potListFor;
+
+function activePot() {
+  const chr = targetChr();
+  return chr && state ? (state.pots || []).find(p => p.chrId === chr.id) : null;
+}
+
+function activeLoot() {
+  const chr = targetChr();
+  return chr && state ? (state.loots || []).find(l => l.chrId === chr.id) : null;
+}
+
+// Only what the character is carrying: you cannot drink a potion you do not have.
+async function loadPotions() {
+  const chr = targetChr();
+  const empty = `<option value="0">（先选一个在线角色）</option>`;
+  potListFor = chr ? chr.id : null;
+  if (!chr) {
+    $("potHpItem").innerHTML = $("potMpItem").innerHTML = empty;
+    return;
+  }
+  const keepHp = $("potHpItem").value, keepMp = $("potMpItem").value;
+  const data = await (await fetch("api/potions?chrId=" + chr.id)).json();
+  if (!data.ok || !data.potions.length) {
+    const msg = `<option value="0">${data.ok ? "消耗背包里没有回血/回蓝的药" : esc(data.error)}</option>`;
+    $("potHpItem").innerHTML = $("potMpItem").innerHTML = msg;
+    return;
+  }
+  const options = data.potions.map(p => {
+    const gain = [p.hp ? "HP+" + p.hp : "", p.hpRate ? "HP+" + p.hpRate + "%" : "",
+                  p.mp ? "MP+" + p.mp : "", p.mpRate ? "MP+" + p.mpRate + "%" : ""]
+      .filter(Boolean).join(" ");
+    return `<option value="${p.id}">${esc(p.name || p.id)} ×${p.quantity}`
+      + (gain ? " · " + gain : "") + `</option>`;
+  }).join("");
+  $("potHpItem").innerHTML = options;
+  $("potMpItem").innerHTML = options;
+  if (data.potions.some(p => String(p.id) === keepHp)) $("potHpItem").value = keepHp;
+  if (data.potions.some(p => String(p.id) === keepMp)) $("potMpItem").value = keepMp;
+}
+
+function renderAssist() {
+  const chr = targetChr();
+  const pot = activePot(), loot = activeLoot();
+
+  if (potListFor !== (chr ? chr.id : null)) loadPotions();
+
+  const potBtn = $("potToggle");
+  potBtn.disabled = !chr;
+  if (!potBtn.classList.contains("busy")) {
+    potBtn.textContent = pot ? "停止自动喝药" : "开始自动喝药";
+  }
+  potBtn.classList.toggle("primary", !pot);
+  $("potStatus").textContent = !chr ? "没有选中角色"
+    : !pot ? `未运行（目标：${chr.name}）`
+    : (pot.note ? `运行中 · ${pot.note}` : "运行中") + ` · 已喝 ${pot.drank} 次`;
+  if (pot) {
+    $("potHpPct").value = pot.hpPercent;
+    $("potMpPct").value = pot.mpPercent;
+    $("potInterval").value = pot.interval;
+  }
+
+  const lootBtn = $("lootToggle");
+  lootBtn.disabled = !chr;
+  if (!lootBtn.classList.contains("busy")) {
+    lootBtn.textContent = loot ? "停止全屏捡取" : "开始全屏捡取";
+  }
+  lootBtn.classList.toggle("primary", !loot);
+  $("lootStatus").textContent = !chr ? "没有选中角色"
+    : !loot ? `未运行（目标：${chr.name}）`
+    : loot.note ? `运行中 · ${loot.note} · 累计 ${loot.totalPicked} 件`
+    : `运行中 · 上一轮捡了 ${loot.lastPicked} / 范围内 ${loot.lastSeen} 件 · 累计 ${loot.totalPicked} 件`;
+  if (loot) {
+    $("lootRadius").value = loot.radius;
+    $("lootInterval").value = loot.interval;
+    $("lootMax").value = loot.maxPerTick;
+  }
+}
+
+function potBody(chr) {
+  return new URLSearchParams({
+    chrId: chr.id, enabled: "true",
+    hpPercent: $("potHpPct").value, hpItemId: $("potHpItem").value || "0",
+    mpPercent: $("potMpPct").value, mpItemId: $("potMpItem").value || "0",
+    interval: $("potInterval").value
+  });
+}
+
+function lootBody(chr) {
+  return new URLSearchParams({
+    chrId: chr.id, enabled: "true", radius: $("lootRadius").value,
+    interval: $("lootInterval").value, maxPerTick: $("lootMax").value
+  });
+}
+
+async function toggleAssist(button, url, on, body) {
+  const res = await withBusy(button, on ? "开启中…" : "停止中…",
+    async () => (await fetch(url, { method: "POST", body })).json());
+  toast(res.ok ? res.message : res.error, !!res.ok);
+  if (res.ok) { state = res; renderAssist(); }
+}
+
+$("potToggle").addEventListener("click", () => {
+  const chr = targetChr();
+  if (!chr) return;
+  const on = !activePot();
+  toggleAssist($("potToggle"), "api/pot", on,
+    on ? potBody(chr) : new URLSearchParams({ chrId: chr.id, enabled: "false" }));
+});
+
+$("lootToggle").addEventListener("click", () => {
+  const chr = targetChr();
+  if (!chr) return;
+  const on = !activeLoot();
+  toggleAssist($("lootToggle"), "api/loot", on,
+    on ? lootBody(chr) : new URLSearchParams({ chrId: chr.id, enabled: "false" }));
+});
+
+$("potRefresh").addEventListener("click", () => withBusy($("potRefresh"), "读取中…", loadPotions));
+
+// Same as the vac: changing a knob while it runs restarts it with the new value.
+["potHpPct", "potHpItem", "potMpPct", "potMpItem", "potInterval"].forEach(id =>
+  $(id).addEventListener("change", async () => {
+    if (!activePot()) return;
+    const res = await (await fetch("api/pot", { method: "POST", body: potBody(targetChr()) })).json();
+    if (res.ok) { state = res; renderAssist(); }
+  }));
+
+["lootRadius", "lootInterval", "lootMax"].forEach(id =>
+  $(id).addEventListener("change", async () => {
+    if (!activeLoot()) return;
+    const res = await (await fetch("api/loot", { method: "POST", body: lootBody(targetChr()) })).json();
+    if (res.ok) { state = res; renderAssist(); }
   }));
 
 // ---------------------------------------------------------------- 自动攻击
@@ -1571,7 +1765,7 @@ document.querySelectorAll("nav button").forEach(btn => btn.addEventListener("cli
 $("refresh").addEventListener("click", () => withBusy($("refresh"), "刷新中…",
   () => Promise.all([loadState(), loadEquips(), loadItems(), loadMaps()])));
 $("target").addEventListener("change",
-  () => { renderOnline(); syncGiftButtons(); renderVac(); renderWhere(); renderScroll(); renderFame(); renderAttack(); });
+  () => { renderOnline(); syncGiftButtons(); renderVac(); renderWhere(); renderScroll(); renderFame(); renderAttack(); renderAssist(); });
 
 loadState();
 setInterval(loadState, 5000);
