@@ -241,11 +241,31 @@
       <table>
         <thead><tr>
           <th>角色</th><th>等级</th><th>职业</th><th>性别</th><th>世界/频道</th>
-          <th>地图</th><th>金币</th><th>空格位（装备/消耗/其他/现金）</th><th>GM</th>
+          <th>地图</th><th>金币</th><th>人气</th><th>空格位（装备/消耗/其他/现金）</th><th>GM</th>
         </tr></thead>
         <tbody id="onlineBody"></tbody>
       </table>
     </div>
+
+    <h2 style="margin-top:28px">改人气</h2>
+    <p class="note">
+      改的是<b>目标角色</b>（右上角选的那个）的人气，<b>立刻同步到客户端</b>，角色身上会飘出加人气的特效。
+      随角色存档写进数据库。
+    </p>
+    <div class="row" style="margin-bottom:14px">
+      <span class="pill" id="fameNow">未选中角色</span>
+      <div><label>数量</label><input id="fameAmount" type="number" value="10" style="width:120px"></div>
+      <button class="act primary" id="fameAdd" disabled>增加</button>
+      <button class="act" id="fameSet" disabled>设为这个值</button>
+    </div>
+    <ul class="note" style="margin:0; padding-left:20px">
+      <li>游戏自己的上下限是 <b>±30,000</b>（<code>Character.applyFame()</code> 写死的），
+          超出会停在边界，不会报错。</li>
+      <li>两个按钮走的都是 <code>gainFame()</code>——<b>唯一会同时做「夹在范围内」和「推送给客户端」的那条路</b>。
+          「设为」只是先算出差值再走同一条路。</li>
+      <li>玩家之间送人气有「一天只能送一次、一个月不能重复送同一个人」的限制。
+          这条路<b>不走那套</b>，也不会往 <code>famelog</code> 里记，所以不影响玩家自己送人气的额度。</li>
+    </ul>
   </section>
 
   <!-- -------------------------------------------------------- 赠送装备 -->
@@ -662,6 +682,7 @@ async function loadState() {
   renderVac();
   renderWhere();
   renderScroll();
+  renderFame();
   // Load each catalog once it exists; the flags stop the 5s poll from re-fetching a list that
   // is legitimately empty because of the current filters.
   if (idx.equipStatus === "ready" && !equipsLoaded) { equipsLoaded = true; loadEquips(); }
@@ -757,7 +778,7 @@ $("saveRates").addEventListener("click", async () => {
 function renderOnline() {
   const body = $("onlineBody");
   if (!state.players.length) {
-    body.innerHTML = `<tr><td colspan="9" class="empty">当前没有角色在线</td></tr>`;
+    body.innerHTML = `<tr><td colspan="10" class="empty">当前没有角色在线</td></tr>`;
     return;
   }
   const target = $("target").value;
@@ -768,6 +789,7 @@ function renderOnline() {
       <td>${esc(state.worlds.find(w => w.id === p.world)?.name || p.world)} / ${p.channel}</td>
       <td>${esc(p.mapName || p.mapId)}</td>
       <td>${p.meso.toLocaleString()}</td>
+      <td>${p.fame}</td>
       <td>${p.freeEquip} / ${p.freeUse} / ${p.freeEtc} / ${p.freeCash}</td>
       <td>${p.gm || ""}</td>
     </tr>`).join("");
@@ -778,8 +800,37 @@ function renderOnline() {
     renderVac();
     renderWhere();
     renderScroll();
+    renderFame();
   }));
 }
+
+// ------------------------------------------------------------------ 人气
+
+function renderFame() {
+  const chr = targetChr();
+  $("fameNow").textContent = chr ? `${chr.name} 当前人气 ${chr.fame}` : "未选中角色";
+  $("fameAdd").disabled = !chr;
+  $("fameSet").disabled = !chr;
+}
+
+async function applyFame(button, body) {
+  const res = await withBusy(button, "处理中…",
+    async () => (await fetch("api/fame", { method: "POST", body })).json());
+  toast(res.ok ? res.message : res.error, !!res.ok);
+  if (res.ok) { state = res; renderTarget(); renderOnline(); renderFame(); }
+}
+
+$("fameAdd").addEventListener("click", () => {
+  const chr = targetChr();
+  if (!chr) return;
+  applyFame($("fameAdd"), new URLSearchParams({ chrId: chr.id, delta: $("fameAmount").value || 0 }));
+});
+
+$("fameSet").addEventListener("click", () => {
+  const chr = targetChr();
+  if (!chr) return;
+  applyFame($("fameSet"), new URLSearchParams({ chrId: chr.id, set: $("fameAmount").value || 0 }));
+});
 
 // -------------------------------------------------------------- 赠送装备
 
@@ -1330,7 +1381,7 @@ document.querySelectorAll("nav button").forEach(btn => btn.addEventListener("cli
 $("refresh").addEventListener("click", () => withBusy($("refresh"), "刷新中…",
   () => Promise.all([loadState(), loadEquips(), loadItems(), loadMaps()])));
 $("target").addEventListener("change",
-  () => { renderOnline(); syncGiftButtons(); renderVac(); renderWhere(); renderScroll(); });
+  () => { renderOnline(); syncGiftButtons(); renderVac(); renderWhere(); renderScroll(); renderFame(); });
 
 loadState();
 setInterval(loadState, 5000);

@@ -82,6 +82,7 @@ public class WebAdminServer {
             server.createContext("/api/gift", WebAdminServer::handleGift);
             server.createContext("/api/vac", WebAdminServer::handleVac);
             server.createContext("/api/scroll", WebAdminServer::handleScroll);
+            server.createContext("/api/fame", WebAdminServer::handleFame);
             server.createContext("/api/maps", WebAdminServer::handleMaps);
             server.createContext("/api/worldmap", WebAdminServer::handleWorldMap);
             server.createContext("/api/warp", WebAdminServer::handleWarp);
@@ -241,6 +242,7 @@ public class WebAdminServer {
         p.put("jobName", chr.getJob().name());
         p.put("gender", chr.getGender());
         p.put("meso", chr.getMeso());
+        p.put("fame", chr.getFame());
         p.put("gm", chr.gmLevel());
         p.put("mapId", chr.getMapId());
         MapleMap map = chr.getMap();
@@ -629,6 +631,56 @@ public class WebAdminServer {
         Map<String, Object> out = state();
         out.put("ok", true);
         out.put("message", "mob vac on for " + chr.getName());
+        respondJson(exchange, out);
+    }
+
+    // ------------------------------------------------------------------- 人气
+
+    /** Fame is bounded at +/-30,000 by the game itself; this is the widest useful step. */
+    private static final int FAME_SPAN = 60_000;
+
+    private static void handleFame(HttpExchange exchange) throws IOException {
+        if (!"POST".equalsIgnoreCase(exchange.getRequestMethod())) {
+            respondJson(exchange, error("POST only"));
+            return;
+        }
+        Map<String, String> form = readForm(exchange);
+
+        Character chr = MobVac.findOnlineCharacter(parseInt(form.get("chrId"), -1));
+        if (chr == null) {
+            respondJson(exchange, error("that character is not online any more"));
+            return;
+        }
+
+        int before = chr.getFame();
+        // Both buttons end up as a delta, so everything goes through gainFame - the one path that
+        // clamps to the game's own bounds and pushes the new value to the client.
+        int delta = form.containsKey("set")
+                ? parseInt(form.get("set"), before) - before
+                : parseInt(form.get("delta"), 0);
+        // Clamped before the addition, not after: gainFame adds delta to the current fame, and an
+        // unbounded delta would overflow int and land on the wrong side of the range.
+        delta = Math.max(-FAME_SPAN, Math.min(FAME_SPAN, delta));
+
+        if (delta != 0) {
+            chr.gainFame(delta);
+        }
+        // Read back rather than trusting the request: gainFame clamps, so what was asked for and
+        // what landed are not always the same number.
+        int after = chr.getFame();
+        if (after == before) {
+            Map<String, Object> out = state();
+            out.put("ok", true);
+            out.put("message", chr.getName() + " fame unchanged (already " + after + ")");
+            respondJson(exchange, out);
+            return;
+        }
+
+        log.info("Web admin: {} fame {} -> {}", chr.getName(), before, after);
+        Map<String, Object> out = state();
+        out.put("ok", true);
+        out.put("message", chr.getName() + " fame " + before + " → " + after
+                + "（" + (after - before > 0 ? "+" : "") + (after - before) + "）");
         respondJson(exchange, out);
     }
 
