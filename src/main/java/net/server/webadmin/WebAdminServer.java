@@ -61,6 +61,7 @@ public class WebAdminServer {
     private static final String LOOPBACK = "127.0.0.1";
     private static final Path ICON_DIR = Path.of("webadmin", "icons");
     private static final Path WORLD_MAP_DIR = Path.of("webadmin", "worldmap");
+    private static final Path MOB_DIR = Path.of("webadmin", "mobs");
 
     private static HttpServer server;
     private static volatile int iconCount = -1;
@@ -81,6 +82,7 @@ public class WebAdminServer {
             server.createContext("/", WebAdminServer::handlePage);
             server.createContext("/icons/", WebAdminServer::handleIcon);
             server.createContext("/worldmap/", WebAdminServer::handleWorldMapImage);
+            server.createContext("/mobs/", WebAdminServer::handleMobImage);
             server.createContext("/api/state", exchange -> respondJson(exchange, state()));
             server.createContext("/api/rates", WebAdminServer::handleRates);
             server.createContext("/api/equips", WebAdminServer::handleEquips);
@@ -101,6 +103,7 @@ public class WebAdminServer {
             server.createContext("/api/mobs", WebAdminServer::handleMobs);
             server.createContext("/api/mob", WebAdminServer::handleMob);
             server.createContext("/api/mapmobs", WebAdminServer::handleMapMobs);
+            server.createContext("/api/droppers", WebAdminServer::handleItemDroppers);
             server.start();
             log.info("Web admin panel on http://{}:{}", LOOPBACK, port);
         } catch (IOException e) {
@@ -157,6 +160,12 @@ public class WebAdminServer {
         String name = exchange.getRequestURI().getPath().substring("/icons/".length());
         // The name goes straight into a path, so accept only what the dumper ever writes.
         sendPng(exchange, ICON_DIR, name, "[0-9]{1,8}\\.png");
+    }
+
+    /** Monster portraits, dumped by tools-local/MobDump. Same deal as the icons. */
+    private static void handleMobImage(HttpExchange exchange) throws IOException {
+        String name = exchange.getRequestURI().getPath().substring("/mobs/".length());
+        sendPng(exchange, MOB_DIR, name, "[0-9]{1,8}\\.png");
     }
 
     /** The world map artwork, dumped by tools-local/WorldMapDump. Same deal as the icons. */
@@ -1075,6 +1084,34 @@ public class WebAdminServer {
         out.put("name", MobIndex.nameOf(mobId));
         out.put("drops", drops);
         out.put("maps", spawnJson(MobIndex.mapsOf(mobId), true));
+        respondJson(exchange, out);
+    }
+
+    /** One item: every monster that drops it, best chance first. */
+    private static void handleItemDroppers(HttpExchange exchange) throws IOException {
+        int itemId = parseInt(queryOf(exchange).get("itemId"), -1);
+        if (MobIndex.get() == null) {
+            respondJson(exchange, error("the monster index is still building"));
+            return;
+        }
+        List<Object> from = new ArrayList<>();
+        for (MobIndex.Dropper d : MobIndex.droppersOf(itemId)) {
+            Map<String, Object> m = Json.obj();
+            m.put("mobId", d.mobId());
+            m.put("name", MobIndex.nameOf(d.mobId()));
+            m.put("chance", d.chance());
+            m.put("min", d.min());
+            m.put("max", d.max());
+            m.put("maps", MobIndex.mapsOf(d.mobId()).size());
+            from.add(m);
+        }
+
+        Map<String, Object> out = Json.obj();
+        out.put("ok", true);
+        out.put("itemId", itemId);
+        out.put("name", itemId == 0 ? "金币"
+                : String.valueOf(ItemInformationProvider.getInstance().getName(itemId)));
+        out.put("droppers", from);
         respondJson(exchange, out);
     }
 

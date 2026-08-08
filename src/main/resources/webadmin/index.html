@@ -126,6 +126,18 @@
   }
   /* minmax(0, auto), not plain auto: the track then prefers the picture's width but may shrink
      below it, so at 3x the map scrolls inside its own box instead of pushing the page sideways. */
+  /* The list is a narrow index; the detail side carries five-column drop tables and needs the
+     room. The old 1fr/320px split had it the wrong way round. */
+  .codexsplit { display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: 16px; align-items: start; }
+  @media (max-width: 900px) { .codexsplit { grid-template-columns: minmax(0, 1fr); } }
+  .mobshot {
+    width: 68px; height: 68px; display: flex; align-items: center; justify-content: center;
+    background: var(--panel2); border: 1px solid var(--line); border-radius: 6px;
+    float: left; margin: 0 12px 8px 0;
+  }
+  .mobshot img { max-width: 64px; max-height: 64px; image-rendering: pixelated; }
+  td.mobcell { width: 44px; padding: 2px 6px 2px 10px; }
+  td.mobcell img { max-width: 40px; max-height: 36px; image-rendering: pixelated; vertical-align: middle; }
   .mapsplit { display: grid; grid-template-columns: minmax(0, auto) minmax(260px, 1fr); gap: 16px; align-items: start; }
   @media (max-width: 900px) { .mapsplit { grid-template-columns: minmax(0, 1fr); } }
   /* overflow:hidden because .wm is exactly the picture: nothing should be drawn outside it, and
@@ -543,9 +555,11 @@
         <input id="cxMobSearch" placeholder="例如 Snail 或 100100" style="width:100%"></div>
       <div style="flex:1; min-width:200px"><label>找地图（名称或编号）</label>
         <input id="cxMapSearch" placeholder="例如 Henesys 或 104040000" style="width:100%"></div>
+      <div style="flex:1; min-width:200px"><label>找物品（反查谁会爆）</label>
+        <input id="cxItemSearch" placeholder="例如 Snail Shell 或 4000019" style="width:100%"></div>
     </div>
 
-    <div class="split">
+    <div class="codexsplit">
       <div>
         <div class="scroll" style="max-height:420px">
           <table><thead><tr id="cxListHead"></tr></thead><tbody id="cxListBody"></tbody></table>
@@ -1599,26 +1613,76 @@ function dropRate(chance) {
   return pct >= 1 ? pct.toFixed(2) + "%" : (chance / 10000).toFixed(4) + "%";
 }
 
+// Dumped by tools-local/MobDump out of the client's Mob.wz. Mobs with no drawable frame just
+// collapse to nothing rather than showing a broken image.
+const mobShot = id => `<img src="mobs/${id}.png" alt="" onerror="this.remove()">`;
+
 async function searchMobs() {
   const q = $("cxMobSearch").value.trim();
   if (!q) return;
   $("cxMapSearch").value = "";
+  $("cxItemSearch").value = "";
   const data = await (await fetch(`api/mobs?limit=300&q=${encodeURIComponent(q)}`)).json();
   if (data.building) { $("cxListCount").textContent = "怪物索引还在建立…"; return; }
-  $("cxListHead").innerHTML = `<th>编号</th><th>名称</th><th>掉落</th><th>地图</th><th>总只数</th>`;
+  $("cxListHead").innerHTML = `<th></th><th>编号</th><th>名称</th><th>掉落</th><th>地图</th>`;
   $("cxListBody").innerHTML = data.results.length ? data.results.map(m => `
     <tr data-mob="${m.id}">
+      <td class="mobcell">${mobShot(m.id)}</td>
       <td>${m.id}</td><td style="white-space:normal">${esc(m.name || "（无名）")}</td>
-      <td>${m.drops}</td><td>${m.maps}</td><td>${m.spawns}</td>
+      <td>${m.drops}</td><td>${m.maps}</td>
     </tr>`).join("") : `<tr><td colspan="5" class="empty">没找到</td></tr>`;
   $("cxListCount").textContent = `匹配 ${data.total} 种怪物，显示前 ${data.shown} 种`;
   bindCodexRows();
+}
+
+// Items are searched across both catalogues, then answered by the reverse drop index.
+async function searchCodexItems() {
+  const q = $("cxItemSearch").value.trim();
+  if (!q) return;
+  $("cxMobSearch").value = "";
+  $("cxMapSearch").value = "";
+  const [items, equips] = await Promise.all([
+    (await fetch(`api/items?q=${encodeURIComponent(q)}&limit=150&named=all`)).json(),
+    (await fetch(`api/equips?q=${encodeURIComponent(q)}&limit=150&named=all&cash=all`)).json()
+  ]);
+  const hits = [...(items.results || []), ...(equips.results || [])];
+  $("cxListHead").innerHTML = `<th></th><th>编号</th><th>名称</th>`;
+  $("cxListBody").innerHTML = hits.length ? hits.map(h => `
+    <tr data-item="${h.id}">
+      <td class="iconcell">${iconCell(h.id)}</td>
+      <td>${h.id}</td><td style="white-space:normal">${esc(h.name || "（无名）")}</td>
+    </tr>`).join("") : `<tr><td colspan="3" class="empty">没找到</td></tr>`;
+  $("cxListCount").textContent = `匹配 ${hits.length} 件物品，点一件看谁会爆`;
+  bindCodexRows();
+}
+
+async function showDroppers(itemId) {
+  const d = await (await fetch("api/droppers?itemId=" + itemId)).json();
+  if (!d.ok) { $("cxDetail").innerHTML = `<p class="note">${esc(d.error)}</p>`; return; }
+  $("cxDetail").innerHTML = `
+    <h2 style="margin-bottom:4px">${pickIcon(d.itemId)}${esc(d.name || "（无名）")}
+      <span style="color:var(--dim);font-weight:400">${d.itemId}</span></h2>
+    <p class="note" style="margin-bottom:10px; clear:both">${d.droppers.length} 种怪物会爆它，按爆率从高到低</p>
+    <div class="scroll" style="max-height:60vh"><table>
+      <thead><tr><th></th><th>编号</th><th>怪物</th><th>数量</th><th>爆率</th><th>地图数</th></tr></thead>
+      <tbody>${d.droppers.length ? d.droppers.map(x => `<tr data-mob="${x.mobId}">
+        <td class="mobcell">${mobShot(x.mobId)}</td>
+        <td>${x.mobId}</td>
+        <td style="white-space:normal">${esc(x.name || "（无名）")}</td>
+        <td>${x.min === x.max ? x.min : x.min + "–" + x.max}</td>
+        <td>${dropRate(x.chance)}</td>
+        <td>${x.maps}</td></tr>`).join("")
+        : `<tr><td colspan="6" class="empty">没有怪物会爆这件物品</td></tr>`}</tbody>
+    </table></div>`;
+  $("cxDetail").querySelectorAll("[data-mob]").forEach(tr =>
+    tr.addEventListener("click", () => showMob(Number(tr.dataset.mob))));
 }
 
 async function searchCodexMaps() {
   const q = $("cxMapSearch").value.trim();
   if (!q) return;
   $("cxMobSearch").value = "";
+  $("cxItemSearch").value = "";
   const data = await (await fetch(`api/maps?limit=300&q=${encodeURIComponent(q)}`)).json();
   if (data.building) { $("cxListCount").textContent = "地图索引还在建立…"; return; }
   $("cxListHead").innerHTML = `<th>编号</th><th>地图</th><th>街道</th>`;
@@ -1636,32 +1700,41 @@ function bindCodexRows() {
     tr.addEventListener("click", () => showMob(Number(tr.dataset.mob))));
   $("cxListBody").querySelectorAll("[data-map]").forEach(tr =>
     tr.addEventListener("click", () => showMapMobs(Number(tr.dataset.map))));
+  $("cxListBody").querySelectorAll("[data-item]").forEach(tr =>
+    tr.addEventListener("click", () => showDroppers(Number(tr.dataset.item))));
 }
 
 async function showMob(id) {
   const d = await (await fetch("api/mob?id=" + id)).json();
   if (!d.ok) { $("cxDetail").innerHTML = `<p class="note">${esc(d.error)}</p>`; return; }
   $("cxDetail").innerHTML = `
+    <span class="mobshot">${mobShot(d.id)}</span>
     <h2 style="margin-bottom:4px">${esc(d.name || "（无名）")} <span style="color:var(--dim);font-weight:400">${d.id}</span></h2>
-    <p class="note" style="margin-bottom:10px">掉落 ${d.drops.length} 种 · 出现在 ${d.maps.length} 张地图</p>
+    <p class="note" style="margin-bottom:12px">掉落 ${d.drops.length} 种 · 出现在 ${d.maps.length} 张地图</p>
+    <div style="clear:both"></div>
     <h2 style="font-size:13px">掉落</h2>
-    <div class="scroll" style="max-height:260px; margin-bottom:12px"><table><tbody>
-      ${d.drops.length ? d.drops.map(x => `<tr>
+    <div class="scroll" style="max-height:60vh; margin-bottom:14px"><table>
+      <thead><tr><th></th><th>编号</th><th>物品</th><th>数量</th><th>爆率</th></tr></thead>
+      <tbody>${d.drops.length ? d.drops.map(x => `<tr${x.itemId ? ` data-item="${x.itemId}"` : ""}>
         <td class="iconcell">${x.itemId ? iconCell(x.itemId) : ""}</td>
         <td>${x.itemId || ""}</td>
         <td style="white-space:normal">${esc(x.name || "（无名）")}${x.quest ? ' <span class="tag">任务</span>' : ""}</td>
         <td>${x.min === x.max ? x.min : x.min + "–" + x.max}</td>
         <td>${dropRate(x.chance)}</td></tr>`).join("")
-        : `<tr><td class="empty">没有掉落数据</td></tr>`}
-    </tbody></table></div>
+        : `<tr><td colspan="5" class="empty">没有掉落数据</td></tr>`}</tbody>
+    </table></div>
     <h2 style="font-size:13px">出现在这些地图</h2>
-    <div class="scroll" style="max-height:260px"><table><tbody>
-      ${d.maps.length ? d.maps.map(x => `<tr data-map="${x.mapId}">
+    <div class="scroll" style="max-height:40vh"><table>
+      <thead><tr><th>编号</th><th>地图</th><th>街道</th><th>数量</th></tr></thead>
+      <tbody>${d.maps.length ? d.maps.map(x => `<tr data-map="${x.mapId}">
         <td>${x.mapId}</td>
         <td style="white-space:normal">${esc(x.name || "（无名）")}</td>
+        <td>${esc(x.street)}</td>
         <td>${x.count} 只</td></tr>`).join("")
-        : `<tr><td class="empty">没有地图刷这只怪</td></tr>`}
-    </tbody></table></div>`;
+        : `<tr><td colspan="4" class="empty">没有地图刷这只怪</td></tr>`}</tbody>
+    </table></div>`;
+  $("cxDetail").querySelectorAll("[data-item]").forEach(tr =>
+    tr.addEventListener("click", () => showDroppers(Number(tr.dataset.item))));
   $("cxDetail").querySelectorAll("[data-map]").forEach(tr =>
     tr.addEventListener("click", () => showMapMobs(Number(tr.dataset.map))));
 }
@@ -1675,6 +1748,7 @@ async function showMapMobs(mapId) {
     <p class="note" style="margin-bottom:10px">${esc(d.street)}${d.street ? " · " : ""}${d.mobs.length} 种怪 · 共 ${total} 只</p>
     <div class="scroll" style="max-height:420px"><table><tbody>
       ${d.mobs.length ? d.mobs.map(m => `<tr data-mob="${m.mobId}">
+        <td class="mobcell">${mobShot(m.mobId)}</td>
         <td>${m.mobId}</td>
         <td style="white-space:normal">${esc(m.name || "（无名）")}</td>
         <td>${m.count} 只</td></tr>`).join("")
@@ -1689,6 +1763,7 @@ async function showMapMobs(mapId) {
 
 $("cxMobSearch").addEventListener("input", debounce(searchMobs, 250));
 $("cxMapSearch").addEventListener("input", debounce(searchCodexMaps, 250));
+$("cxItemSearch").addEventListener("input", debounce(searchCodexItems, 250));
 
 // -------------------------------------------------------------------- 传送
 

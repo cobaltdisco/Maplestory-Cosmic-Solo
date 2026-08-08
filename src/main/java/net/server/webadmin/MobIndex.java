@@ -44,6 +44,10 @@ public final class MobIndex {
     public record Drop(int itemId, String itemName, int chance, int min, int max, int questId) {
     }
 
+    /** The other direction: one monster that drops a given item. */
+    public record Dropper(int mobId, int chance, int min, int max) {
+    }
+
     /** How many of one monster a single map holds. */
     public record Spawn(int mapId, int mobId, int count) {
     }
@@ -53,6 +57,7 @@ public final class MobIndex {
 
     private static volatile List<Mob> mobs;
     private static volatile Map<Integer, List<Drop>> dropsByMob = Map.of();
+    private static volatile Map<Integer, List<Dropper>> droppersByItem = Map.of();
     private static volatile Map<Integer, List<Spawn>> spawnsByMob = Map.of();
     private static volatile Map<Integer, List<Spawn>> spawnsByMap = Map.of();
     private static volatile Map<Integer, String> names = Map.of();
@@ -71,6 +76,10 @@ public final class MobIndex {
 
     public static List<Drop> dropsOf(int mobId) {
         return dropsByMob.getOrDefault(mobId, List.of());
+    }
+
+    public static List<Dropper> droppersOf(int itemId) {
+        return droppersByItem.getOrDefault(itemId, List.of());
     }
 
     public static List<Spawn> mapsOf(int mobId) {
@@ -139,6 +148,7 @@ public final class MobIndex {
         }
 
         Map<Integer, List<Drop>> out = new HashMap<>();
+        Map<Integer, List<Dropper>> reverse = new HashMap<>();
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(
                      "SELECT dropperid, itemid, chance, minimum_quantity, maximum_quantity, questid"
@@ -146,16 +156,27 @@ public final class MobIndex {
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 int itemId = rs.getInt("itemid");
-                out.computeIfAbsent(rs.getInt("dropperid"), k -> new ArrayList<>())
+                int mobId = rs.getInt("dropperid");
+                int chance = rs.getInt("chance");
+                int min = rs.getInt("minimum_quantity");
+                int max = rs.getInt("maximum_quantity");
+                out.computeIfAbsent(mobId, k -> new ArrayList<>())
                         .add(new Drop(itemId,
                                 itemId == 0 ? "金币" : itemNames.getOrDefault(itemId, ""),
-                                rs.getInt("chance"), rs.getInt("minimum_quantity"),
-                                rs.getInt("maximum_quantity"), rs.getInt("questid")));
+                                chance, min, max, rs.getInt("questid")));
+                reverse.computeIfAbsent(itemId, k -> new ArrayList<>())
+                        .add(new Dropper(mobId, chance, min, max));
             }
         } catch (SQLException e) {
             log.error("Web admin: could not read drop_data", e);
         }
         out.replaceAll((k, v) -> List.copyOf(v));
+        // Best chance first, so "where do I farm this" is answered by the top row.
+        reverse.replaceAll((k, v) -> {
+            v.sort(Comparator.comparingInt(Dropper::chance).reversed());
+            return List.copyOf(v);
+        });
+        droppersByItem = Map.copyOf(reverse);
         return Map.copyOf(out);
     }
 
