@@ -289,14 +289,24 @@ public class HiredMerchant extends AbstractMapObject {
 
     public void buy(Client c, int item, short quantity) {
         synchronized (items) {
+            // The slot arrives straight off the wire. Indexing the list before checking it means a
+            // stale or edited packet throws IndexOutOfBounds out of the handler, and the client --
+            // which is waiting for either a purchase or an enableActions -- gets neither and locks.
+            if (item < 0 || item >= items.size() || quantity < 1) {
+                c.sendPacket(PacketCreator.enableActions());
+                return;
+            }
+
             PlayerShopItem pItem = items.get(item);
+            if (!pItem.isExist() || pItem.getBundles() < quantity) {
+                c.sendPacket(PacketCreator.enableActions());
+                return;
+            }
+
             Item newItem = pItem.getItem().copy();
 
             newItem.setQuantity((short) ((pItem.getItem().getQuantity() * quantity)));
-            if (quantity < 1 || !pItem.isExist() || pItem.getBundles() < quantity) {
-                c.sendPacket(PacketCreator.enableActions());
-                return;
-            } else if (newItem.getInventoryType().equals(InventoryType.EQUIP) && newItem.getQuantity() > 1) {
+            if (newItem.getInventoryType().equals(InventoryType.EQUIP) && newItem.getQuantity() > 1) {
                 c.sendPacket(PacketCreator.enableActions());
                 return;
             }

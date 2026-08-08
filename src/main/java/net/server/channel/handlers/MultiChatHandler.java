@@ -43,8 +43,14 @@ public final class MultiChatHandler extends AbstractPacketHandler {
             return;
         }
 
-        int type = p.readByte(); // 0 for buddys, 1 for partys
-        int numRecipients = p.readByte();
+        int type = p.readByte(); // 0 for buddys, 1 for partys, 2 for guilds, 3 for alliances
+        // Unsigned, and checked against what is left in the packet. readByte is signed, so a count
+        // of 128 or more arrived negative and NegativeArraySizeException came out of the handler;
+        // a count larger than the payload ran readInt off the end for the same result.
+        int numRecipients = Byte.toUnsignedInt(p.readByte());
+        if (numRecipients > p.available() / Integer.BYTES) {
+            return;
+        }
         int[] recipients = new int[numRecipients];
         for (int i = 0; i < numRecipients; i++) {
             recipients[i] = p.readInt();

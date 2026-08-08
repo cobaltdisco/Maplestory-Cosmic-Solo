@@ -277,6 +277,19 @@ public class FredrickProcessor {
             try {
                 Character chr = c.getPlayer();
 
+                // A deployed store keeps its stock in two places: the in-memory items list and the
+                // type=6 rows in the DB. Fredrick reads those same rows, hands them over and deletes
+                // them -- so retrieving while a store is live gives the player the goods and leaves
+                // the shelf untouched, and the store writes the whole shelf back when it closes. The
+                // clearItems() below only covers the case where the player still has the store window
+                // bound to them; walking away from an open store clears chr.hiredMerchant and leaves
+                // the store running, which is the ordinary way to leave one up.
+                if (chr.hasMerchant() || c.getWorldServer().getHiredMerchant(chr.getId()) != null) {
+                    chr.dropMessage(1, "Close your hired merchant before collecting from Fredrick.");
+                    chr.sendPacket(PacketCreator.enableActions());
+                    return;
+                }
+
                 List<Pair<Item, InventoryType>> items;
                 try {
                     items = ItemFactory.MERCHANT.loadItems(chr.getId(), false);
