@@ -11,6 +11,7 @@ import server.maps.MapleMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 
@@ -38,12 +39,16 @@ public final class AutoLoot {
     /** pickupItem refuses a drop younger than this; it is not ours to change. */
     private static final int PICKUP_DELAY = 400;
 
-    /** {@code radius} 0 is the whole map; the screen is roughly 800 by 600 around the character. */
-    public record Options(int radius, int interval, int maxPerTick) {
+    /**
+     * {@code radius} 0 is the whole map; the screen is roughly 800 by 600 around the character.
+     * {@code only} empty means every item; money is governed by {@code mesos} either way.
+     */
+    public record Options(int radius, int interval, int maxPerTick, Set<Integer> only, boolean mesos) {
         public Options {
             radius = Math.max(0, Math.min(100_000, radius));
             interval = Math.max(MIN_INTERVAL, Math.min(MAX_INTERVAL, interval));
             maxPerTick = Math.max(1, Math.min(200, maxPerTick));
+            only = only == null ? Set.of() : Set.copyOf(only);
         }
     }
 
@@ -56,6 +61,7 @@ public final class AutoLoot {
         volatile int lastFresh;
         volatile int lastStuck;
         volatile int lastUnwanted;
+        volatile int lastFiltered;
         volatile long totalPicked;
         volatile String note = "";
 
@@ -76,9 +82,12 @@ public final class AutoLoot {
         sessions.put(chrId, session);
         session.task = TimerManager.getInstance().register(() -> tick(session),
                 options.interval(), options.interval());
-        log.info("Web admin: auto loot on for chr {} (radius {}, every {}ms, up to {} per tick)",
+        log.info("Web admin: auto loot on for chr {} (radius {}, every {}ms, up to {} per tick,"
+                        + " {}, mesos {})",
                 chrId, options.radius() == 0 ? "whole map" : options.radius(),
-                options.interval(), options.maxPerTick());
+                options.interval(), options.maxPerTick(),
+                options.only().isEmpty() ? "every item" : options.only().size() + " chosen items",
+                options.mesos());
     }
 
     public static synchronized void stop(int chrId) {
@@ -110,6 +119,9 @@ public final class AutoLoot {
             m.put("lastFresh", s.lastFresh);
             m.put("lastStuck", s.lastStuck);
             m.put("lastUnwanted", s.lastUnwanted);
+            m.put("lastFiltered", s.lastFiltered);
+            m.put("only", new ArrayList<>(s.options.only()));
+            m.put("mesos", s.options.mesos());
             m.put("totalPicked", s.totalPicked);
             m.put("note", s.note);
             out.add(m);
@@ -137,7 +149,7 @@ public final class AutoLoot {
 
             long radiusSq = (long) session.options.radius() * session.options.radius();
             long now = System.currentTimeMillis();
-            int picked = 0, seen = 0, fresh = 0, stuck = 0, unwanted = 0, attempts = 0;
+            int picked = 0, seen = 0, fresh = 0, stuck = 0, unwanted = 0, filtered = 0, attempts = 0;
 
             for (MapObject object : map.getMapObjects()) {
                 if (!(object instanceof MapItem drop)) {
@@ -148,6 +160,19 @@ public final class AutoLoot {
                 }
                 if (drop.isPickedUp()) {
                     continue;               // already gone, just not swept out of the map yet
+                }
+                // Money first, and never through getItemId(): for a meso drop that method
+                // returns the *amount*, so a filter list containing 1092056 would happily match
+                // a 1,092,056 meso pile. Money has its own switch.
+                if (drop.getMeso() > 0) {
+                    if (!session.options.mesos()) {
+                        filtered++;
+                        continue;
+                    }
+                } else if (!session.options.only().isEmpty()
+                        && !session.options.only().contains(drop.getItemId())) {
+                    filtered++;
+                    continue;
                 }
                 seen++;
                 // pickupItem refuses anything dropped less than 400ms ago. Attempting it anyway
@@ -186,6 +211,7 @@ public final class AutoLoot {
             session.lastFresh = fresh;
             session.lastStuck = stuck;
             session.lastUnwanted = unwanted;
+            session.lastFiltered = filtered;
             session.totalPicked += picked;
         } catch (Exception e) {
             log.error("Web admin: auto loot tick failed for chr {}, switching it off",

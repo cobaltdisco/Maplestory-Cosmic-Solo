@@ -166,6 +166,19 @@
     white-space: pre-wrap; font-size: 12.5px; color: var(--dim); margin: 0 0 12px;
     max-height: 190px; overflow: auto;
   }
+  /* One chip per chosen item, each removable - a comma-separated id box would be shorter to
+     build and impossible to read back. */
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px; margin: 0 6px 6px 0;
+    padding: 3px 6px 3px 4px; border: 1px solid var(--line); border-radius: 6px;
+    background: var(--panel2); font-size: 12.5px;
+  }
+  .chip img { width: 20px; height: 20px; object-fit: contain; image-rendering: pixelated; }
+  .chip button {
+    border: 0; background: none; color: var(--dim); cursor: pointer; font-size: 14px;
+    line-height: 1; padding: 0 2px;
+  }
+  .chip button:hover { color: var(--bad); }
   .tag { font-size: 11px; padding: 1px 6px; border-radius: 4px; background: var(--panel); border: 1px solid var(--line); color: var(--dim); }
   .tag.bad { color: var(--bad); border-color: var(--bad); }
   .tag.cash { color: var(--warn); border-color: var(--warn); }
@@ -198,8 +211,7 @@
   <button data-tab="equip">赠送装备</button>
   <button data-tab="item">赠送物品</button>
   <button data-tab="vac">吸怪</button>
-  <button data-tab="attack">自动攻击</button>
-  <button data-tab="assist">喝药 / 捡取</button>
+  <button data-tab="auto">挂机（攻击 / 喝药 / 捡取）</button>
   <button data-tab="teleport">传送</button>
   <button data-tab="scroll">砸卷</button>
 </nav>
@@ -453,7 +465,7 @@
   </section>
 
   <!-- ------------------------------------------------------------ 自动攻击 -->
-  <section id="tab-attack">
+  <section id="tab-auto">
     <h2>自动攻击</h2>
     <p class="note">
       开着的时候，目标角色周围的怪会被不断打掉。<b>经验、掉落、任务计数、装备熟练度全都正常</b>——
@@ -513,10 +525,9 @@
       <li>角色死了会<b>暂停而不是继续打</b>——死人拿不到经验（<code>giveExpToCharacter</code> 直接跳过），
           继续打等于白白清图。</li>
     </ul>
-  </section>
 
-  <!-- ------------------------------------------------------ 喝药 / 捡取 -->
-  <section id="tab-assist">
+    <hr style="border:none; border-top:1px solid var(--line); margin:30px 0">
+
     <h2>自动喝药</h2>
     <p class="note">
       血量或蓝量掉到设定的百分比以下，就自动喝你选的药。
@@ -535,10 +546,27 @@
       <button class="act" id="potRefresh">重新读取背包里的药</button>
     </div>
 
-    <h2 style="margin-top:30px">全屏捡取</h2>
+    <hr style="border:none; border-top:1px solid var(--line); margin:30px 0">
+
+    <h2>全屏捡取</h2>
     <p class="note">
       把地图上的掉落<b>全部捡起来</b>，不管掉在多远。范围填 0 = 整张地图（比一屏还大）。
+      <b>不加物品筛选就是全捡</b>；加了就只捡列表里的那几样。
     </p>
+
+    <div class="row" style="margin-bottom:10px">
+      <div style="flex:1; min-width:240px"><label>只捡这些（搜名称或编号，点结果加进来）</label>
+        <input id="lootSearch" placeholder="留空 = 全捡" style="width:100%"></div>
+      <div><label>&nbsp;</label><label style="display:flex; gap:6px; align-items:center; color:var(--text); margin:0; padding:7px 0">
+        <input type="checkbox" id="lootMesos" checked style="width:auto"> 金币也捡
+      </label></div>
+      <div><label>&nbsp;</label><button class="act" id="lootClear">清空筛选</button></div>
+    </div>
+    <div id="lootFound" class="scroll" style="max-height:180px; display:none; margin-bottom:10px">
+      <table><tbody id="lootFoundBody"></tbody></table>
+    </div>
+    <div id="lootChips" style="margin-bottom:14px"></div>
+
     <div class="row" style="margin-bottom:14px">
       <div><label>范围（像素，0 = 整张地图）</label><input id="lootRadius" type="number" min="0" max="100000" value="0" style="width:170px"></div>
       <div><label>间隔（毫秒）</label><input id="lootInterval" type="number" min="300" max="10000" step="100" value="800" style="width:110px"></div>
@@ -1333,6 +1361,7 @@ function renderAssist() {
     // something you can read off instead of guess at.
     : `运行中 · 上一轮捡了 ${loot.lastPicked} / 范围内 ${loot.lastSeen} 件`
       + (loot.lastFresh ? ` · ${loot.lastFresh} 件刚掉下来（0.4 秒保护期，下一轮就捡）` : "")
+      + (loot.lastFiltered ? ` · ${loot.lastFiltered} 件被筛选挡下` : "")
       + (loot.lastUnwanted ? ` · ${loot.lastUnwanted} 件是用不上的任务物品（跳过，不会再弹提示）` : "")
       + (loot.lastStuck ? ` · ${loot.lastStuck} 件捡不动（背包满 / 不归你）` : "")
       + (loot.lastSeen > loot.lastPicked + loot.lastFresh + loot.lastStuck + loot.lastUnwanted
@@ -1342,6 +1371,13 @@ function renderAssist() {
     $("lootRadius").value = loot.radius;
     $("lootInterval").value = loot.interval;
     $("lootMax").value = loot.maxPerTick;
+    $("lootMesos").checked = loot.mesos;
+    // After a page reload the chips are gone but the server is still filtering. Rebuild them
+    // from what it reports, by id - the names were only ever in the browser.
+    if (!lootOnly.size && (loot.only || []).length) {
+      loot.only.forEach(id => lootOnly.set(id, "编号 " + id));
+      renderLootChips();
+    }
   }
 }
 
@@ -1354,10 +1390,62 @@ function potBody(chr) {
   });
 }
 
+// id -> name for the chosen items. Empty means "pick everything up", which is what the server
+// treats an empty list as, so there is no separate on/off switch for the filter.
+let lootOnly = new Map();
+
+function renderLootChips() {
+  $("lootChips").innerHTML = lootOnly.size
+    ? [...lootOnly].map(([id, name]) => `<span class="chip">
+        <img src="icons/${id}.png" alt="" onerror="this.remove()">
+        ${esc(name)} <span style="color:var(--dim)">${id}</span>
+        <button data-drop="${id}" title="移除">×</button></span>`).join("")
+    : `<span class="note">没有筛选，掉什么捡什么。</span>`;
+  $("lootChips").querySelectorAll("[data-drop]").forEach(b =>
+    b.addEventListener("click", () => { lootOnly.delete(Number(b.dataset.drop)); renderLootChips(); pushLoot(); }));
+}
+
+// Searches both catalogues at once - a drop can be an equip or an item, and making the user
+// know which before they can filter on it would be a silly thing to ask.
+async function searchLoot() {
+  const q = $("lootSearch").value.trim();
+  const box = $("lootFound");
+  if (!q) { box.style.display = "none"; return; }
+  const [items, equips] = await Promise.all([
+    (await fetch(`api/items?q=${encodeURIComponent(q)}&limit=8&named=all`)).json(),
+    (await fetch(`api/equips?q=${encodeURIComponent(q)}&limit=8&named=all&cash=all`)).json()
+  ]);
+  const hits = [...(items.results || []), ...(equips.results || [])];
+  box.style.display = "";
+  $("lootFoundBody").innerHTML = hits.length ? hits.map(h => `
+    <tr data-add="${h.id}" data-name="${esc(h.name)}">
+      <td class="iconcell">${iconCell(h.id)}</td>
+      <td>${h.id}</td><td style="white-space:normal">${esc(h.name)}</td>
+    </tr>`).join("") : `<tr><td class="empty">没找到</td></tr>`;
+  $("lootFoundBody").querySelectorAll("[data-add]").forEach(tr =>
+    tr.addEventListener("click", () => {
+      lootOnly.set(Number(tr.dataset.add), tr.dataset.name);
+      renderLootChips();
+      $("lootSearch").value = "";
+      box.style.display = "none";
+      pushLoot();
+    }));
+}
+
+// Applies the filter immediately when it is already running, so editing the list does not need
+// a stop and start.
+async function pushLoot() {
+  if (!activeLoot()) return;
+  const res = await (await fetch("api/loot", { method: "POST", body: lootBody(targetChr()) })).json();
+  if (res.ok) { state = res; renderAssist(); }
+}
+
 function lootBody(chr) {
   return new URLSearchParams({
     chrId: chr.id, enabled: "true", radius: $("lootRadius").value,
-    interval: $("lootInterval").value, maxPerTick: $("lootMax").value
+    interval: $("lootInterval").value, maxPerTick: $("lootMax").value,
+    only: [...lootOnly.keys()].join(","),
+    mesos: $("lootMesos").checked ? "true" : "false"
   });
 }
 
@@ -1394,12 +1482,18 @@ $("potRefresh").addEventListener("click", () => withBusy($("potRefresh"), "读�
     if (res.ok) { state = res; renderAssist(); }
   }));
 
-["lootRadius", "lootInterval", "lootMax"].forEach(id =>
-  $(id).addEventListener("change", async () => {
-    if (!activeLoot()) return;
-    const res = await (await fetch("api/loot", { method: "POST", body: lootBody(targetChr()) })).json();
-    if (res.ok) { state = res; renderAssist(); }
-  }));
+["lootRadius", "lootInterval", "lootMax", "lootMesos"].forEach(id =>
+  $(id).addEventListener("change", pushLoot));
+
+$("lootSearch").addEventListener("input", debounce(searchLoot, 250));
+$("lootClear").addEventListener("click", () => {
+  lootOnly.clear();
+  $("lootSearch").value = "";
+  $("lootFound").style.display = "none";
+  renderLootChips();
+  pushLoot();
+});
+renderLootChips();
 
 // ---------------------------------------------------------------- 自动攻击
 

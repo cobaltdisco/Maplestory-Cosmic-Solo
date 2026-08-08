@@ -38,9 +38,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -778,7 +780,9 @@ public class WebAdminServer {
         AutoLoot.start(chrId, new AutoLoot.Options(
                 parseInt(form.get("radius"), 0),
                 parseInt(form.get("interval"), 800),
-                parseInt(form.get("maxPerTick"), 50)));
+                parseInt(form.get("maxPerTick"), 50),
+                parseIds(form.get("only")),
+                !"false".equalsIgnoreCase(form.get("mesos"))));
         respondToggled(exchange, "auto loot on for " + chr.getName());
     }
 
@@ -831,6 +835,21 @@ public class WebAdminServer {
         out.put("ok", true);
         out.put("potions", potions);
         respondJson(exchange, out);
+    }
+
+    /** A comma-separated id list, ignoring anything that is not a number. */
+    private static Set<Integer> parseIds(String raw) {
+        Set<Integer> out = new LinkedHashSet<>();
+        if (raw == null || raw.isBlank()) {
+            return out;
+        }
+        for (String part : raw.split(",")) {
+            int id = parseInt(part, -1);
+            if (id > 0) {
+                out.add(id);
+            }
+        }
+        return out;
     }
 
     /** Reads a toggle request, or answers "POST only" and returns null. */
