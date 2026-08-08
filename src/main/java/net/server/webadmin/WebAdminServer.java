@@ -98,6 +98,9 @@ public class WebAdminServer {
             server.createContext("/api/maps", WebAdminServer::handleMaps);
             server.createContext("/api/worldmap", WebAdminServer::handleWorldMap);
             server.createContext("/api/warp", WebAdminServer::handleWarp);
+            server.createContext("/api/mobs", WebAdminServer::handleMobs);
+            server.createContext("/api/mob", WebAdminServer::handleMob);
+            server.createContext("/api/mapmobs", WebAdminServer::handleMapMobs);
             server.start();
             log.info("Web admin panel on http://{}:{}", LOOPBACK, port);
         } catch (IOException e) {
@@ -108,6 +111,7 @@ public class WebAdminServer {
 
         Thread indexer = new Thread(() -> {
             MapIndex.build();
+            MobIndex.build();
             ItemIndex.build();
             EquipIndex.build();
         }, "webadmin-indexer");
@@ -234,6 +238,7 @@ public class WebAdminServer {
         index.put("itemCount", ItemIndex.get() == null ? 0 : ItemIndex.get().size());
         index.put("mapCount", MapIndex.get() == null ? 0 : MapIndex.get().size());
         index.put("worldMapCount", MapIndex.worlds().size());
+        index.put("mobCount", MobIndex.get() == null ? 0 : MobIndex.get().size());
         index.put("iconCount", iconCount());
 
         Map<String, Object> out = Json.obj();
@@ -999,6 +1004,116 @@ public class WebAdminServer {
         out.put("ok", true);
         out.put("message", "scrolls always succeed for " + chr.getName());
         respondJson(exchange, out);
+    }
+
+    // ------------------------------------------------------------------- 图鉴
+
+    private static void handleMobs(HttpExchange exchange) throws IOException {
+        List<MobIndex.Mob> all = MobIndex.get();
+        if (all == null) {
+            Map<String, Object> out = Json.obj();
+            out.put("building", true);
+            out.put("results", List.of());
+            respondJson(exchange, out);
+            return;
+        }
+
+        Map<String, String> q = queryOf(exchange);
+        String text = q.getOrDefault("q", "").trim().toLowerCase(Locale.ROOT);
+        int limit = Math.max(1, Math.min(500, parseInt(q.get("limit"), 200)));
+
+        List<Object> results = new ArrayList<>();
+        int matched = 0;
+        for (MobIndex.Mob mob : all) {
+            if (!text.isEmpty() && !mob.name().toLowerCase(Locale.ROOT).contains(text)
+                    && !String.valueOf(mob.id()).contains(text)) {
+                continue;
+            }
+            matched++;
+            if (results.size() < limit) {
+                Map<String, Object> m = Json.obj();
+                m.put("id", mob.id());
+                m.put("name", mob.name());
+                m.put("drops", mob.dropCount());
+                m.put("maps", mob.mapCount());
+                m.put("spawns", mob.totalSpawns());
+                results.add(m);
+            }
+        }
+
+        Map<String, Object> out = Json.obj();
+        out.put("building", false);
+        out.put("total", matched);
+        out.put("shown", results.size());
+        out.put("results", results);
+        respondJson(exchange, out);
+    }
+
+    /** One monster: everything it drops, and every map it lives on. */
+    private static void handleMob(HttpExchange exchange) throws IOException {
+        int mobId = parseInt(queryOf(exchange).get("id"), -1);
+        if (MobIndex.get() == null) {
+            respondJson(exchange, error("the monster index is still building"));
+            return;
+        }
+
+        List<Object> drops = new ArrayList<>();
+        for (MobIndex.Drop drop : MobIndex.dropsOf(mobId)) {
+            Map<String, Object> m = Json.obj();
+            m.put("itemId", drop.itemId());
+            m.put("name", drop.itemName());
+            m.put("chance", drop.chance());
+            m.put("min", drop.min());
+            m.put("max", drop.max());
+            m.put("quest", drop.questId());
+            drops.add(m);
+        }
+
+        Map<String, Object> out = Json.obj();
+        out.put("ok", true);
+        out.put("id", mobId);
+        out.put("name", MobIndex.nameOf(mobId));
+        out.put("drops", drops);
+        out.put("maps", spawnJson(MobIndex.mapsOf(mobId), true));
+        respondJson(exchange, out);
+    }
+
+    /** One map: every monster on it and how many of each. */
+    private static void handleMapMobs(HttpExchange exchange) throws IOException {
+        int mapId = parseInt(queryOf(exchange).get("mapId"), -1);
+        if (MobIndex.get() == null) {
+            respondJson(exchange, error("the monster index is still building"));
+            return;
+        }
+        MapIndex.Entry map = MapIndex.byId(mapId);
+
+        Map<String, Object> out = Json.obj();
+        out.put("ok", true);
+        out.put("mapId", mapId);
+        out.put("mapName", map == null ? "" : map.name());
+        out.put("street", map == null ? "" : map.street());
+        out.put("mobs", spawnJson(MobIndex.mobsOn(mapId), false));
+        respondJson(exchange, out);
+    }
+
+    /** {@code byMap} true labels each row with the map, false with the monster. */
+    private static List<Object> spawnJson(List<MobIndex.Spawn> spawns, boolean byMap) {
+        List<Object> out = new ArrayList<>();
+        for (MobIndex.Spawn spawn : spawns) {
+            Map<String, Object> m = Json.obj();
+            m.put("count", spawn.count());
+            if (byMap) {
+                MapIndex.Entry map = MapIndex.byId(spawn.mapId());
+                m.put("mapId", spawn.mapId());
+                m.put("name", map == null ? "" : map.name());
+                m.put("street", map == null ? "" : map.street());
+            } else {
+                m.put("mobId", spawn.mobId());
+                m.put("name", MobIndex.nameOf(spawn.mobId()));
+            }
+            out.add(m);
+        }
+        return out;
     }
 
     // ------------------------------------------------------------------- 传送
