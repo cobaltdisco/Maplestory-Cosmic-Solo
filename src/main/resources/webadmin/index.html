@@ -1309,9 +1309,10 @@ function renderAssist() {
     // something you can read off instead of guess at.
     : `运行中 · 上一轮捡了 ${loot.lastPicked} / 范围内 ${loot.lastSeen} 件`
       + (loot.lastFresh ? ` · ${loot.lastFresh} 件刚掉下来（0.4 秒保护期，下一轮就捡）` : "")
-      + (loot.lastStuck ? ` · ${loot.lastStuck} 件捡不动（背包满 / 不需要的任务物品 / 不归你）` : "")
-      + (loot.lastSeen > loot.lastPicked + loot.lastFresh + loot.lastStuck
-          ? ` · ${loot.lastSeen - loot.lastPicked - loot.lastFresh - loot.lastStuck} 件被「每轮上限」挡下` : "")
+      + (loot.lastUnwanted ? ` · ${loot.lastUnwanted} 件是用不上的任务物品（跳过，不会再弹提示）` : "")
+      + (loot.lastStuck ? ` · ${loot.lastStuck} 件捡不动（背包满 / 不归你）` : "")
+      + (loot.lastSeen > loot.lastPicked + loot.lastFresh + loot.lastStuck + loot.lastUnwanted
+          ? ` · ${loot.lastSeen - loot.lastPicked - loot.lastFresh - loot.lastStuck - loot.lastUnwanted} 件被「每轮上限」挡下` : "")
       + ` · 累计 ${loot.totalPicked} 件`;
   if (loot) {
     $("lootRadius").value = loot.radius;

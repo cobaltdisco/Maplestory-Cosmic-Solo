@@ -55,6 +55,7 @@ public final class AutoLoot {
         volatile int lastSeen;
         volatile int lastFresh;
         volatile int lastStuck;
+        volatile int lastUnwanted;
         volatile long totalPicked;
         volatile String note = "";
 
@@ -108,6 +109,7 @@ public final class AutoLoot {
             m.put("lastSeen", s.lastSeen);
             m.put("lastFresh", s.lastFresh);
             m.put("lastStuck", s.lastStuck);
+            m.put("lastUnwanted", s.lastUnwanted);
             m.put("totalPicked", s.totalPicked);
             m.put("note", s.note);
             out.add(m);
@@ -135,7 +137,7 @@ public final class AutoLoot {
 
             long radiusSq = (long) session.options.radius() * session.options.radius();
             long now = System.currentTimeMillis();
-            int picked = 0, seen = 0, fresh = 0, stuck = 0, attempts = 0;
+            int picked = 0, seen = 0, fresh = 0, stuck = 0, unwanted = 0, attempts = 0;
 
             for (MapObject object : map.getMapObjects()) {
                 if (!(object instanceof MapItem drop)) {
@@ -153,6 +155,16 @@ public final class AutoLoot {
                 // be refused, and the next tick gets it regardless.
                 if (now - drop.getDropTime() < PICKUP_DELAY) {
                     fresh++;
+                    continue;
+                }
+                // A quest drop for a quest this character is not on is refused by pickupItem with
+                // "This item is not available for pick-up" - a message meant for someone who
+                // clicked it once, not for a loop retrying every drop several times a second.
+                // The same public check it makes is done here first, so the item is left alone
+                // and silently. It is re-evaluated every tick, so accepting the quest starts
+                // collecting them without touching this switch.
+                if (!chr.needQuestItem(drop.getQuest(), drop.getItemId())) {
+                    unwanted++;
                     continue;
                 }
                 if (attempts >= session.options.maxPerTick()) {
@@ -173,6 +185,7 @@ public final class AutoLoot {
             session.lastSeen = seen;
             session.lastFresh = fresh;
             session.lastStuck = stuck;
+            session.lastUnwanted = unwanted;
             session.totalPicked += picked;
         } catch (Exception e) {
             log.error("Web admin: auto loot tick failed for chr {}, switching it off",
