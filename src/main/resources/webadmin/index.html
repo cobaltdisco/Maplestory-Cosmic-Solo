@@ -260,6 +260,17 @@
       <button class="act primary" id="fameAdd" disabled>增加</button>
       <button class="act" id="fameSet" disabled>设为这个值</button>
     </div>
+
+    <h2 style="margin-top:28px">踢下线</h2>
+    <p class="note">
+      把目标角色断开连接。走的是 <code>Client.disconnect()</code>，和 GM 命令 <code>!dc</code> 同一条路——
+      <b>它会先把角色写进数据库再断开</b>，所以数据不会丢。
+      会话卡死（人已经不在了但列表里还挂着）时用这个，<b>不用重启服务端</b>。
+    </p>
+    <div class="row">
+      <button class="act" id="kickBtn" disabled>踢下线</button>
+      <span class="pill">自动保存是<b>每小时一次</b>；强杀服务端会丢掉这一小时内的进度，踢下线不会</span>
+    </div>
     <ul class="note" style="margin:0; padding-left:20px">
       <li>游戏自己的上下限是 <b>±30,000</b>（<code>Character.applyFame()</code> 写死的），
           超出会停在边界，不会报错。</li>
@@ -932,7 +943,20 @@ function renderFame() {
   $("fameNow").textContent = chr ? `${chr.name} 当前人气 ${chr.fame}` : "未选中角色";
   $("fameAdd").disabled = !chr;
   $("fameSet").disabled = !chr;
+  $("kickBtn").disabled = !chr;
 }
+
+$("kickBtn").addEventListener("click", async () => {
+  const chr = targetChr();
+  if (!chr || !confirm(`把 ${chr.name} 踢下线？断开前会先存档。`)) return;
+  const body = new URLSearchParams({ chrId: chr.id });
+  // The server waits to see whether the disconnect actually took, so this round trip is slow
+  // on purpose - the label says so rather than looking hung.
+  const res = await withBusy($("kickBtn"), "断开中…",
+    async () => (await fetch("api/kick", { method: "POST", body })).json());
+  toast(res.ok ? res.message : res.error, !!res.ok);
+  if (res.ok) { state = res; renderTarget(); renderOnline(); renderFame(); }
+});
 
 async function applyFame(button, body) {
   const res = await withBusy(button, "处理中…",

@@ -92,6 +92,7 @@ public class WebAdminServer {
             server.createContext("/api/pot", WebAdminServer::handlePot);
             server.createContext("/api/loot", WebAdminServer::handleLoot);
             server.createContext("/api/potions", WebAdminServer::handlePotions);
+            server.createContext("/api/kick", WebAdminServer::handleKick);
             server.createContext("/api/maps", WebAdminServer::handleMaps);
             server.createContext("/api/worldmap", WebAdminServer::handleWorldMap);
             server.createContext("/api/warp", WebAdminServer::handleWarp);
@@ -845,6 +846,57 @@ public class WebAdminServer {
         Map<String, Object> out = state();
         out.put("ok", true);
         out.put("message", message);
+        respondJson(exchange, out);
+    }
+
+    // ----------------------------------------------------------------- 踢下线
+
+    /** How long to give the disconnect before reporting whether it took. */
+    private static final long KICK_SETTLE_MS = 1500;
+
+    /**
+     * Disconnects a character the way the {@code !dc} command does - through
+     * {@link Client#disconnect}, whose path writes the character to the database on its way out.
+     * <p>
+     * That is the whole point of having this button. A stuck session could only be cleared by
+     * restarting the server, and a restart on Windows is a hard kill: no shutdown hook runs, and
+     * every character keeps only what the hourly autosave had already written.
+     */
+    private static void handleKick(HttpExchange exchange) throws IOException {
+        Map<String, String> form = takeToggle(exchange);
+        if (form == null) {
+            return;
+        }
+        int chrId = parseInt(form.get("chrId"), -1);
+        Character chr = MobVac.findOnlineCharacter(chrId);
+        if (chr == null) {
+            respondJson(exchange, error("that character is not online any more"));
+            return;
+        }
+        Client client = chr.getClient();
+        if (client == null) {
+            respondJson(exchange, error(chr.getName() + " has no session to disconnect"));
+            return;
+        }
+
+        String name = chr.getName();
+        client.disconnect(false, false);
+        // disconnect() hands the work to a worker thread, and a session that is already wedged
+        // may be refused by canDisconnect() and do nothing at all - so report what happened
+        // rather than what was asked for.
+        try {
+            Thread.sleep(KICK_SETTLE_MS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        boolean gone = MobVac.findOnlineCharacter(chrId) == null;
+        log.info("Web admin: kicked {} - {}", name, gone ? "disconnected" : "still online");
+
+        Map<String, Object> out = state();
+        out.put("ok", true);
+        out.put("message", gone
+                ? name + " 已下线，角色数据已写入数据库"
+                : name + " 仍然在线——这个会话可能已经卡死，只能重启服务端清掉");
         respondJson(exchange, out);
     }
 
