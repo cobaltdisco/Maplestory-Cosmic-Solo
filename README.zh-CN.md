@@ -73,6 +73,6 @@ Docker 跑不了，服务端锁了本机，Docker 里连不上。直接运行就
 ## 许可证
 
 AGPL-3.0，跟原版一样。这里大部分代码都是别人写的——从 OdinMS（2008）到 HeavenMS（2019）再到
-Cosmic，由 Ponk 维护。原版 README 保留在下面。
+Cosmic，由 Ponk 维护。
 
 不提供支持，不处理 issue。风险自担。
