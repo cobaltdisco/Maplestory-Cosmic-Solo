@@ -222,6 +222,7 @@
   <button data-tab="online">在线角色</button>
   <button data-tab="equip">赠送装备</button>
   <button data-tab="item">赠送物品</button>
+  <button data-tab="sell">卖装备</button>
   <button data-tab="vac">吸怪</button>
   <button data-tab="auto">挂机（攻击 / 喝药 / 捡取）</button>
   <button data-tab="codex">图鉴</button>
@@ -429,6 +430,44 @@
         </div>
         <button class="act primary" id="giftItem" style="width:100%; margin-top:14px" disabled>赠送给目标角色</button>
       </div>
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------ 卖装备 -->
+  <section id="tab-sell">
+    <h2>卖掉背包里的装备</h2>
+    <p class="note">
+      卖的是目标角色<b>装备栏（背包里）</b>的装备，<b>身上穿着的不在里面</b>。
+      价格就是这件装备自带的商店价，和在游戏里卖给 NPC 拿到的钱一样。
+      <b>现金装、锁定装不卖</b>——它们卖不出钱，点下去只是删掉。<b>卖了拿不回来。</b>
+      少数普通装备的商店价本来就是 0，标成「卖不出钱」，「全选有价的」不会选中它们。
+    </p>
+
+    <div class="row" style="margin-bottom:14px">
+      <button class="act" id="sellLoad" disabled>读取背包</button>
+      <span class="pill" id="sellWho">未选中角色</span>
+      <div><label>排序</label><select id="sellSort">
+        <option value="slot">按格子</option>
+        <option value="price">按售价从高到低</option>
+        <option value="level">按需求等级从低到高</option>
+      </select></div>
+      <div><label>&nbsp;</label><button class="act" id="sellAll">全选有价的</button></div>
+      <div><label>&nbsp;</label><button class="act" id="sellNone">取消全选</button></div>
+    </div>
+
+    <div class="scroll" style="max-height:60vh">
+      <table>
+        <thead><tr>
+          <th style="width:32px"></th><th></th><th>格子</th><th>编号</th><th>名称</th>
+          <th>等级</th><th>属性</th><th>剩余孔</th><th>售价</th>
+        </tr></thead>
+        <tbody id="sellBody"><tr><td colspan="9" class="empty">先选一个在线角色，再点「读取背包」。</td></tr></tbody>
+      </table>
+    </div>
+
+    <div class="row" style="margin-top:14px">
+      <button class="act primary" id="sellGo" disabled>卖掉选中的</button>
+      <span class="pill" id="sellStatus">还没读取</span>
     </div>
   </section>
 
@@ -793,6 +832,7 @@ async function loadState() {
   renderAttack();
   renderAssist();
   renderFame();
+  renderSell();
   // Load each catalog once it exists; the flags stop the 5s poll from re-fetching a list that
   // is legitimately empty because of the current filters.
   if (idx.equipStatus === "ready" && !equipsLoaded) { equipsLoaded = true; loadEquips(); }
@@ -1159,6 +1199,132 @@ $("giftItem").addEventListener("click", async () => {
 
 ["itInv", "itCat", "itNamed"].forEach(id => $(id).addEventListener("change", loadItems));
 $("itSearch").addEventListener("input", debounce(loadItems, 250));
+
+// --------------------------------------------------------------- 卖装备
+
+// The long labels in STATS would push every other column off the row, so the bag table uses the
+// abbreviations the game's own tooltips use.
+const STAT_SHORT = {
+  STR: "力", DEX: "敏", INT: "智", LUK: "运", PAD: "物攻", MAD: "魔攻",
+  PDD: "物防", MDD: "魔防", ACC: "命中", EVA: "回避", MHP: "HP", MMP: "MP",
+  Speed: "速度", Jump: "跳跃"
+};
+
+let sellRows = [], sellFor = null;
+// Picks are keyed slot:itemId, which is exactly what the sell request sends - so a slot that has
+// changed hands while the page sat open cannot be sold by mistake.
+const sellPicked = new Set();
+const sellKey = row => `${row.slot}:${row.id}`;
+
+function clearBag(why) {
+  sellRows = [];
+  sellFor = null;
+  sellPicked.clear();
+  $("sellBody").innerHTML = `<tr><td colspan="9" class="empty">${why}</td></tr>`;
+  $("sellStatus").textContent = "还没读取";
+  syncSellGo();
+}
+
+function renderSell() {
+  const chr = targetChr();
+  $("sellLoad").disabled = !chr;
+  $("sellWho").textContent = chr
+    ? `目标：${chr.name} · 身上 ${chr.meso.toLocaleString()} 金币`
+    : "未选中角色";
+  // A bag belongs to one character; switching targets makes the table a lie.
+  if (sellFor !== null && (!chr || chr.id !== sellFor)) {
+    clearBag("目标角色换了，重新点「读取背包」。");
+  }
+  syncSellGo();
+}
+
+async function loadBag() {
+  const chr = targetChr();
+  if (!chr) return toast("先选一个在线角色", false);
+  const res = await withBusy($("sellLoad"), "读取中…",
+    async () => (await fetch("api/bag?chrId=" + chr.id)).json());
+  if (!res.ok) { clearBag("读取失败。"); return toast(res.error, false); }
+  sellRows = res.equips;
+  sellFor = chr.id;
+  sellPicked.clear();
+  renderBag();
+  $("sellStatus").textContent = sellRows.length
+    ? `${res.name} 背包里 ${sellRows.length} 件（空格 ${res.free} 个），全卖掉能得 ${res.worth.toLocaleString()} 金币`
+    : `${res.name} 的装备栏是空的`;
+}
+
+function renderBag() {
+  const mode = $("sellSort").value;
+  const rows = sellRows.slice().sort((a, b) =>
+    mode === "price" ? b.price - a.price
+      : mode === "level" ? (a.reqLevel || 0) - (b.reqLevel || 0)
+        : a.slot - b.slot);
+
+  $("sellBody").innerHTML = rows.length ? rows.map(r => {
+    const key = sellKey(r);
+    // Signed on purpose: heavy armour really does carry a negative speed.
+    const stats = STATS.map(([k]) => r.stats[k]
+      ? `${STAT_SHORT[k]}${r.stats[k] > 0 ? "+" : ""}${r.stats[k]}` : "")
+      .filter(Boolean).join(" ");
+    return `<tr${r.blocked ? ' style="opacity:.45"' : ""}>
+      <td>${r.blocked ? "" :
+        `<input type="checkbox" data-pick="${key}"${sellPicked.has(key) ? " checked" : ""} style="width:auto">`}</td>
+      <td class="iconcell">${iconCell(r.id)}</td>
+      <td>${r.slot}</td>
+      <td>${r.id}</td>
+      <td>${esc(r.name)}${r.blocked ? ` <span class="tag">${esc(r.blocked)}</span>`
+        : r.price ? "" : ` <span class="tag bad">卖不出钱</span>`}</td>
+      <td>${r.reqLevel || "-"}</td>
+      <td>${esc(stats) || "-"}</td>
+      <td>${r.tuc}</td>
+      <td>${r.price.toLocaleString()}</td>
+    </tr>`;
+  }).join("") : `<tr><td colspan="9" class="empty">装备栏里什么都没有</td></tr>`;
+
+  $("sellBody").querySelectorAll("input[data-pick]").forEach(box =>
+    box.addEventListener("change", () => {
+      if (box.checked) sellPicked.add(box.dataset.pick); else sellPicked.delete(box.dataset.pick);
+      syncSellGo();
+    }));
+  syncSellGo();
+}
+
+function syncSellGo() {
+  const btn = $("sellGo");
+  const total = sellRows.filter(r => sellPicked.has(sellKey(r)))
+    .reduce((sum, r) => sum + r.price, 0);
+  btn.disabled = !sellPicked.size || !targetChr();
+  if (!btn.classList.contains("busy")) {
+    btn.textContent = sellPicked.size
+      ? `卖掉选中的 ${sellPicked.size} 件（共 ${total.toLocaleString()} 金币）`
+      : "卖掉选中的";
+  }
+  return total;
+}
+
+$("sellLoad").addEventListener("click", loadBag);
+$("sellSort").addEventListener("change", renderBag);
+// Worth something only. About 300 non-cash equips in the game are priced at nothing, and a shop
+// takes those for zero mesos - so one click that swept them in would be a delete button.
+$("sellAll").addEventListener("click", () => {
+  sellRows.filter(r => !r.blocked && r.price > 0).forEach(r => sellPicked.add(sellKey(r)));
+  renderBag();
+});
+$("sellNone").addEventListener("click", () => { sellPicked.clear(); renderBag(); });
+
+$("sellGo").addEventListener("click", async () => {
+  const chr = targetChr();
+  if (!chr || !sellPicked.size) return;
+  if (chr.id !== sellFor) return toast("这份背包不是当前目标角色的，请重新读取", false);
+  const total = syncSellGo();
+  if (!confirm(`卖掉 ${sellPicked.size} 件装备，得到 ${total.toLocaleString()} 金币。\n卖了拿不回来，确定吗？`)) return;
+
+  const body = new URLSearchParams({ chrId: chr.id, picks: [...sellPicked].join(",") });
+  const res = await withBusy($("sellGo"), "卖出中…",
+    async () => (await fetch("api/sell", { method: "POST", body })).json());
+  toast(res.ok ? res.message : res.error, !!res.ok);
+  if (res.ok) { loadState(); loadBag(); }
+});
 
 // -------------------------------------------------------------------- 吸怪
 
@@ -2005,6 +2171,11 @@ document.querySelectorAll("nav button").forEach(btn => btn.addEventListener("cli
     s.classList.toggle("on", s.id === "tab-" + btn.dataset.tab));
   // A hidden section measures zero, so the automatic zoom cannot be worked out until the tab is
   // actually on screen - and the map is drawn long before anyone opens it.
+  // The bag is only worth reading when someone is looking at it, and it goes stale as soon as the
+  // character picks anything up - so it is fetched on arrival rather than kept up to date.
+  if (btn.dataset.tab === "sell" && sellFor === null && targetChr()) {
+    loadBag();
+  }
   if (btn.dataset.tab === "teleport" && $("tpZoom").value === "auto"
       && tpWorld && zoomFor(tpWorld.width) !== tpDrawnZoom) {
     loadWorldMap();
@@ -2014,7 +2185,7 @@ document.querySelectorAll("nav button").forEach(btn => btn.addEventListener("cli
 $("refresh").addEventListener("click", () => withBusy($("refresh"), "刷新中…",
   () => Promise.all([loadState(), loadEquips(), loadItems(), loadMaps()])));
 $("target").addEventListener("change",
-  () => { renderOnline(); syncGiftButtons(); renderVac(); renderWhere(); renderScroll(); renderFame(); renderAttack(); renderAssist(); });
+  () => { renderOnline(); syncGiftButtons(); renderVac(); renderWhere(); renderScroll(); renderFame(); renderAttack(); renderAssist(); renderSell(); });
 
 loadState();
 setInterval(loadState, 5000);

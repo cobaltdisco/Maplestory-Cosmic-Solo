@@ -88,6 +88,8 @@ public class WebAdminServer {
             server.createContext("/api/equips", WebAdminServer::handleEquips);
             server.createContext("/api/items", WebAdminServer::handleItems);
             server.createContext("/api/gift", WebAdminServer::handleGift);
+            server.createContext("/api/bag", WebAdminServer::handleBag);
+            server.createContext("/api/sell", WebAdminServer::handleSell);
             server.createContext("/api/vac", WebAdminServer::handleVac);
             server.createContext("/api/scroll", WebAdminServer::handleScroll);
             server.createContext("/api/fame", WebAdminServer::handleFame);
@@ -1516,6 +1518,201 @@ public class WebAdminServer {
         // MAX_EQUIPMNT_STAT is what the server itself caps equip stats at when levelling them up.
         int cap = Math.min(Short.MAX_VALUE, YamlConfig.config.server.MAX_EQUIPMNT_STAT);
         setter.set((short) Math.max(0, Math.min(cap, value)));
+    }
+
+    // ----------------------------------------------------------------- 卖装备
+
+    /**
+     * What the character is carrying in the EQUIP tab, with what a shop would pay for each.
+     * <p>
+     * Only the bag: what is worn sits in the EQUIPPED inventory, and selling something off the
+     * character's body is a different, much easier mistake to make by accident.
+     * <p>
+     * The price is the item's own {@code info/price}, which is the number {@link server.Shop#sell}
+     * hands over - so what the panel quotes and what an NPC would pay are the same. Items with no
+     * price data at all report 0 rather than the -1 the lookup returns for them.
+     * <p>
+     * Stats come off the character's own copy rather than the catalogue, so a scrolled weapon shows
+     * what it actually has.
+     */
+    private static void handleBag(HttpExchange exchange) throws IOException {
+        Character chr = MobVac.findOnlineCharacter(parseInt(queryOf(exchange).get("chrId"), -1));
+        if (chr == null) {
+            respondJson(exchange, error("that character is not online any more"));
+            return;
+        }
+
+        ItemInformationProvider ii = ItemInformationProvider.getInstance();
+        List<Item> carried = new ArrayList<>(chr.getInventory(InventoryType.EQUIP).list());
+        carried.sort(Comparator.comparingInt(Item::getPosition));
+
+        List<Object> equips = new ArrayList<>();
+        long worth = 0;
+        for (Item item : carried) {
+            int itemId = item.getItemId();
+            int price = Math.max(0, ii.getPrice(itemId, 1));
+            String blocked = sellBlocker(ii, item);
+            if (blocked == null) {
+                worth += price;
+            }
+
+            Map<String, Object> m = Json.obj();
+            m.put("slot", item.getPosition());
+            m.put("id", itemId);
+            m.put("name", ii.getName(itemId));
+            m.put("price", price);
+            m.put("blocked", blocked);
+            Integer req = ii.getEquipLevelReq(itemId);
+            m.put("reqLevel", req == null ? 0 : req);
+            if (item instanceof Equip equip) {
+                m.put("tuc", equip.getUpgradeSlots());
+                m.put("stats", statsOf(equip));
+            } else {
+                m.put("tuc", 0);
+                m.put("stats", Json.obj());
+            }
+            equips.add(m);
+        }
+
+        Map<String, Object> out = Json.obj();
+        out.put("ok", true);
+        out.put("name", chr.getName());
+        out.put("meso", chr.getMeso());
+        out.put("free", freeSlots(chr, InventoryType.EQUIP));
+        out.put("worth", worth);
+        out.put("equips", equips);
+        respondJson(exchange, out);
+    }
+
+    /**
+     * Sells the picked equips, doing to the inventory exactly what {@link server.Shop#sell} does:
+     * drop the slot, then pay the item's price.
+     * <p>
+     * It cannot call {@code Shop.sell} itself. That method also fires shop-transaction packets, and
+     * the client has no shop window open to receive them.
+     * <p>
+     * Every pick carries the item id the page saw. A slot whose id no longer matches is skipped
+     * rather than sold: the character is playing while the panel is open, and slots move whenever
+     * the inventory is sorted or something is equipped.
+     */
+    private static void handleSell(HttpExchange exchange) throws IOException {
+        Map<String, String> form = takeToggle(exchange);
+        if (form == null) {
+            return;
+        }
+        Character chr = MobVac.findOnlineCharacter(parseInt(form.get("chrId"), -1));
+        if (chr == null) {
+            respondJson(exchange, error("that character is not online any more"));
+            return;
+        }
+        Client client = chr.getClient();
+        if (client == null) {
+            respondJson(exchange, error("that character has no live session"));
+            return;
+        }
+
+        ItemInformationProvider ii = ItemInformationProvider.getInstance();
+        Inventory inv = chr.getInventory(InventoryType.EQUIP);
+        long paid = 0;
+        int sold = 0;
+        List<String> names = new ArrayList<>();
+        List<String> skipped = new ArrayList<>();
+
+        for (String pick : form.getOrDefault("picks", "").split(",")) {
+            int colon = pick.indexOf(':');
+            if (colon < 0) {
+                continue;
+            }
+            short slot = (short) parseInt(pick.substring(0, colon), -1);
+            int itemId = parseInt(pick.substring(colon + 1), -1);
+            if (slot <= 0 || itemId <= 0) {
+                continue;
+            }
+
+            Item item = inv.getItem(slot);
+            if (item == null || item.getItemId() != itemId) {
+                skipped.add("格子 " + slot + " 已经不是原来那件了");
+                continue;
+            }
+            String blocked = sellBlocker(ii, item);
+            if (blocked != null) {
+                skipped.add(ii.getName(itemId) + "（" + blocked + "）");
+                continue;
+            }
+
+            int price = Math.max(0, ii.getPrice(itemId, 1));
+            InventoryManipulator.removeFromSlot(client, InventoryType.EQUIP, slot, (short) 1, false);
+            paid += price;
+            sold++;
+            names.add(ii.getName(itemId));
+        }
+
+        if (paid > 0) {
+            // One payment for the lot: gainMeso caps the character at the meso ceiling itself, and
+            // a single call means a single "+mesos" popup instead of one per item.
+            chr.gainMeso((int) Math.min(Integer.MAX_VALUE, paid), true);
+        }
+        if (sold > 0) {
+            log.info("Web admin: {} sold {} equips for {} mesos - {}", chr.getName(), sold, paid,
+                    String.join(", ", names));
+        }
+
+        StringBuilder message = new StringBuilder();
+        message.append(sold == 0 ? "一件都没卖出去" : "卖掉 " + sold + " 件，得到 " + paid + " 金币");
+        if (!skipped.isEmpty()) {
+            message.append("；跳过 ").append(skipped.size()).append(" 件：")
+                    .append(String.join("、", skipped));
+        }
+
+        Map<String, Object> out = state();
+        out.put("ok", true);
+        out.put("sold", sold);
+        out.put("paid", paid);
+        out.put("message", message.toString());
+        respondJson(exchange, out);
+    }
+
+    /**
+     * Why an equip must not be sold, or null when it can be.
+     * <p>
+     * Both cases would be a straight deletion rather than a sale: cash equips carry no price, and a
+     * locked item is one the game itself refuses to let go of. Neither is worth the mesos, and
+     * neither can be undone.
+     */
+    private static String sellBlocker(ItemInformationProvider ii, Item item) {
+        if (ii.isCash(item.getItemId())) {
+            return "现金装备";
+        }
+        if ((item.getFlag() & ItemConstants.LOCK) != 0) {
+            return "已锁定";
+        }
+        return null;
+    }
+
+    /** The equip's own non-zero stats, keyed the way the gift tab already names them. */
+    private static Map<String, Object> statsOf(Equip equip) {
+        Map<String, Object> stats = Json.obj();
+        putStat(stats, "STR", equip.getStr());
+        putStat(stats, "DEX", equip.getDex());
+        putStat(stats, "INT", equip.getInt());
+        putStat(stats, "LUK", equip.getLuk());
+        putStat(stats, "PAD", equip.getWatk());
+        putStat(stats, "MAD", equip.getMatk());
+        putStat(stats, "PDD", equip.getWdef());
+        putStat(stats, "MDD", equip.getMdef());
+        putStat(stats, "ACC", equip.getAcc());
+        putStat(stats, "EVA", equip.getAvoid());
+        putStat(stats, "MHP", equip.getHp());
+        putStat(stats, "MMP", equip.getMp());
+        putStat(stats, "Speed", equip.getSpeed());
+        putStat(stats, "Jump", equip.getJump());
+        return stats;
+    }
+
+    private static void putStat(Map<String, Object> stats, String key, short value) {
+        if (value != 0) {
+            stats.put(key, (int) value);
+        }
     }
 
     // ----------------------------------------------------------------- plumbing
