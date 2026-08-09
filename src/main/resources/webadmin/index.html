@@ -694,13 +694,18 @@
 const SLOT_NAMES = {
   "Cp": "帽子", "HrCp": "特殊帽子", "Af": "脸饰", "Ay": "眼饰", "Ae": "耳环",
   "Ma": "上衣", "MaPn": "套服", "Pn": "裤/裙", "So": "鞋", "GlGw": "手套",
-  "Gv": "手套(现金)", "Sr": "披风", "Si": "盾牌", "Wp": "武器", "WpSi": "武器(可带盾)",
-  "WpSp": "武器(低级)", "Ri": "戒指", "Pe": "项链", "Tm": "骑宠", "Sd": "鞍具",
+  "Gv": "手套(现金)", "Sr": "披风", "Si": "盾牌", "Wp": "武器",
+  "Ri": "戒指", "Pe": "项链", "Tm": "骑宠", "Sd": "鞍具",
   "Me": "勋章", "Be": "腰带", "Ba": "徽章", "": "宠物装备 / 无部位"
 };
+// WpSi and WpSp used to be listed here as separate slots. They are not: the server puts all three
+// weapon spellings in the same inventory position, and the split does not track "takes a shield"
+// either - the server decides that from the id band, which disagrees with the islot for claws,
+// knuckles, guns, spears and polearms. The server now folds them before the page sees them.
 // Weapon class by id band. Each label was checked against the actual item names in that band
 // rather than taken on faith - e.g. 133 holds the Zamadars, which are daggers.
-// 134/135/136/139 hold nothing, and 170 is entirely cash weapons (689 items, zero non-cash).
+// 134/135/136 hold nothing and 139 holds one no-name item (1392000), so none of them gets a label.
+// 170 is entirely cash weapons (769 items, zero non-cash).
 const WEAPON_NAMES = {
   130: "单手剑", 131: "单手斧", 132: "单手钝器", 133: "短剑",
   137: "短杖", 138: "长杖",
@@ -1119,8 +1124,19 @@ $("giftEquip").addEventListener("click", async () => {
   if (res.ok) loadState();
 });
 
-["eqJob", "eqGender", "eqSlot", "eqWeapon", "eqLevel", "eqJobStrict", "eqCash", "eqSort", "eqNamed"]
+["eqJob", "eqGender", "eqWeapon", "eqLevel", "eqJobStrict", "eqCash", "eqSort", "eqNamed"]
   .forEach(id => $(id).addEventListener("change", loadEquips));
+
+// The slot list is no longer narrowed by the weapon class, so 帽子 can now be picked while a weapon
+// class is still selected - a pair that matches nothing. Clear the weapon instead of letting the
+// list come back empty. It has its own handler rather than joining the list above because the
+// clearing has to happen before the request goes out, not after.
+$("eqSlot").addEventListener("change", () => {
+  if ($("eqSlot").value !== "" && $("eqSlot").value !== "Wp") {
+    $("eqWeapon").value = "";
+  }
+  loadEquips();
+});
 $("eqSearch").addEventListener("input", debounce(loadEquips, 250));
 
 // -------------------------------------------------------------- 赠送物品

@@ -221,6 +221,24 @@ public final class EquipIndex {
     }
 
     /**
+     * The equip slot the panel groups by, which folds the wz data's three weapon spellings -
+     * {@code Wp}, {@code WpSi}, {@code WpSp} - into one.
+     * <p>
+     * They are not three slots. {@link constants.inventory.EquipSlot} maps all three to inventory
+     * position -11, so the server itself already treats them as the same place on the character.
+     * <p>
+     * Nor does the split mean "takes a shield". {@code WpSi} holds the two-handed swords, axes and
+     * blunt weapons plus bows and crossbows, but claws, knuckles, guns, spears and polearms are
+     * spelled {@code Wp} - and {@link ItemInformationProvider#isTwoHanded} counts every one of those
+     * as two-handed too, so it is the id band and not the islot that decides whether a shield fits.
+     * A handful of items cross the line the other way (1402014 Thermometer, the seal cushions in
+     * 1422xxx): two-handed id bands carrying {@code Wp}. {@code WpSp} matches nothing at all in v83.
+     */
+    public static String slotFacet(Entry e) {
+        return e.slot().startsWith("Wp") ? "Wp" : e.slot();
+    }
+
+    /**
      * The weapon's class, as its id band: 130 one-handed sword, 145 bow, 170 cash weapon, and so
      * on - 0 for anything that is not a weapon.
      * <p>

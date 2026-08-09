@@ -452,13 +452,15 @@ public class WebAdminServer {
             // Counted before their own filter, so each option shows how many items it would yield
             // under the other filters - an option's own selection must not shrink its own number.
             int band = EquipIndex.weaponBand(e);
-            if (weapon < 0 || band == weapon) {
-                slotCounts.merge(e.slot(), 1, Integer::sum);
-            }
-            if (band > 0 && (slot.isEmpty() || slot.equals(e.slot()))) {
+            String facet = EquipIndex.slotFacet(e);
+            // The weapon filter is left out of this one on purpose. A weapon class only ever lives
+            // in the weapon slot, so counting under it would collapse the slot list to that single
+            // option and there would be no way back to hats without clearing the weapon first.
+            slotCounts.merge(facet, 1, Integer::sum);
+            if (band > 0 && (slot.isEmpty() || slot.equals(facet))) {
                 weaponCounts.merge(band, 1, Integer::sum);
             }
-            if (!slot.isEmpty() && !slot.equals(e.slot())) {
+            if (!slot.isEmpty() && !slot.equals(facet)) {
                 continue;
             }
             if (weapon >= 0 && band != weapon) {
@@ -512,7 +514,9 @@ public class WebAdminServer {
         Map<String, Object> m = Json.obj();
         m.put("id", e.id());
         m.put("name", e.name());
-        m.put("slot", e.slot());
+        // The folded slot, so the page never has to know that the wz data spells the weapon slot
+        // three different ways.
+        m.put("slot", EquipIndex.slotFacet(e));
         m.put("gender", e.gender());
         m.put("reqJob", e.reqJob());
         m.put("reqLevel", e.reqLevel());
