@@ -846,7 +846,10 @@ public class WebAdminServer {
             respondJson(exchange, error("没有选中任何这个角色会用的 buff 技能"));
             return;
         }
-        AutoBuff.start(chrId, new AutoBuff.Options(skills, parseInt(form.get("interval"), 1000)));
+        // The 10 is the default lead in seconds, not a radix - parseInt here is this file's own
+        // (String, fallback) helper.
+        AutoBuff.start(chrId, new AutoBuff.Options(skills,
+                parseInt(form.get("interval"), 1000), parseInt(form.get("lead"), 10)));
         respondToggled(exchange, "auto buff on for " + chr.getName()
                 + "（" + skills.size() + " 个技能）");
     }

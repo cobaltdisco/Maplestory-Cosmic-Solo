@@ -3511,6 +3511,26 @@ public class Character extends AbstractCharacterObject {
         }
     }
 
+    /**
+     * When the buff from this source is due to end, on the server clock, or -1 if it is not up.
+     * <p>
+     * This is the very entry {@code buffExpireTask} compares against, so anything wanting to act
+     * shortly before a buff lapses works from the server's own deadline instead of rebuilding one
+     * out of the effect's duration - which would quietly disagree wherever the applied duration was
+     * not the raw one.
+     */
+    public long getBuffExpiry(int sourceid) {
+        effLock.lock();
+        chrLock.lock();
+        try {
+            Long expiry = buffExpires.get(sourceid);
+            return expiry == null ? -1 : expiry;
+        } finally {
+            chrLock.unlock();
+            effLock.unlock();
+        }
+    }
+
     public boolean hasActiveBuff(int sourceid) {
         LinkedList<BuffStatValueHolder> allBuffs;
 

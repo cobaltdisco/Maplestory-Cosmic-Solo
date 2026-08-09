@@ -583,15 +583,18 @@
 
     <h2>自动 Buff</h2>
     <p class="note">
-      勾中的 buff 只要<b>不在身上就补</b>——技能到时和被怪驱散走的是同一条路，所以两种都管。
+      勾中的 buff <b>快到期就提前续上</b>，中间不会断；被怪驱散掉的也会立刻补回来。
       可以勾多个。<b>会有施法光效</b>，图标、时间条、属性加成和自己放的一模一样。
       列表只列<b>这个角色真的学过</b>的 buff 技能。
+      <br>提前的秒数<b>最多只用到这个 buff 一半的时长</b>——不然像轻功（12 秒）那种短 buff 会被反复重放。
+      填 0 = 不提前，掉了再补。
     </p>
 
     <div class="row" style="margin-bottom:10px">
       <button class="act" id="buffLoad" disabled>读取角色的 Buff 技能</button>
       <div><label>&nbsp;</label><button class="act" id="buffAll">全选（不含带提醒的）</button></div>
       <div><label>&nbsp;</label><button class="act" id="buffNone">取消全选</button></div>
+      <div><label>提前几秒续（0 = 不提前）</label><input id="buffLead" type="number" min="0" max="120" value="10" style="width:150px"></div>
       <div><label>间隔（毫秒）</label><input id="buffInterval" type="number" min="500" max="10000" step="100" value="1000" style="width:110px"></div>
     </div>
 
@@ -599,9 +602,9 @@
       <table>
         <thead><tr>
           <th style="width:32px"></th><th>技能</th><th>等级</th><th>持续</th>
-          <th>冷却</th><th>MP</th><th>现在</th><th>提醒</th>
+          <th>冷却</th><th>MP</th><th>现在</th><th>提前</th><th>提醒</th>
         </tr></thead>
-        <tbody id="buffBody"><tr><td colspan="8" class="empty">先选一个在线角色，再点「读取角色的 Buff 技能」。</td></tr></tbody>
+        <tbody id="buffBody"><tr><td colspan="9" class="empty">先选一个在线角色，再点「读取角色的 Buff 技能」。</td></tr></tbody>
       </table>
     </div>
 
@@ -1578,13 +1581,18 @@ async function loadBuffSkills() {
 function renderBuffList() {
   const body = $("buffBody");
   if (!buffRows.length) {
-    body.innerHTML = `<tr><td colspan="8" class="empty">${
+    body.innerHTML = `<tr><td colspan="9" class="empty">${
       buffFor === null ? "先选一个在线角色，再点「读取角色的 Buff 技能」。"
                        : "这个角色没有学过任何 buff 技能。"}</td></tr>`;
     syncBuffGo();
     return;
   }
-  body.innerHTML = buffRows.map(s => `
+  // The lead is capped at half the buff's own length on the server; showing what each skill will
+  // really get is more use than repeating the number that is already in the box.
+  const lead = Number($("buffLead").value) || 0;
+  body.innerHTML = buffRows.map(s => {
+    const realLead = Math.min(lead, Math.floor(s.duration / 2000));
+    return `
     <tr>
       <td><input type="checkbox" data-buff="${s.id}"${buffPicked.has(s.id) ? " checked" : ""} style="width:auto"></td>
       <td>${esc(s.name || s.id)}<br><span class="note" style="font-size:11px">${s.id}</span></td>
@@ -1592,9 +1600,11 @@ function renderBuffList() {
       <td>${s.duration > 0 ? Math.round(s.duration / 1000) + " 秒" : "-"}</td>
       <td>${s.cooldown > 0 ? s.cooldown + " 秒" : "-"}</td>
       <td>${s.mpCon || "-"}${s.hpCon ? ` <span class="tag">HP ${s.hpCon}</span>` : ""}</td>
-      <td>${s.active ? '<span class="tag">在身上</span>' : ""}</td>
+      <td>${s.active ? `<span class="tag">在身上${s.left >= 0 ? " · 剩 " + s.left + " 秒" : ""}</span>` : ""}</td>
+      <td>${!lead ? "-" : realLead < lead ? `<span class="tag">${realLead} 秒（按一半封顶）</span>` : realLead + " 秒"}</td>
       <td>${s.warning ? `<span class="tag bad">${esc(s.warning)}</span>` : ""}</td>
-    </tr>`).join("");
+    </tr>`;
+  }).join("");
   body.querySelectorAll("input[data-buff]").forEach(box =>
     box.addEventListener("change", () => {
       const id = Number(box.dataset.buff);
@@ -1629,9 +1639,11 @@ function renderBuff() {
   $("buffStatus").textContent = !chr ? "没有选中角色"
     : !running ? `未运行（目标：${chr.name}）`
     : (running.note ? `运行中 · ${running.note}` : `运行中 · ${running.skills.length} 个技能`)
-      + ` · 累计放了 ${running.cast} 次`;
+      + (running.lead ? ` · 提前 ${running.lead} 秒续` : " · 掉了再补")
+      + ` · 累计放了 ${running.cast} 次（其中 ${running.renewed} 次是提前续的）`;
   if (running) {
     $("buffInterval").value = running.interval;
+    $("buffLead").value = running.lead;
     // Rebuilt from the server after a reload, so the checkboxes match what is really armed.
     if (!buffPicked.size && running.skills.length) {
       running.skills.forEach(id => buffPicked.add(id));
@@ -1647,6 +1659,8 @@ $("buffAll").addEventListener("click", () => {
   renderBuffList();
 });
 $("buffNone").addEventListener("click", () => { buffPicked.clear(); renderBuffList(); });
+// The 提前 column is worked out from this box, so the table has to be redrawn when it moves.
+$("buffLead").addEventListener("input", () => { if (buffRows.length) renderBuffList(); });
 
 $("buffToggle").addEventListener("click", async () => {
   const chr = targetChr();
@@ -1655,7 +1669,7 @@ $("buffToggle").addEventListener("click", async () => {
   const body = new URLSearchParams(running
     ? { chrId: chr.id, enabled: "false" }
     : { chrId: chr.id, enabled: "true", skills: [...buffPicked].join(","),
-        interval: $("buffInterval").value });
+        interval: $("buffInterval").value, lead: $("buffLead").value });
   const res = await withBusy($("buffToggle"), running ? "停止中…" : "启动中…",
     async () => (await fetch("api/buff", { method: "POST", body })).json());
   toast(res.ok ? res.message : res.error, !!res.ok);

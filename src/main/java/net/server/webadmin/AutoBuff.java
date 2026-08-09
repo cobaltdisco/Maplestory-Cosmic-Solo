@@ -38,11 +38,15 @@ import static java.util.concurrent.TimeUnit.SECONDS;
  * play. So this sends {@code showOwnBuffEffect} to the caster first, exactly as the map-wide buff a
  * dying boss hands out already does.
  *
- * <h3>Noticing a buff is gone</h3>
+ * <h3>Noticing a buff is gone, or nearly gone</h3>
  * {@link Character#hasActiveBuff(int)} answers for both ways a buff can end. Running out and being
  * dispelled by a monster both finish in {@code cancelEffect}, which drops the entry from the same
  * table {@code hasActiveBuff} reads - so one check covers both, and there is nothing to subscribe
  * to.
+ * <p>
+ * Waiting for that leaves a gap, though: the buff is off for however long the tick takes to come
+ * round. So a buff is also renewed when it is within the lead time of running out, read from
+ * {@link Character#getBuffExpiry(int)} - the same deadline the game's own expiry sweeper uses.
  *
  * <h3>Cooldowns</h3>
  * Several buffs last less time than their own cooldown - Infinity is 40 seconds on a 600 second
@@ -59,10 +63,14 @@ public final class AutoBuff {
     /** Only one cast per tick, so a fresh set of buffs goes up as a sequence rather than a burst. */
     private static final int CASTS_PER_TICK = 1;
 
-    public record Options(Set<Integer> skills, int interval) {
+    private static final int MAX_LEAD = 120;
+
+    /** {@code lead} is how many seconds before a buff runs out to renew it; 0 waits for the gap. */
+    public record Options(Set<Integer> skills, int interval, int lead) {
         public Options {
             skills = Set.copyOf(skills);
             interval = Math.max(MIN_INTERVAL, Math.min(MAX_INTERVAL, interval));
+            lead = Math.max(0, Math.min(MAX_LEAD, lead));
         }
     }
 
@@ -71,6 +79,7 @@ public final class AutoBuff {
         final Options options;
         volatile ScheduledFuture<?> task;
         volatile long cast;
+        volatile long renewed;
         volatile String note = "";
 
         Session(int chrId, Options options) {
@@ -90,8 +99,8 @@ public final class AutoBuff {
         sessions.put(chrId, session);
         session.task = TimerManager.getInstance().register(() -> tick(session),
                 options.interval(), options.interval());
-        log.info("Web admin: auto buff on for chr {} ({} skills, every {}ms)",
-                chrId, options.skills().size(), options.interval());
+        log.info("Web admin: auto buff on for chr {} ({} skills, every {}ms, {}s lead)",
+                chrId, options.skills().size(), options.interval(), options.lead());
     }
 
     public static synchronized void stop(int chrId) {
@@ -100,7 +109,8 @@ public final class AutoBuff {
             if (session.task != null) {
                 session.task.cancel(false);
             }
-            log.info("Web admin: auto buff off for chr {} after {} casts", chrId, session.cast);
+            log.info("Web admin: auto buff off for chr {} after {} casts ({} of them renewals)",
+                    chrId, session.cast, session.renewed);
         }
     }
 
@@ -117,7 +127,9 @@ public final class AutoBuff {
             m.put("chrId", s.chrId);
             m.put("skills", new ArrayList<>(s.options.skills()));
             m.put("interval", s.options.interval());
+            m.put("lead", s.options.lead());
             m.put("cast", s.cast);
+            m.put("renewed", s.renewed);
             m.put("note", s.note);
             out.add(m);
         }
@@ -164,6 +176,11 @@ public final class AutoBuff {
             m.put("mpCon", effect.getMpCon());
             m.put("hpCon", effect.getHpCon());
             m.put("active", chr.hasActiveBuff(skill.getId()));
+            // A snapshot: the list is read on demand rather than polled, so this is right when the
+            // page asked and drifts from then on.
+            long expiry = chr.getBuffExpiry(skill.getId());
+            m.put("left", expiry < 0 ? -1
+                    : Math.max(0, (expiry - Server.getInstance().getCurrentTime()) / 1000));
             m.put("warning", warn(skill.getId(), effect));
             out.add(m);
         }
@@ -236,16 +253,11 @@ public final class AutoBuff {
                 return;
             }
 
+            long now = Server.getInstance().getCurrentTime();
+            int leadMs = session.options.lead() * 1000;
             int casts = 0;
             int cooling = 0, missing = 0, poor = 0;
             for (int skillId : session.options.skills()) {
-                if (chr.hasActiveBuff(skillId)) {
-                    continue;
-                }
-                if (chr.skillIsCooling(skillId)) {
-                    cooling++;
-                    continue;
-                }
                 Skill skill = SkillFactory.getSkill(skillId);
                 int level = skill == null ? 0 : chr.getSkillLevel(skill);
                 if (level <= 0) {
@@ -255,6 +267,17 @@ public final class AutoBuff {
                 StatEffect effect = skill.getEffect(level);
                 if (effect == null) {
                     missing++;
+                    continue;
+                }
+                boolean renewing = false;
+                if (chr.hasActiveBuff(skillId)) {
+                    if (!dueSoon(chr, skillId, effect, leadMs, now)) {
+                        continue;
+                    }
+                    renewing = true;
+                }
+                if (chr.skillIsCooling(skillId)) {
+                    cooling++;
                     continue;
                 }
                 // Checked here as well as inside applyHpMpChange so the panel can say why nothing
@@ -269,6 +292,9 @@ public final class AutoBuff {
                 casts++;
                 if (cast(chr, skillId, level, effect)) {
                     session.cast++;
+                    if (renewing) {
+                        session.renewed++;
+                    }
                 }
             }
 
@@ -279,6 +305,27 @@ public final class AutoBuff {
             log.error("Web admin: auto buff tick failed for chr {}, switching it off", session.chrId, e);
             stop(session.chrId);
         }
+    }
+
+    /**
+     * Whether a buff that is still up is close enough to the end to be renewed now.
+     * <p>
+     * Renewing costs nothing but the MP: {@code applyBuffEffect} cancels the running instance and
+     * re-applies the full duration, which is exactly what happens when a player re-casts a buff by
+     * hand, so the bar goes back to full rather than being extended by the remainder.
+     * <p>
+     * The lead is capped at half the buff's own length. A ten second lead on Nimble Feet, which
+     * lasts twelve, would otherwise mean re-casting it every couple of seconds forever.
+     */
+    private static boolean dueSoon(Character chr, int skillId, StatEffect effect, int leadMs, long now) {
+        if (leadMs <= 0) {
+            return false;
+        }
+        long expiry = chr.getBuffExpiry(skillId);
+        if (expiry < 0) {
+            return false;       // up, but with no deadline recorded - nothing to be early for
+        }
+        return expiry - now <= Math.min(leadMs, effect.getDuration() / 2L);
     }
 
     /** One cast, in the order the packet handler does it: cooldown, flash, effect. */
