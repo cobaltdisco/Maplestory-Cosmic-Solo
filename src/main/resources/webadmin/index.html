@@ -138,6 +138,16 @@
   .mobshot img { max-width: 64px; max-height: 64px; image-rendering: pixelated; }
   td.mobcell { width: 44px; padding: 2px 6px 2px 10px; }
   td.mobcell img { max-width: 40px; max-height: 36px; image-rendering: pixelated; vertical-align: middle; }
+  /* The jump-quest view. The drawing is the map's own coordinate space, so the box scrolls in
+     both directions rather than the picture being squashed to fit - a jump quest is four times
+     taller than it is wide and squashing it would destroy the one thing worth reading. */
+  .jqbox {
+    overflow: auto; border: 1px solid var(--line); border-radius: 8px;
+    background: var(--panel2); max-height: 72vh;
+  }
+  .jqbox svg { display: block; cursor: crosshair; }
+  .jqsplit { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 380px); gap: 16px; align-items: start; }
+  @media (max-width: 900px) { .jqsplit { grid-template-columns: minmax(0, 1fr); } }
   .mapsplit { display: grid; grid-template-columns: minmax(0, auto) minmax(260px, 1fr); gap: 16px; align-items: start; }
   @media (max-width: 900px) { .mapsplit { grid-template-columns: minmax(0, 1fr); } }
   /* overflow:hidden because .wm is exactly the picture: nothing should be drawn outside it, and
@@ -227,6 +237,7 @@
   <button data-tab="auto">挂机（攻击 / 喝药 / 捡取 / Buff）</button>
   <button data-tab="codex">图鉴</button>
   <button data-tab="teleport">传送</button>
+  <button data-tab="jq">跳跳</button>
   <button data-tab="scroll">砸卷</button>
 </nav>
 
@@ -704,6 +715,51 @@
     <p class="note" id="tpMapCount" style="margin-top:8px"></p>
   </section>
 
+  <!-- ------------------------------------------------------------ 跳跳 -->
+  <section id="tab-jq">
+    <h2>同图移动（跳跳）</h2>
+    <p class="note">
+      跳跳的难点是<b>在同一张图里往上爬</b>，而「传送」页签是图与图之间的，只会把你放回起点。
+      这里是<b>在当前这张图里换个位置</b>：点传送门列表里的「站过去」，或者直接点左边的图。
+      <br>点空中会<b>落到下面那块平台上</b>。会走一次换图流程，所以画面会闪一下重载。
+    </p>
+
+    <div class="row" style="margin-bottom:12px">
+      <span class="pill" id="jqWhere">未选中角色</span>
+      <button class="act" id="jqLoad" disabled>读取当前地图</button>
+      <div><label>放大</label><select id="jqZoom">
+        <option value="auto" selected>自动（撑满宽度，上下滚动）</option>
+        <option value="0.25">0.25×</option>
+        <option value="0.5">0.5×</option>
+        <option value="1">1×（原始坐标）</option>
+      </select></div>
+      <div><label>&nbsp;</label><label style="display:flex; gap:6px; align-items:center; color:var(--text); margin:0; padding:7px 0">
+        <input type="checkbox" id="jqNames" checked style="width:auto"> 标出传送门名字
+      </label></div>
+    </div>
+
+    <div class="jqsplit">
+      <div class="jqbox" id="jqBox"><p class="empty">先选一个在线角色，再点「读取当前地图」。</p></div>
+      <div>
+        <div class="card" style="margin-bottom:12px">
+          <h2 style="margin-top:0">直接填坐标</h2>
+          <div class="row">
+            <div><label>x</label><input id="jqX" type="number" style="width:110px"></div>
+            <div><label>y</label><input id="jqY" type="number" style="width:110px"></div>
+            <div><label>&nbsp;</label><button class="act primary" id="jqGo" disabled>站过去</button></div>
+          </div>
+        </div>
+        <div class="scroll" style="max-height:46vh">
+          <table>
+            <thead><tr><th>传送门</th><th>坐标</th><th>通向</th><th></th></tr></thead>
+            <tbody id="jqPortalBody"><tr><td colspan="4" class="empty">还没读取</td></tr></tbody>
+          </table>
+        </div>
+        <p class="note" id="jqLegend" style="margin-top:8px"></p>
+      </div>
+    </div>
+  </section>
+
   <!-- ------------------------------------------------------------ 砸卷 -->
   <section id="tab-scroll">
     <h2>砸卷必成</h2>
@@ -873,6 +929,7 @@ async function loadState() {
   renderFame();
   renderSell();
   renderBuff();
+  renderJq();
   // Load each catalog once it exists; the flags stop the 5s poll from re-fetching a list that
   // is legitimately empty because of the current filters.
   if (idx.equipStatus === "ready" && !equipsLoaded) { equipsLoaded = true; loadEquips(); }
@@ -1549,6 +1606,186 @@ function renderAssist() {
     }
   }
 }
+
+// -------------------------------------------------------------------- 跳跳
+
+let jqShape = null, jqFor = null;
+
+// Portal types as the wz spells them (pt). 0 is where the map drops you when you arrive without a
+// named portal; 2 is the kind that leads somewhere else; 1 is everything in-map, which in a jump
+// quest is the arrival points and the paired shortcut gates.
+const JQ_PORTAL_KIND = { 0: "出生点", 1: "图内", 2: "出口" };
+
+function jqSpan() {
+  return jqShape ? [jqShape.right - jqShape.left, jqShape.bottom - jqShape.top] : [0, 0];
+}
+
+// Fit the width and let the height scroll. Fitting the height instead would be the obvious reading
+// of "fit", but a jump quest is four times taller than it is wide, so it would shrink the picture
+// to a sixth and the platforms would blur together - and scrolling up a jump quest is how you think
+// about one anyway. Measured off the box's width, which the grid sets, not off its height, which
+// the drawing itself would set: that way round is circular.
+function jqZoomFor() {
+  const chosen = $("jqZoom").value;
+  if (chosen !== "auto") return Number(chosen);
+  const [spanX] = jqSpan();
+  const room = ($("jqBox").clientWidth || Math.round(window.innerWidth * 0.6)) - 4;
+  return spanX > 0 ? Math.max(0.05, Math.min(1, room / spanX)) : 1;
+}
+
+async function loadJq() {
+  const chr = targetChr();
+  if (!chr) return toast("先选一个在线角色", false);
+  const res = await withBusy($("jqLoad"), "读取中…",
+    async () => (await fetch("api/mapshape?mapId=" + chr.mapId)).json());
+  if (!res.ok) {
+    jqShape = null; jqFor = null;
+    $("jqBox").innerHTML = `<p class="empty">${esc(res.error)}</p>`;
+    $("jqPortalBody").innerHTML = `<tr><td colspan="4" class="empty">这张图没有可画的数据</td></tr>`;
+    return;
+  }
+  jqShape = res;
+  jqFor = chr.mapId;
+  drawJq();
+  renderJqPortals();
+}
+
+function drawJq(retry) {
+  if (!jqShape) return;
+  const [spanX, spanY] = jqSpan();
+  const zoom = jqZoomFor();
+  const names = $("jqNames").checked;
+  const chr = targetChr();
+
+  // Walls are drawn apart from floors: in a jump quest the vertical segments are what you bump
+  // into, and mixing them into one colour makes the picture unreadable.
+  const floors = [], walls = [];
+  for (const [x1, y1, x2, y2] of jqShape.footholds) {
+    (x1 === x2 ? walls : floors).push(
+      `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`);
+  }
+  const climbs = jqShape.climbs.map(([x, y1, y2, ladder]) =>
+    `<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke-dasharray="${ladder ? "6 4" : "2 6"}"/>`);
+
+  const portals = jqShape.portals.map(p => {
+    const colour = p.type === 2 ? "var(--ok)" : p.type === 0 ? "var(--accent)" : "var(--warn)";
+    const label = names
+      ? `<text x="${p.x + 10}" y="${p.y - 8}" fill="${colour}" font-size="${Math.round(13 / zoom)}">${esc(p.name)}</text>`
+      : "";
+    return `<g><circle cx="${p.x}" cy="${p.y}" r="${Math.round(6 / zoom)}" fill="${colour}"/>${label}</g>`;
+  });
+
+  // Given ids so the five-second poll can move the marker without rebuilding the drawing - a
+  // rebuild would reset the box's scroll position, and on a four-thousand pixel jump quest that
+  // means being thrown back to the bottom every five seconds.
+  const me = chr && chr.mapId === jqShape.mapId
+    ? `<g id="jqMe"><circle id="jqMeDot" cx="${chr.x}" cy="${chr.y}" r="${Math.round(9 / zoom)}" fill="none"
+         stroke="var(--bad)" stroke-width="${Math.round(3 / zoom)}"/>
+       <text id="jqMeTag" x="${chr.x + 14}" y="${chr.y + 5}" fill="var(--bad)" font-size="${Math.round(13 / zoom)}">${esc(chr.name)}</text></g>`
+    : "";
+
+  $("jqBox").innerHTML = `
+    <svg width="${Math.round(spanX * zoom)}" height="${Math.round(spanY * zoom)}"
+         viewBox="${jqShape.left} ${jqShape.top} ${spanX} ${spanY}">
+      <g stroke="var(--dim)" stroke-width="${Math.round(3 / zoom)}" stroke-linecap="round">${floors.join("")}</g>
+      <g stroke="var(--line)" stroke-width="${Math.round(2 / zoom)}">${walls.join("")}</g>
+      <g stroke="var(--accent)" stroke-width="${Math.round(2 / zoom)}">${climbs.join("")}</g>
+      ${portals.join("")}
+      ${me}
+    </svg>`;
+
+  $("jqLegend").innerHTML =
+    `平台 ${jqShape.footholds.length} 段 · 绳梯 ${jqShape.climbs.length} 条 · 传送门 ${jqShape.portals.length} 个`
+    + ` · <span style="color:var(--accent)">●</span> 出生点`
+    + ` <span style="color:var(--ok)">●</span> 出口`
+    + ` <span style="color:var(--warn)">●</span> 图内`
+    + (me ? ` · <span style="color:var(--bad)">○</span> 你在这` : "");
+
+  const svg = $("jqBox").querySelector("svg");
+  if (svg) svg.addEventListener("click", onJqClick);
+
+  // A tall drawing puts a vertical scrollbar inside the box, which narrows it *after* the zoom was
+  // worked out - leaving the picture a scrollbar's width too wide and a horizontal bar under it.
+  // Measure the now-narrower box and draw once more; the flag stops it bouncing.
+  if (!retry && $("jqZoom").value === "auto" && $("jqBox").scrollWidth > $("jqBox").clientWidth) {
+    drawJq(true);
+  }
+}
+
+// The viewBox maps the map's own coordinates onto the drawing, so the click only has to be scaled
+// by the box's rendered size - no separate zoom maths, and it stays right when the zoom changes.
+function onJqClick(event) {
+  if (!jqShape) return;
+  const rect = event.currentTarget.getBoundingClientRect();
+  const [spanX, spanY] = jqSpan();
+  const x = Math.round(jqShape.left + (event.clientX - rect.left) / rect.width * spanX);
+  const y = Math.round(jqShape.top + (event.clientY - rect.top) / rect.height * spanY);
+  $("jqX").value = x;
+  $("jqY").value = y;
+  place(x, y, false);
+}
+
+function renderJqPortals() {
+  if (!jqShape) return;
+  $("jqPortalBody").innerHTML = jqShape.portals.length ? jqShape.portals.map(p => {
+    const to = p.targetMapId
+      ? `${esc(p.targetMapName || "（无名）")}<br><span class="note" style="font-size:11px">${p.targetMapId}</span>`
+      : p.targetName ? `本图 · ${esc(p.targetName)}`
+      : p.script ? `脚本 ${esc(p.script)}` : "-";
+    return `<tr>
+      <td>${esc(p.name)}<br><span class="note" style="font-size:11px">${JQ_PORTAL_KIND[p.type] || ("pt " + p.type)}</span></td>
+      <td>${p.x}, ${p.y}</td>
+      <td>${to}</td>
+      <td><button class="act" data-jqp="${p.x},${p.y}">站过去</button></td>
+    </tr>`;
+  }).join("") : `<tr><td colspan="4" class="empty">这张图没有传送门</td></tr>`;
+
+  $("jqPortalBody").querySelectorAll("button[data-jqp]").forEach(btn =>
+    btn.addEventListener("click", () => {
+      const [x, y] = btn.dataset.jqp.split(",").map(Number);
+      // exact: a portal already sits on a platform, so snapping it down would be wrong.
+      place(x, y, true, btn);
+    }));
+}
+
+async function place(x, y, exact, button) {
+  const chr = targetChr();
+  if (!chr) return toast("先选一个在线角色", false);
+  const body = new URLSearchParams({ chrId: chr.id, x, y, exact: exact ? "true" : "false" });
+  const run = async () => (await fetch("api/place", { method: "POST", body })).json();
+  const res = button ? await withBusy(button, "…", run) : await run();
+  toast(res.ok ? res.message : res.error, !!res.ok);
+  if (res.ok) loadState();
+}
+
+function renderJq() {
+  const chr = targetChr();
+  $("jqLoad").disabled = !chr;
+  $("jqGo").disabled = !chr;
+  $("jqWhere").textContent = !chr ? "未选中角色"
+    : `${chr.name} · ${chr.mapName || chr.mapId}（${chr.mapId}） · 站在 (${chr.x}, ${chr.y})`;
+  // The drawing belongs to one map; walking into the next stage makes it a lie.
+  if (jqFor !== null && (!chr || chr.mapId !== jqFor)) {
+    jqShape = null;
+    jqFor = null;
+    $("jqBox").innerHTML = `<p class="empty">换地图了，重新点「读取当前地图」。</p>`;
+    $("jqPortalBody").innerHTML = `<tr><td colspan="4" class="empty">还没读取</td></tr>`;
+    $("jqLegend").textContent = "";
+    return;
+  }
+  const dot = $("jqMeDot"), tag = $("jqMeTag");
+  if (chr && dot && tag) {
+    dot.setAttribute("cx", chr.x);
+    dot.setAttribute("cy", chr.y);
+    tag.setAttribute("x", chr.x + 14);
+    tag.setAttribute("y", chr.y + 5);
+  }
+}
+
+$("jqLoad").addEventListener("click", loadJq);
+$("jqZoom").addEventListener("change", drawJq);
+$("jqNames").addEventListener("change", drawJq);
+$("jqGo").addEventListener("click", () => place(Number($("jqX").value), Number($("jqY").value), false, $("jqGo")));
 
 // ---------------------------------------------------------------- 自动 Buff
 
@@ -2358,6 +2595,15 @@ document.querySelectorAll("nav button").forEach(btn => btn.addEventListener("cli
   if (btn.dataset.tab === "auto" && buffFor === null && targetChr()) {
     loadBuffSkills();
   }
+  if (btn.dataset.tab === "jq") {
+    // Same zero-measurement trap as the world map: a hidden box has no height, so the automatic
+    // zoom could not have been worked out before the tab was on screen.
+    if (jqFor === null && targetChr()) {
+      loadJq();
+    } else if (jqShape && $("jqZoom").value === "auto") {
+      drawJq();
+    }
+  }
   if (btn.dataset.tab === "teleport" && $("tpZoom").value === "auto"
       && tpWorld && zoomFor(tpWorld.width) !== tpDrawnZoom) {
     loadWorldMap();
@@ -2367,7 +2613,7 @@ document.querySelectorAll("nav button").forEach(btn => btn.addEventListener("cli
 $("refresh").addEventListener("click", () => withBusy($("refresh"), "刷新中…",
   () => Promise.all([loadState(), loadEquips(), loadItems(), loadMaps()])));
 $("target").addEventListener("change",
-  () => { renderOnline(); syncGiftButtons(); renderVac(); renderWhere(); renderScroll(); renderFame(); renderAttack(); renderAssist(); renderSell(); renderBuff(); });
+  () => { renderOnline(); syncGiftButtons(); renderVac(); renderWhere(); renderScroll(); renderFame(); renderAttack(); renderAssist(); renderSell(); renderBuff(); renderJq(); });
 
 loadState();
 setInterval(loadState, 5000);

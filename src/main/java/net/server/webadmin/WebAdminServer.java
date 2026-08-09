@@ -23,8 +23,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import server.ItemInformationProvider;
 import server.StatEffect;
+import server.maps.Foothold;
 import server.maps.MapleMap;
 
+import java.awt.Point;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -104,6 +106,8 @@ public class WebAdminServer {
             server.createContext("/api/maps", WebAdminServer::handleMaps);
             server.createContext("/api/worldmap", WebAdminServer::handleWorldMap);
             server.createContext("/api/warp", WebAdminServer::handleWarp);
+            server.createContext("/api/mapshape", WebAdminServer::handleMapShape);
+            server.createContext("/api/place", WebAdminServer::handlePlace);
             server.createContext("/api/mobs", WebAdminServer::handleMobs);
             server.createContext("/api/mob", WebAdminServer::handleMob);
             server.createContext("/api/mapmobs", WebAdminServer::handleMapMobs);
@@ -285,6 +289,9 @@ public class WebAdminServer {
         p.put("mapId", chr.getMapId());
         MapleMap map = chr.getMap();
         p.put("mapName", map == null ? "" : map.getMapName());
+        // So the jump-quest view can show where on the map the character is standing.
+        p.put("x", chr.getPosition() == null ? 0 : chr.getPosition().x);
+        p.put("y", chr.getPosition() == null ? 0 : chr.getPosition().y);
         p.put("freeEquip", freeSlots(chr, InventoryType.EQUIP));
         p.put("freeUse", freeSlots(chr, InventoryType.USE));
         p.put("freeEtc", freeSlots(chr, InventoryType.ETC));
@@ -1433,6 +1440,127 @@ public class WebAdminServer {
         Map<String, Object> out = Json.obj();
         out.put("ok", true);
         out.put("message", chr.getName() + " → " + name + "（" + mapId + "）");
+        respondJson(exchange, out);
+    }
+
+    // ------------------------------------------------------- 同图移动（跳跳）
+
+    /** The platforms, ropes and portals of one map, for the panel to draw and click on. */
+    private static void handleMapShape(HttpExchange exchange) throws IOException {
+        int mapId = parseInt(queryOf(exchange).get("mapId"), -1);
+        MapShape.Shape shape = mapId < 0 ? null : MapShape.of(mapId);
+        if (shape == null) {
+            respondJson(exchange, error("Map.wz has no shape data for map " + mapId));
+            return;
+        }
+
+        List<Object> footholds = new ArrayList<>();
+        for (MapShape.Line f : shape.footholds()) {
+            footholds.add(List.of(f.x1(), f.y1(), f.x2(), f.y2()));
+        }
+        List<Object> climbs = new ArrayList<>();
+        for (MapShape.Climb c : shape.climbs()) {
+            climbs.add(List.of(c.x(), c.y1(), c.y2(), c.ladder() ? 1 : 0));
+        }
+        List<Object> portals = new ArrayList<>();
+        for (MapShape.Portal p : shape.portals()) {
+            Map<String, Object> m = Json.obj();
+            m.put("name", p.name());
+            m.put("type", p.type());
+            m.put("x", p.x());
+            m.put("y", p.y());
+            m.put("script", p.script());
+            // MapId.NONE is the "no destination of its own" marker, and it reads better as nothing
+            // than as 999999999.
+            boolean leadsAway = p.targetMapId() > 0 && p.targetMapId() != 999999999;
+            m.put("targetMapId", leadsAway ? p.targetMapId() : 0);
+            m.put("targetName", p.targetName());
+            MapIndex.Entry entry = leadsAway ? MapIndex.byId(p.targetMapId()) : null;
+            m.put("targetMapName", entry == null ? "" : entry.name());
+            portals.add(m);
+        }
+
+        MapIndex.Entry here = MapIndex.byId(mapId);
+        Map<String, Object> out = Json.obj();
+        out.put("ok", true);
+        out.put("mapId", mapId);
+        out.put("mapName", here == null ? "" : here.name());
+        out.put("left", shape.left());
+        out.put("top", shape.top());
+        out.put("right", shape.right());
+        out.put("bottom", shape.bottom());
+        out.put("footholds", footholds);
+        out.put("climbs", climbs);
+        out.put("portals", portals);
+        respondJson(exchange, out);
+    }
+
+    /**
+     * Puts the character down somewhere else on the map it is already standing on.
+     * <p>
+     * This is the one thing the map-to-map warp cannot do, and the only way the server has to move
+     * a player at all: movement is the client's to decide, and {@code MovePlayerHandler} only ever
+     * records where the client says it went and repeats it to everyone else. So a jump quest is
+     * skipped by re-entering the same map at a different point, not by walking there.
+     * <p>
+     * The landing spot is snapped down onto the platform below the click, through the map's own
+     * {@code findBelow} - the same lookup the game uses to decide what a character is standing on -
+     * so a click in mid-air lands where a fall from it would.
+     * <p>
+     * Deliberately does not call {@code saveLocationOnWarp}: the saved location is what a return
+     * scroll goes back to, and overwriting it with a spot halfway up a jump quest would make the
+     * panel's own map-to-map teleport lose the place it was meant to preserve.
+     */
+    private static void handlePlace(HttpExchange exchange) throws IOException {
+        Map<String, String> form = takeToggle(exchange);
+        if (form == null) {
+            return;
+        }
+        Character chr = MobVac.findOnlineCharacter(parseInt(form.get("chrId"), -1));
+        if (chr == null) {
+            respondJson(exchange, error("that character is not online any more"));
+            return;
+        }
+        if (!chr.isLoggedinWorld()) {
+            respondJson(exchange, error(chr.getName() + " 不在地图上（商城 / 拍卖场里）"));
+            return;
+        }
+        if (!chr.isAlive()) {
+            respondJson(exchange, error(chr.getName() + " is dead - revive first"));
+            return;
+        }
+        MapleMap map = chr.getMap();
+        if (map == null) {
+            respondJson(exchange, error("that character is not on a map"));
+            return;
+        }
+
+        int x = parseInt(form.get("x"), Integer.MIN_VALUE);
+        int y = parseInt(form.get("y"), Integer.MIN_VALUE);
+        if (x == Integer.MIN_VALUE || y == Integer.MIN_VALUE) {
+            respondJson(exchange, error("x / y missing"));
+            return;
+        }
+
+        // A portal's own position already sits on a platform, so it is used as given; only a free
+        // click needs snapping.
+        int landY = y;
+        if (!"true".equalsIgnoreCase(form.get("exact"))) {
+            Foothold below = map.getFootholds().findBelow(new Point(x, y));
+            if (below != null) {
+                landY = below.calculateFooting(x);
+            }
+        }
+
+        chr.changeMap(map, new Point(x, landY));
+        log.info("Web admin: placed {} at ({}, {}) on map {}", chr.getName(), x, landY, map.getId());
+
+        Map<String, Object> out = Json.obj();
+        out.put("ok", true);
+        out.put("x", x);
+        out.put("y", landY);
+        out.put("message", chr.getName() + " → (" + x + ", " + landY + ")"
+                + (landY != y ? "（落在下面的平台上）" : ""));
         respondJson(exchange, out);
     }
 
