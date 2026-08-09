@@ -98,6 +98,8 @@ public class WebAdminServer {
             server.createContext("/api/pot", WebAdminServer::handlePot);
             server.createContext("/api/loot", WebAdminServer::handleLoot);
             server.createContext("/api/potions", WebAdminServer::handlePotions);
+            server.createContext("/api/buffskills", WebAdminServer::handleBuffSkills);
+            server.createContext("/api/buff", WebAdminServer::handleBuff);
             server.createContext("/api/kick", WebAdminServer::handleKick);
             server.createContext("/api/maps", WebAdminServer::handleMaps);
             server.createContext("/api/worldmap", WebAdminServer::handleWorldMap);
@@ -129,6 +131,7 @@ public class WebAdminServer {
         AutoAttack.stopAll();
         AutoPot.stopAll();
         AutoLoot.stopAll();
+        AutoBuff.stopAll();
         PerfectScroll.stopAll();
         if (server != null) {
             server.stop(1);
@@ -261,6 +264,7 @@ public class WebAdminServer {
         out.put("attacks", AutoAttack.describe());
         out.put("pots", AutoPot.describe());
         out.put("loots", AutoLoot.describe());
+        out.put("buffs", AutoBuff.describe());
         out.put("scrolls", PerfectScroll.describe());
         return out;
     }
@@ -804,6 +808,47 @@ public class WebAdminServer {
                 parseIds(form.get("only")),
                 !"false".equalsIgnoreCase(form.get("mesos"))));
         respondToggled(exchange, "auto loot on for " + chr.getName());
+    }
+
+    /** The buffs this character has learnt, and which of them are up right now. */
+    private static void handleBuffSkills(HttpExchange exchange) throws IOException {
+        Character chr = MobVac.findOnlineCharacter(parseInt(queryOf(exchange).get("chrId"), -1));
+        if (chr == null) {
+            respondJson(exchange, error("that character is not online any more"));
+            return;
+        }
+        Map<String, Object> out = Json.obj();
+        out.put("ok", true);
+        out.put("skills", AutoBuff.offer(chr));
+        respondJson(exchange, out);
+    }
+
+    private static void handleBuff(HttpExchange exchange) throws IOException {
+        Map<String, String> form = takeToggle(exchange);
+        if (form == null) {
+            return;
+        }
+        int chrId = parseInt(form.get("chrId"), -1);
+        if (!"true".equalsIgnoreCase(form.get("enabled"))) {
+            AutoBuff.stop(chrId);
+            respondToggled(exchange, "auto buff off");
+            return;
+        }
+        Character chr = MobVac.findOnlineCharacter(chrId);
+        if (chr == null) {
+            respondJson(exchange, error("that character is not online any more"));
+            return;
+        }
+        // Filtered against what the character can actually cast: the page may have been open since
+        // before a job advance, or be describing a different character altogether.
+        Set<Integer> skills = AutoBuff.keepCastable(chr, parseIds(form.get("skills")));
+        if (skills.isEmpty()) {
+            respondJson(exchange, error("没有选中任何这个角色会用的 buff 技能"));
+            return;
+        }
+        AutoBuff.start(chrId, new AutoBuff.Options(skills, parseInt(form.get("interval"), 1000)));
+        respondToggled(exchange, "auto buff on for " + chr.getName()
+                + "（" + skills.size() + " 个技能）");
     }
 
     /**

@@ -1800,6 +1800,19 @@ public class StatEffect {
         return skill;
     }
 
+    /**
+     * Whether this effect sits on the character for a while instead of happening once.
+     * <p>
+     * For a skill this is exactly the {@code isBuff} decision {@link client.SkillFactory} makes
+     * while loading - {@code skillType == 2}, or an effect node with no hit/ball, plus its own list
+     * of exceptions - which arrives here as the constructor's {@code overTime} argument. It is the
+     * flag {@link #applyTo} itself gates the buff branch on, so there is no more authoritative
+     * answer to "is this a buff" available.
+     */
+    public boolean isOverTime() {
+        return overTime;
+    }
+
     public int getSourceId() {
         return sourceid;
     }

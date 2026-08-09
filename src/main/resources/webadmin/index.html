@@ -224,7 +224,7 @@
   <button data-tab="item">赠送物品</button>
   <button data-tab="sell">卖装备</button>
   <button data-tab="vac">吸怪</button>
-  <button data-tab="auto">挂机（攻击 / 喝药 / 捡取）</button>
+  <button data-tab="auto">挂机（攻击 / 喝药 / 捡取 / Buff）</button>
   <button data-tab="codex">图鉴</button>
   <button data-tab="teleport">传送</button>
   <button data-tab="scroll">砸卷</button>
@@ -579,6 +579,37 @@
       <span class="pill" id="lootStatus">未运行</span>
     </div>
 
+    <hr style="border:none; border-top:1px solid var(--line); margin:30px 0">
+
+    <h2>自动 Buff</h2>
+    <p class="note">
+      勾中的 buff 只要<b>不在身上就补</b>——技能到时和被怪驱散走的是同一条路，所以两种都管。
+      可以勾多个。<b>会有施法光效</b>，图标、时间条、属性加成和自己放的一模一样。
+      列表只列<b>这个角色真的学过</b>的 buff 技能。
+    </p>
+
+    <div class="row" style="margin-bottom:10px">
+      <button class="act" id="buffLoad" disabled>读取角色的 Buff 技能</button>
+      <div><label>&nbsp;</label><button class="act" id="buffAll">全选（不含带提醒的）</button></div>
+      <div><label>&nbsp;</label><button class="act" id="buffNone">取消全选</button></div>
+      <div><label>间隔（毫秒）</label><input id="buffInterval" type="number" min="500" max="10000" step="100" value="1000" style="width:110px"></div>
+    </div>
+
+    <div class="scroll" style="max-height:46vh">
+      <table>
+        <thead><tr>
+          <th style="width:32px"></th><th>技能</th><th>等级</th><th>持续</th>
+          <th>冷却</th><th>MP</th><th>现在</th><th>提醒</th>
+        </tr></thead>
+        <tbody id="buffBody"><tr><td colspan="8" class="empty">先选一个在线角色，再点「读取角色的 Buff 技能」。</td></tr></tbody>
+      </table>
+    </div>
+
+    <div class="row" style="margin-top:14px">
+      <button class="act primary" id="buffToggle" disabled>开始自动 Buff</button>
+      <span class="pill" id="buffStatus">未运行</span>
+    </div>
+
   </section>
 
   <!-- ------------------------------------------------------------ 图鉴 -->
@@ -838,6 +869,7 @@ async function loadState() {
   renderAssist();
   renderFame();
   renderSell();
+  renderBuff();
   // Load each catalog once it exists; the flags stop the 5s poll from re-fetching a list that
   // is legitimately empty because of the current filters.
   if (idx.equipStatus === "ready" && !equipsLoaded) { equipsLoaded = true; loadEquips(); }
@@ -1514,6 +1546,121 @@ function renderAssist() {
     }
   }
 }
+
+// ---------------------------------------------------------------- 自动 Buff
+
+let buffRows = [], buffFor = null;
+const buffPicked = new Set();
+
+function activeBuff() {
+  const chr = targetChr();
+  return chr && state ? (state.buffs || []).find(b => b.chrId === chr.id) : null;
+}
+
+async function loadBuffSkills() {
+  const chr = targetChr();
+  if (!chr) return toast("先选一个在线角色", false);
+  const res = await withBusy($("buffLoad"), "读取中…",
+    async () => (await fetch("api/buffskills?chrId=" + chr.id)).json());
+  if (!res.ok) { buffRows = []; buffFor = null; renderBuffList(); return toast(res.error, false); }
+  buffRows = res.skills;
+  buffFor = chr.id;
+  // A running session is the truth about what is armed; the checkboxes follow it rather than
+  // the other way round, so a page reload does not silently disarm half the list.
+  const running = activeBuff();
+  if (running) {
+    buffPicked.clear();
+    (running.skills || []).forEach(id => buffPicked.add(id));
+  }
+  renderBuffList();
+}
+
+function renderBuffList() {
+  const body = $("buffBody");
+  if (!buffRows.length) {
+    body.innerHTML = `<tr><td colspan="8" class="empty">${
+      buffFor === null ? "先选一个在线角色，再点「读取角色的 Buff 技能」。"
+                       : "这个角色没有学过任何 buff 技能。"}</td></tr>`;
+    syncBuffGo();
+    return;
+  }
+  body.innerHTML = buffRows.map(s => `
+    <tr>
+      <td><input type="checkbox" data-buff="${s.id}"${buffPicked.has(s.id) ? " checked" : ""} style="width:auto"></td>
+      <td>${esc(s.name || s.id)}<br><span class="note" style="font-size:11px">${s.id}</span></td>
+      <td>${s.level}</td>
+      <td>${s.duration > 0 ? Math.round(s.duration / 1000) + " 秒" : "-"}</td>
+      <td>${s.cooldown > 0 ? s.cooldown + " 秒" : "-"}</td>
+      <td>${s.mpCon || "-"}${s.hpCon ? ` <span class="tag">HP ${s.hpCon}</span>` : ""}</td>
+      <td>${s.active ? '<span class="tag">在身上</span>' : ""}</td>
+      <td>${s.warning ? `<span class="tag bad">${esc(s.warning)}</span>` : ""}</td>
+    </tr>`).join("");
+  body.querySelectorAll("input[data-buff]").forEach(box =>
+    box.addEventListener("change", () => {
+      const id = Number(box.dataset.buff);
+      if (box.checked) buffPicked.add(id); else buffPicked.delete(id);
+      syncBuffGo();
+    }));
+  syncBuffGo();
+}
+
+function syncBuffGo() {
+  const chr = targetChr();
+  const running = activeBuff();
+  const btn = $("buffToggle");
+  btn.disabled = !chr || (!running && !buffPicked.size);
+  if (!btn.classList.contains("busy")) {
+    btn.textContent = running ? "停止自动 Buff"
+      : buffPicked.size ? `开始自动 Buff（${buffPicked.size} 个）` : "开始自动 Buff";
+  }
+  btn.classList.toggle("primary", !running);
+}
+
+function renderBuff() {
+  const chr = targetChr();
+  const running = activeBuff();
+  $("buffLoad").disabled = !chr;
+  if (buffFor !== null && (!chr || chr.id !== buffFor)) {
+    buffRows = [];
+    buffFor = null;
+    buffPicked.clear();
+    renderBuffList();
+  }
+  $("buffStatus").textContent = !chr ? "没有选中角色"
+    : !running ? `未运行（目标：${chr.name}）`
+    : (running.note ? `运行中 · ${running.note}` : `运行中 · ${running.skills.length} 个技能`)
+      + ` · 累计放了 ${running.cast} 次`;
+  if (running) {
+    $("buffInterval").value = running.interval;
+    // Rebuilt from the server after a reload, so the checkboxes match what is really armed.
+    if (!buffPicked.size && running.skills.length) {
+      running.skills.forEach(id => buffPicked.add(id));
+      renderBuffList();
+    }
+  }
+  syncBuffGo();
+}
+
+$("buffLoad").addEventListener("click", loadBuffSkills);
+$("buffAll").addEventListener("click", () => {
+  buffRows.filter(s => !s.warning).forEach(s => buffPicked.add(s.id));
+  renderBuffList();
+});
+$("buffNone").addEventListener("click", () => { buffPicked.clear(); renderBuffList(); });
+
+$("buffToggle").addEventListener("click", async () => {
+  const chr = targetChr();
+  if (!chr) return;
+  const running = activeBuff();
+  const body = new URLSearchParams(running
+    ? { chrId: chr.id, enabled: "false" }
+    : { chrId: chr.id, enabled: "true", skills: [...buffPicked].join(","),
+        interval: $("buffInterval").value });
+  const res = await withBusy($("buffToggle"), running ? "停止中…" : "启动中…",
+    async () => (await fetch("api/buff", { method: "POST", body })).json());
+  toast(res.ok ? res.message : res.error, !!res.ok);
+  if (res.ok) { state = res; renderBuff(); }
+});
 
 function potBody(chr) {
   return new URLSearchParams({
@@ -2192,6 +2339,11 @@ document.querySelectorAll("nav button").forEach(btn => btn.addEventListener("cli
   if (btn.dataset.tab === "sell" && sellFor === null && targetChr()) {
     loadBag();
   }
+  // Same reasoning for the buff list: it is per-character and goes stale the moment a buff runs
+  // out, so it is read when the tab opens rather than kept fresh by the poll.
+  if (btn.dataset.tab === "auto" && buffFor === null && targetChr()) {
+    loadBuffSkills();
+  }
   if (btn.dataset.tab === "teleport" && $("tpZoom").value === "auto"
       && tpWorld && zoomFor(tpWorld.width) !== tpDrawnZoom) {
     loadWorldMap();
@@ -2201,7 +2353,7 @@ document.querySelectorAll("nav button").forEach(btn => btn.addEventListener("cli
 $("refresh").addEventListener("click", () => withBusy($("refresh"), "刷新中…",
   () => Promise.all([loadState(), loadEquips(), loadItems(), loadMaps()])));
 $("target").addEventListener("change",
-  () => { renderOnline(); syncGiftButtons(); renderVac(); renderWhere(); renderScroll(); renderFame(); renderAttack(); renderAssist(); renderSell(); });
+  () => { renderOnline(); syncGiftButtons(); renderVac(); renderWhere(); renderScroll(); renderFame(); renderAttack(); renderAssist(); renderSell(); renderBuff(); });
 
 loadState();
 setInterval(loadState, 5000);
