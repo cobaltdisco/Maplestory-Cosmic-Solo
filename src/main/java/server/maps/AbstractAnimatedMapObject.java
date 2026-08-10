@@ -51,16 +51,28 @@ public abstract class AbstractAnimatedMapObject extends AbstractMapObject implem
         return Math.abs(stance) % 2 == 1;
     }
 
+    /**
+     * The foothold to report in an idle movement. Zero means "on nothing", which is what the
+     * template below is built with; anything that stands on the map's geometry should say so, or
+     * the receiving client will read the move as a step into mid-air and apply gravity to it.
+     */
+    protected int getIdleMovementFh() {
+        return 0;
+    }
+
     public InPacket getIdleMovement() {
         final byte[] idleMovementBytes = IDLE_MOVEMENT_PACKET.getBytes();
         byte[] movementData = Arrays.copyOf(idleMovementBytes, idleMovementBytes.length);
         //seems wasteful to create a whole packet writer when only a few values are changed
         int x = getPosition().x;
         int y = getPosition().y;
+        int fh = getIdleMovementFh();
         movementData[2] = (byte) (x & 0xFF); //x
         movementData[3] = (byte) (x >> 8 & 0xFF);
         movementData[4] = (byte) (y & 0xFF); //y
         movementData[5] = (byte) (y >> 8 & 0xFF);
+        movementData[10] = (byte) (fh & 0xFF); //fh
+        movementData[11] = (byte) (fh >> 8 & 0xFF);
         movementData[12] = (byte) (getStance() & 0xFF);
         return new ByteBufInPacket(Unpooled.wrappedBuffer(movementData));
     }

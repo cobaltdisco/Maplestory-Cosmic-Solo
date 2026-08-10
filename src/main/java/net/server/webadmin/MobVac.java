@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import server.TimerManager;
 import server.life.Monster;
+import server.maps.Foothold;
 import server.maps.MapleMap;
 
 import java.awt.Point;
@@ -132,7 +133,7 @@ public final class MobVac {
             session.mapId = map.getId();
             session.mapName = map.getMapName();
 
-            Point target = targetPoint(chr, map, session.options.distance());
+            Target target = targetFor(chr, map, session.options.distance());
             long radiusSq = (long) session.options.radius() * session.options.radius();
             int moved = 0;
             int seen = 0;
@@ -148,10 +149,15 @@ public final class MobVac {
                     continue;
                 }
                 seen++;
-                if (mob.getPosition().distanceSq(target) <= ARRIVED_TOLERANCE * ARRIVED_TOLERANCE) {
+                if (mob.getPosition().distanceSq(target.at()) <= ARRIVED_TOLERANCE * ARRIVED_TOLERANCE) {
                     continue;               // already on the pile
                 }
-                mob.resetMobPosition(target);
+                // Before the move, not after: both packets resetMobPosition sends - the movement
+                // broadcast and the control handover at the end - read getFh() as they are built.
+                if (target.fh() >= 0) {
+                    mob.setFh(target.fh());
+                }
+                mob.resetMobPosition(target.at());
                 moved++;
             }
 
@@ -165,16 +171,45 @@ public final class MobVac {
         }
     }
 
+    /** Where mobs go this tick, and the foothold that point stands on ({@code -1} if none does). */
+    private record Target(Point at, int fh) {
+    }
+
     /**
      * A point the given distance ahead of the character, snapped down onto whatever foothold is
      * there. {@code calcDropPos} falls back to the character's own position when the spot is off
      * the map, so a character standing at the edge of a platform pulls mobs onto itself rather
      * than into the void.
+     *
+     * <h3>Why the foothold comes with it</h3>
+     * A mob carries a foothold id as well as a position, and the client is the one simulating mob
+     * movement: it is told both, and if they disagree it believes the foothold and drops the mob
+     * until it finds real ground. That id is written once when the map loads
+     * ({@code MapFactory.loadLife}) or when a spawn point revives the mob, and nothing updates it
+     * afterwards - not even a genuine client-driven move, which reads the client's own foothold
+     * out of the movement packet and then throws it away
+     * ({@code AbstractMovementPacketHandler.updatePosition} skips those six bytes).
+     * <p>
+     * Ordinarily that goes unnoticed, because a mob walking under its own steam is already where
+     * its controller thinks it is. The vac is different: {@link Monster#resetMobPosition} both
+     * broadcasts a movement and hands control to a client, and each of those packets carries a
+     * foothold describing a position the mob has only just been given. The client resolves the
+     * contradiction the only way it can, and the mob you just pulled in falls out of the pile.
+     * (The movement blob had a second fault of its own, fixed in
+     * {@code AbstractAnimatedMapObject.getIdleMovement}, which used to hard-code foothold 0.)
+     * <p>
+     * So the id is set to the foothold the mob is actually being put on, which is the one the drop
+     * position was snapped to. {@code findBelow} returns the first non-wall foothold at or under
+     * the point, and the drop position sits exactly on its surface, so it hands back that same
+     * foothold. Nothing here can leak into the map's spawn data: {@code SpawnPoint} copies its
+     * foothold from the template mob in its constructor, at map-load time.
      */
-    private static Point targetPoint(Character chr, MapleMap map, int distance) {
+    private static Target targetFor(Character chr, MapleMap map, int distance) {
         Point at = chr.getPosition();
         int ahead = chr.isFacingLeft() ? -distance : distance;
-        return map.calcDropPos(new Point(at.x + ahead, at.y), at);
+        Point drop = map.calcDropPos(new Point(at.x + ahead, at.y), at);
+        Foothold ground = map.getFootholds().findBelow(drop);
+        return new Target(drop, ground == null ? -1 : ground.getId());
     }
 
     static Character findOnlineCharacter(int chrId) {

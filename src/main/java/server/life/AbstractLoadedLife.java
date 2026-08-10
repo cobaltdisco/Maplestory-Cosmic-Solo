@@ -72,6 +72,17 @@ public abstract class AbstractLoadedLife extends AbstractAnimatedMapObject {
         this.fh = fh;
     }
 
+    /**
+     * A life stands on the map's geometry, so an idle movement about it has to name the foothold
+     * it is standing on. The inherited template leaves that field at zero - fine for a player,
+     * whose foothold the server never tracks at all, but for a mob it is the difference between
+     * "it is over there" and "it is over there, falling".
+     */
+    @Override
+    protected int getIdleMovementFh() {
+        return getFh();
+    }
+
     public int getStartFh() {
         return start_fh;
     }
