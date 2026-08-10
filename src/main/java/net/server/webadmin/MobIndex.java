@@ -160,6 +160,9 @@ public final class MobIndex {
                 int chance = rs.getInt("chance");
                 int min = rs.getInt("minimum_quantity");
                 int max = rs.getInt("maximum_quantity");
+                // Not run through Lang: the index is built once at startup, long before the panel
+                // has said which language it wants. Item 0 is mesos, and the page names it from
+                // the id rather than from this string.
                 out.computeIfAbsent(mobId, k -> new ArrayList<>())
                         .add(new Drop(itemId,
                                 itemId == 0 ? "金币" : itemNames.getOrDefault(itemId, ""),

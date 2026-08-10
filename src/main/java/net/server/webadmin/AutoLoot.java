@@ -137,7 +137,9 @@ public final class AutoLoot {
                 return;
             }
             if (!chr.isLoggedinWorld() || !chr.isAlive()) {
-                session.note = chr.isAlive() ? "不在游戏里，暂停" : "角色已死亡，暂停";
+                session.note = chr.isAlive()
+                        ? Lang.t("不在游戏里，暂停", "not in the game world, paused")
+                        : Lang.t("角色已死亡，暂停", "character is dead, paused");
                 session.lastPicked = session.lastSeen = 0;
                 return;
             }

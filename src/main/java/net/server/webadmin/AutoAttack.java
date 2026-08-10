@@ -168,16 +168,19 @@ public final class AutoAttack {
         Skill skill = SkillFactory.getSkill(o.skillId());
         int level = skill == null ? 0 : chr.getSkillLevel(skill);
         if (level <= 0) {
-            session.note = "角色没有这个技能（或还没加点），暂停";
+            session.note = Lang.t("角色没有这个技能（或还没加点），暂停",
+                    "character does not have that skill (or has no points in it), paused");
             return null;
         }
         StatEffect effect = skill.getEffect(level);
         if (effect == null) {
-            session.note = "这个技能没有 " + level + " 级的数据，暂停";
+            session.note = Lang.t("这个技能没有 " + level + " 级的数据，暂停",
+                    "skill has no data for level " + level + ", paused");
             return null;
         }
         if (chr.getMp() < effect.getMpCon()) {
-            session.note = "MP 不够（需要 " + effect.getMpCon() + "），暂停";
+            session.note = Lang.t("MP 不够（需要 " + effect.getMpCon() + "），暂停",
+                    "not enough MP (needs " + effect.getMpCon() + "), paused");
             return null;
         }
         // The same call the real attack handler makes: it pays the MP and applies whatever the
@@ -208,12 +211,14 @@ public final class AutoAttack {
             // In the cash shop the character is online but not standing on a map, and a dead one
             // is dropped by the experience distribution anyway - so both are a pause, not a stop.
             if (!chr.isLoggedinWorld()) {
-                session.note = "在商城 / 拍卖场里，暂停";
+                session.note = Lang.t("在商城 / 拍卖场里，暂停",
+                        "in the Cash Shop or MTS, paused");
                 session.lastHit = session.lastKilled = session.lastSeen = 0;
                 return;
             }
             if (!chr.isAlive()) {
-                session.note = "角色已死亡，暂停（死人拿不到经验）";
+                session.note = Lang.t("角色已死亡，暂停（死人拿不到经验）",
+                        "character is dead, paused (no EXP while dead)");
                 session.lastHit = session.lastKilled = session.lastSeen = 0;
                 return;
             }

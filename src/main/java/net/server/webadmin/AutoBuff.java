@@ -197,20 +197,24 @@ public final class AutoBuff {
     private static String warn(int skillId, StatEffect effect) {
         if (SUMMONS.contains(skillId)) {
             return ITEM_COST.contains(skillId)
-                    ? "召唤兽：重新召唤是换一只新的，而且每次吃一颗召唤石"
-                    : "召唤兽：重新召唤是换一只新的，不是续时间";
+                    ? Lang.t("召唤兽：重新召唤是换一只新的，而且每次吃一颗召唤石",
+                            "summon: recasting replaces it with a new one, and eats a summoning rock each time")
+                    : Lang.t("召唤兽：重新召唤是换一只新的，不是续时间",
+                            "summon: recasting replaces it with a new one rather than extending it");
         }
         if (ITEM_COST.contains(skillId)) {
-            return "每次施放消耗一个道具";
+            return Lang.t("每次施放消耗一个道具", "consumes an item on every cast");
         }
         if (effect.isMonsterRiding()) {
-            return "骑宠：要求骑宠道具还戴在身上";
+            return Lang.t("骑宠：要求骑宠道具还戴在身上",
+                    "mount: the mount item has to still be equipped");
         }
         if (effect.isMorph()) {
-            return "变身：外观会被改掉";
+            return Lang.t("变身：外观会被改掉", "morph: the character's appearance is replaced");
         }
         if (effect.getCooldown() > 0 && effect.getCooldown() * 1000 > effect.getDuration()) {
-            return "冷却（" + effect.getCooldown() + "秒）比持续时间还长，中间必然会空一段";
+            return Lang.t("冷却（" + effect.getCooldown() + "秒）比持续时间还长，中间必然会空一段",
+                    "the cooldown (" + effect.getCooldown() + "s) outlasts the buff, so there will always be a gap");
         }
         return null;
     }
@@ -245,11 +249,12 @@ public final class AutoBuff {
             // not on a map, and a dead one cannot cast at all - the packet handler checks isAlive()
             // before it calls applyTo, and so does this.
             if (!chr.isLoggedinWorld()) {
-                session.note = "在商城 / 拍卖场里，暂停";
+                session.note = Lang.t("在商城 / 拍卖场里，暂停",
+                        "in the Cash Shop or MTS, paused");
                 return;
             }
             if (!chr.isAlive()) {
-                session.note = "角色已死亡，暂停";
+                session.note = Lang.t("角色已死亡，暂停", "character is dead, paused");
                 return;
             }
 
@@ -347,15 +352,15 @@ public final class AutoBuff {
     private static String note(int cooling, int missing, int poor) {
         List<String> parts = new ArrayList<>();
         if (cooling > 0) {
-            parts.add(cooling + " 个在冷却");
+            parts.add(Lang.t(cooling + " 个在冷却", cooling + " on cooldown"));
         }
         if (poor > 0) {
-            parts.add(poor + " 个 HP/MP 不够");
+            parts.add(Lang.t(poor + " 个 HP/MP 不够", poor + " short of HP or MP"));
         }
         if (missing > 0) {
-            parts.add(missing + " 个角色已经没有了");
+            parts.add(Lang.t(missing + " 个角色已经没有了", missing + " the character no longer has"));
         }
-        return String.join("，", parts);
+        return String.join(Lang.t("，", ", "), parts);
     }
 
     /**

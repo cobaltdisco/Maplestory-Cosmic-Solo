@@ -85,7 +85,12 @@ public class WebAdminServer {
             server.createContext("/icons/", WebAdminServer::handleIcon);
             server.createContext("/worldmap/", WebAdminServer::handleWorldMapImage);
             server.createContext("/mobs/", WebAdminServer::handleMobImage);
-            server.createContext("/api/state", exchange -> respondJson(exchange, state()));
+            // The poll carries the panel's language, so everything the server phrases - toasts,
+            // the status notes the background sessions write - comes back in the same one.
+            server.createContext("/api/state", exchange -> {
+                Lang.set(queryOf(exchange).get("lang"));
+                respondJson(exchange, state());
+            });
             server.createContext("/api/rates", WebAdminServer::handleRates);
             server.createContext("/api/equips", WebAdminServer::handleEquips);
             server.createContext("/api/items", WebAdminServer::handleItems);
@@ -850,7 +855,8 @@ public class WebAdminServer {
         // before a job advance, or be describing a different character altogether.
         Set<Integer> skills = AutoBuff.keepCastable(chr, parseIds(form.get("skills")));
         if (skills.isEmpty()) {
-            respondJson(exchange, error("没有选中任何这个角色会用的 buff 技能"));
+            respondJson(exchange, error(Lang.t("没有选中任何这个角色会用的 buff 技能",
+                    "none of the skills chosen are buffs this character can cast")));
             return;
         }
         // The 10 is the default lead in seconds, not a radix - parseInt here is this file's own
@@ -858,7 +864,7 @@ public class WebAdminServer {
         AutoBuff.start(chrId, new AutoBuff.Options(skills,
                 parseInt(form.get("interval"), 1000), parseInt(form.get("lead"), 10)));
         respondToggled(exchange, "auto buff on for " + chr.getName()
-                + "（" + skills.size() + " 个技能）");
+                + Lang.t("（" + skills.size() + " 个技能）", " (" + skills.size() + " skills)"));
     }
 
     /**
@@ -989,8 +995,9 @@ public class WebAdminServer {
         Map<String, Object> out = state();
         out.put("ok", true);
         out.put("message", gone
-                ? name + " 已下线，角色数据已写入数据库"
-                : name + " 仍然在线——这个会话可能已经卡死，只能重启服务端清掉");
+                ? name + Lang.t(" 已下线，角色数据已写入数据库", " is offline, character saved to the database")
+                : name + Lang.t(" 仍然在线——这个会话可能已经卡死，只能重启服务端清掉",
+                        " is still online - the session may be wedged; only a server restart will clear it"));
         respondJson(exchange, out);
     }
 
@@ -1039,8 +1046,9 @@ public class WebAdminServer {
         log.info("Web admin: {} fame {} -> {}", chr.getName(), before, after);
         Map<String, Object> out = state();
         out.put("ok", true);
+        String step = (after - before > 0 ? "+" : "") + (after - before);
         out.put("message", chr.getName() + " fame " + before + " → " + after
-                + "（" + (after - before > 0 ? "+" : "") + (after - before) + "）");
+                + Lang.t("（" + step + "）", " (" + step + ")"));
         respondJson(exchange, out);
     }
 
@@ -1170,7 +1178,7 @@ public class WebAdminServer {
         Map<String, Object> out = Json.obj();
         out.put("ok", true);
         out.put("itemId", itemId);
-        out.put("name", itemId == 0 ? "金币"
+        out.put("name", itemId == 0 ? Lang.t("金币", "Mesos")
                 : String.valueOf(ItemInformationProvider.getInstance().getName(itemId)));
         out.put("droppers", from);
         respondJson(exchange, out);
@@ -1439,7 +1447,8 @@ public class WebAdminServer {
 
         Map<String, Object> out = Json.obj();
         out.put("ok", true);
-        out.put("message", chr.getName() + " → " + name + "（" + mapId + "）");
+        out.put("message", chr.getName() + " → " + name
+                + Lang.t("（" + mapId + "）", " (" + mapId + ")"));
         respondJson(exchange, out);
     }
 
@@ -1522,7 +1531,8 @@ public class WebAdminServer {
             return;
         }
         if (!chr.isLoggedinWorld()) {
-            respondJson(exchange, error(chr.getName() + " 不在地图上（商城 / 拍卖场里）"));
+            respondJson(exchange, error(chr.getName() + Lang.t(" 不在地图上（商城 / 拍卖场里）",
+                    " is not on a map (in the Cash Shop or MTS)")));
             return;
         }
         if (!chr.isAlive()) {
@@ -1560,7 +1570,7 @@ public class WebAdminServer {
         out.put("x", x);
         out.put("y", landY);
         out.put("message", chr.getName() + " → (" + x + ", " + landY + ")"
-                + (landY != y ? "（落在下面的平台上）" : ""));
+                + (landY != y ? Lang.t("（落在下面的平台上）", " (landed on the platform below)") : ""));
         respondJson(exchange, out);
     }
 
@@ -1811,12 +1821,13 @@ public class WebAdminServer {
 
             Item item = inv.getItem(slot);
             if (item == null || item.getItemId() != itemId) {
-                skipped.add("格子 " + slot + " 已经不是原来那件了");
+                skipped.add(Lang.t("格子 " + slot + " 已经不是原来那件了",
+                        "slot " + slot + " no longer holds the same item"));
                 continue;
             }
             String blocked = sellBlocker(ii, item);
             if (blocked != null) {
-                skipped.add(ii.getName(itemId) + "（" + blocked + "）");
+                skipped.add(ii.getName(itemId) + Lang.t("（" + blocked + "）", " (" + blocked + ")"));
                 continue;
             }
 
@@ -1838,10 +1849,14 @@ public class WebAdminServer {
         }
 
         StringBuilder message = new StringBuilder();
-        message.append(sold == 0 ? "一件都没卖出去" : "卖掉 " + sold + " 件，得到 " + paid + " 金币");
+        message.append(sold == 0
+                ? Lang.t("一件都没卖出去", "nothing was sold")
+                : Lang.t("卖掉 " + sold + " 件，得到 " + paid + " 金币",
+                        "sold " + sold + " equips for " + paid + " mesos"));
         if (!skipped.isEmpty()) {
-            message.append("；跳过 ").append(skipped.size()).append(" 件：")
-                    .append(String.join("、", skipped));
+            message.append(Lang.t("；跳过 " + skipped.size() + " 件：",
+                            "; skipped " + skipped.size() + ": "))
+                    .append(String.join(Lang.t("、", ", "), skipped));
         }
 
         Map<String, Object> out = state();
@@ -1861,10 +1876,10 @@ public class WebAdminServer {
      */
     private static String sellBlocker(ItemInformationProvider ii, Item item) {
         if (ii.isCash(item.getItemId())) {
-            return "现金装备";
+            return Lang.t("现金装备", "cash equip");
         }
         if ((item.getFlag() & ItemConstants.LOCK) != 0) {
-            return "已锁定";
+            return Lang.t("已锁定", "locked");
         }
         return null;
     }

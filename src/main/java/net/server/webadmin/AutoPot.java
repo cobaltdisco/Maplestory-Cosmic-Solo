@@ -114,7 +114,9 @@ public final class AutoPot {
             Client client = chr.getClient();
             // A dead character cannot drink, and in the cash shop there is no HP bar to watch.
             if (client == null || !chr.isLoggedinWorld() || !chr.isAlive()) {
-                session.note = chr.isAlive() ? "不在游戏里，暂停" : "角色已死亡，暂停";
+                session.note = chr.isAlive()
+                        ? Lang.t("不在游戏里，暂停", "not in the game world, paused")
+                        : Lang.t("角色已死亡，暂停", "character is dead, paused");
                 return;
             }
             session.note = "";
@@ -146,12 +148,14 @@ public final class AutoPot {
 
     private static boolean drink(Character chr, Client client, Session session, int itemId, String what) {
         if (itemId <= 0) {
-            session.note = what + " 低了，但没有选药";
+            session.note = Lang.t(what + " 低了，但没有选药",
+                    what + " is low, but no potion was chosen");
             return false;
         }
         Item item = chr.getInventory(InventoryType.USE).findById(itemId);
         if (item == null) {
-            session.note = what + " 低了，但背包里没有这个药了";
+            session.note = Lang.t(what + " 低了，但背包里没有这个药了",
+                    what + " is low, but there is none of that potion left in the bag");
             return false;
         }
         PetAutopotProcessor.runAutopotAction(client, item.getPosition(), itemId);
