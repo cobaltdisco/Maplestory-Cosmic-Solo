@@ -25,10 +25,11 @@ import java.util.Map;
  * two handles: the inventory tab (exact, straight from
  * {@link ItemConstants#getInventoryType}) and a purpose category.
  * <p>
- * Every purpose category below is decided by a predicate that already exists in the server
- * source ({@link ItemConstants} / {@link ItemId}) - none of them are guesses about what a
- * number range "probably" means. Anything without such a predicate is left as "other" and is
- * reached through the name search instead of being filed under an invented label.
+ * Most purpose categories below are decided by a predicate that already exists in the server
+ * source ({@link ItemConstants} / {@link ItemId}). Where a band has no such predicate but is
+ * plainly one thing, the label was earned by reading every name in it - see the comments in
+ * {@link #categoryOf} - never by assuming what a number range probably means. Anything left is
+ * "other", reached through the name search instead of being filed under an invented label.
  * <p>
  * The description is the text the game shows in the item's tooltip. It comes straight off the
  * String.wz files: {@link ItemInformationProvider} has no getter for it, and its per-item
@@ -151,10 +152,29 @@ public final class ItemIndex {
         }
     }
 
+    /**
+     * Everything in the USE inventory that a character drinks or eats for its effect.
+     * <p>
+     * {@link ItemConstants#isPotion} is narrower than the word suggests - it is band 2000 alone,
+     * the plain HP and MP flasks. The recovery snacks in 2001 (Watermelon, Red Bean Sundae), the
+     * stat potions in 2002 (Dexterity Potion, Warrior Elixir), the special recoveries in 2011 and
+     * 2012 (Drake's Blood, Fairy's Honey) and the cures in 2050 (Antidote, Eyedrop, All Cure
+     * Potion) were all falling through to "other", which is the one place nobody browses.
+     * <p>
+     * Every name in those five bands was read before adding it here rather than trusting the
+     * number: 2050 in particular also holds One View and Owl Potion, which reveal things rather
+     * than cure them, but they are still drunk out of the same inventory for an effect.
+     */
+    private static boolean isDrinkable(int id) {
+        int band = id / 1000;
+        return ItemConstants.isPotion(id)
+                || band == 2001 || band == 2002 || band == 2011 || band == 2012 || band == 2050;
+    }
+
     private static String categoryOf(int id, InventoryType type) {
         return switch (type) {
             case USE -> {
-                if (ItemConstants.isPotion(id)) {
+                if (isDrinkable(id)) {
                     yield "potion";
                 } else if (ItemConstants.isFood(id)) {
                     yield "food";
@@ -173,6 +193,22 @@ public final class ItemIndex {
                     yield "bullet";
                 } else if (ItemId.isMonsterCard(id)) {
                     yield "card";
+                } else if (id / 10000 == 221) {
+                    // Every one of the 30 entries here transforms the drinker - Potion of
+                    // Transformation, the five Penguin Transformations, Change to Ghost, the
+                    // monster Pieces. Checked by name, not assumed from the band.
+                    yield "transform";
+                } else if (id / 10000 == 210) {
+                    // 283 entries, and the largest single thing hiding in "other". All of them
+                    // spawn monsters: the Monster Sacks and Summoning scrolls, the Monster Marbles
+                    // in 2109, the event summons (Balrog's Spirit, GMEvent_Pink Bean) and the
+                    // 26 unnamed ones between them.
+                    yield "summonBag";
+                } else if (id / 1000 == 2290) {
+                    // 111 entries, every one of them named "[Mastery Book] ...". The [Skill Book]
+                    // items are 2280, which also holds Lava Bottle and Ancient Ice Powder, so that
+                    // band is left where it is rather than labelled by its majority.
+                    yield "masteryBook";
                 }
                 yield "other";
             }

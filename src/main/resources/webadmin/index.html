@@ -320,7 +320,7 @@
 <nav>
   <button data-tab="rates" class="on">倍率</button>
   <button data-tab="online">在线角色</button>
-  <button data-tab="equip">定制装备</button>
+  <button data-tab="equip">赠送装备</button>
   <button data-tab="item">赠送物品</button>
   <button data-tab="sell">卖装备</button>
   <button data-tab="vac">吸怪</button>
@@ -387,9 +387,9 @@
     </div>
   </section>
 
-  <!-- -------------------------------------------------------- 定制装备 -->
+  <!-- -------------------------------------------------------- 赠送装备 -->
   <section id="tab-equip">
-    <h2>定制装备</h2>
+    <h2>赠送装备</h2>
     <p class="note">按职业、性别、部位过滤。</p>
     <div class="row" style="margin-bottom:14px">
       <div><label>职业</label><select id="eqJob">
@@ -464,11 +464,6 @@
   <!-- -------------------------------------------------------- 赠送物品 -->
   <section id="tab-item">
     <h2>赠送物品</h2>
-    <p class="note" data-i18n="item.note">
-      物品没有职业和性别的概念，所以换了一套过滤维度：<b>背包类型</b>（就是游戏里那四个背包页）
-      → <b>用途</b> → 名称搜索。三层都可以单独用，也可以叠加。
-      列表里的<b>描述</b>就是游戏里物品说明那段字，太长的截断了，点一行能在右边看全文。
-    </p>
     <div class="row" style="margin-bottom:14px">
       <div><label>背包类型</label><select id="itInv">
         <option value="">全部</option>
@@ -494,7 +489,6 @@
             <tbody id="itemBody"></tbody>
           </table>
         </div>
-        <p class="note" id="itemCount" style="margin-top:8px"></p>
       </div>
 
       <div class="card">
@@ -517,21 +511,9 @@
   <!-- ------------------------------------------------------------ 卖装备 -->
   <section id="tab-sell">
     <h2>卖掉背包里的装备</h2>
-    <p class="note" data-i18n="sell.note">
-      卖的是目标角色<b>装备栏（背包里）</b>的装备，<b>身上穿着的不在里面</b>。
-      价格就是这件装备自带的商店价，和在游戏里卖给 NPC 拿到的钱一样。
-      <b>现金装、锁定装不卖</b>——它们卖不出钱，点下去只是删掉。<b>卖了拿不回来。</b>
-      少数普通装备的商店价本来就是 0，标成「卖不出钱」，「全选有价的」不会选中它们。
-    </p>
-
     <div class="row" style="margin-bottom:14px">
-      <button class="act" id="sellLoad" disabled>读取背包</button>
-      <span class="pill" id="sellWho">未选中角色</span>
-      <div><label>排序</label><select id="sellSort">
-        <option value="slot">按格子</option>
-        <option value="price">按售价从高到低</option>
-        <option value="level">按需求等级从低到高</option>
-      </select></div>
+      <div><label>目标角色</label><div class="readout" id="sellWho" style="min-width:160px">未选中角色</div></div>
+      <div><label>&nbsp;</label><button class="act" id="sellLoad" disabled>读取背包</button></div>
       <div><label>&nbsp;</label><button class="act" id="sellAll">全选有价的</button></div>
       <div><label>&nbsp;</label><button class="act" id="sellNone">取消全选</button></div>
     </div>
@@ -555,10 +537,7 @@
   <!-- ------------------------------------------------------------ 吸怪 -->
   <section id="tab-vac">
     <h2>吸怪</h2>
-    <p class="note" data-i18n="vac.note">
-      开着的时候，目标角色所在地图的怪会被不断拉到角色<b>面朝方向</b>的前方。
-      角色转身、换地图都会自动跟上；<b>角色一下线就自动关掉</b>。
-    </p>
+    <p class="note">开着的时候，目标角色所在地图的怪会被不断拉到角色面前。</p>
 
     <div class="row" style="margin-bottom:14px">
       <div><label>距离（像素）</label><input id="vacDistance" type="number" min="0" max="1000" value="80" style="width:110px"></div>
@@ -570,7 +549,8 @@
     </div>
 
     <div class="row">
-      <button class="act primary" id="vacToggle" disabled>开始吸怪</button>
+      <div><label>目标角色</label><div class="readout" id="vacWho" style="min-width:160px">未选中角色</div></div>
+      <div><label>&nbsp;</label><button class="act primary" id="vacToggle" disabled>开始吸怪</button></div>
       <span class="pill" id="vacStatus">未运行</span>
     </div>
 
@@ -883,8 +863,8 @@ const EN = {
   "刷新中…": "Refreshing…",
   "倍率": "Rates",
   "在线角色": "Online",
-  "定制装备": "Custom equip",
-  "赠送物品": "Give item",
+  "赠送装备": "Give equips",
+  "赠送物品": "Give items",
   "卖装备": "Sell equips",
   "吸怪": "Mob vac",
   "挂机（攻击 / 喝药 / 捡取 / Buff）": "Auto (attack / potion / loot / buff)",
@@ -1007,7 +987,7 @@ const EN = {
   "断开前会先存档，数据不会丢。": "Saves before disconnecting, so nothing is lost.",
   "把 {0} 踢下线？会先存档。": "Disconnect {0}? It is saved first.",
 
-  // -- 定制装备
+  // -- 赠送装备
   "无职业需求": "No job requirement",
   "剑士": "Warrior",
   "法师": "Magician",
@@ -1039,7 +1019,6 @@ const EN = {
   "赠送给目标角色": "Give to the target character",
   "装备索引建立中（已扫描 {0} 件）…": "Building the equip index ({0} scanned)…",
   "全部武器（{0}）": "All weapons ({0})",
-  "匹配 {0} 件，显示前 {1} 件": "{0} matches, showing the first {1}",
   "没有符合条件的装备": "No equips match",
   "现金": "Cash",
   "会崩客户端": "Crashes the client",
@@ -1116,11 +1095,14 @@ const EN = {
   "消耗": "Use",
   "设置": "Setup",
   "其他": "Etc",
-  "恢复药水": "Recovery potion",
+  "药水": "Potion",
   "食物 / 状态": "Food / status",
+  "变身": "Transformation",
+  "召唤袋": "Summoning bag",
   "返回卷轴": "Return scroll",
   "装备卷轴": "Equip scroll",
   "特殊卷轴（混沌/纯洁/白卷）": "Special scroll (Chaos / Clean Slate / White)",
+  "技能书": "Mastery book",
   "箭矢": "Arrow",
   "飞镖": "Throwing star",
   "子弹": "Bullet",
@@ -1130,25 +1112,23 @@ const EN = {
   "宠物": "Pet",
   "倍率券": "Rate coupon",
   "商店道具": "Store item",
-  "其他（用编号段或搜索）": "Other (use the id band or search)",
+  // Not "Other": the inventory optgroup right above it is already called Etc, which is 其他 too.
+  "未分类": "Uncategorised",
 
   // -- 卖装备
   "卖掉背包里的装备": "Sell equips from the inventory",
   "读取背包": "Load bag",
-  "按格子": "By slot",
-  "按售价从高到低": "By price, high to low",
-  "按需求等级从低到高": "By required level, low to high",
   "全选有价的": "Select everything worth something",
   "格子": "Slot",
   "剩余孔": "Slots left",
   "售价": "Price",
   "先选一个在线角色，再点「读取背包」。": "Pick an online character, then press “Load bag”.",
   "卖掉选中的": "Sell selected",
-  "目标：{0} · 身上 {1} 金币": "Target: {0} · {1} mesos on hand",
   "目标角色换了，重新点「读取背包」。": "The target changed - press “Load bag” again.",
   "读取失败。": "Load failed.",
-  "{0} 背包里 {1} 件（空格 {2} 个），全卖掉能得 {3} 金币":
-    "{1} equips in {0}'s bag ({2} free slots); selling the lot would fetch {3} mesos",
+  "{0} 身上 {1} 金币；背包 {2} 件（空格 {3} 个），全卖掉能得 {4} 金币":
+    "{0} has {1} mesos; {2} equips in the bag ({3} free slots), and selling the lot would " +
+    "fetch {4} more",
   "{0} 的装备栏是空的": "{0}'s Equip inventory is empty",
   "卖不出钱": "Worth nothing",
   "装备栏里什么都没有": "Nothing in the Equip inventory",
@@ -1172,8 +1152,10 @@ const EN = {
   "short|跳跃": "JMP",
 
   // -- 吸怪
+  "开着的时候，目标角色所在地图的怪会被不断拉到角色面前。":
+    "Pulls every mob on the target's map to the front of the character.",
   "距离（像素）": "Distance (px)",
-  "连 BOSS 一起吸": "Vacuum bosses too",
+  "连 BOSS 一起吸": "Vacuum bosses",
   "开始吸怪": "Start the vac",
   "停止吸怪": "Stop the vac",
   "上一轮移动 {0} / 命中 {1} 只": "last pass moved {0} of {1} in range",
@@ -1386,23 +1368,6 @@ const EN_HTML = {
     "Range <b>±30,000</b>; values past that clamp. Does not affect the daily player-to-player " +
     "fame limit.",
 
-  "item.note":
-    "Items have no job or gender, so the filters differ: <b>inventory</b> (the four in-game " +
-    "tabs) → <b>use</b> → name search. Use any one alone or stack them. The <b>description</b> " +
-    "column is the in-game item text, truncated; click a row for the full text on the right.",
-
-  "sell.note":
-    "Sells equips from the target's <b>Equip inventory</b>. <b>Equipped items are not " +
-    "included.</b> Price = the item's shop price, same as selling to an NPC. <b>Cash and locked " +
-    "equips are skipped</b>: they sell for 0, so it would just delete them. <b>Sales cannot be " +
-    "undone.</b> Some ordinary equips are worth 0 too; they are tagged “Worth nothing” and " +
-    "skipped by “Select everything worth something”.",
-
-  "vac.note":
-    "Pulls every mob on the target's map to the front of the character, on the side they are " +
-    "<b>facing</b>. Follows turning and map changes automatically. <b>Switches off on " +
-    "logout.</b>",
-
   "attack.note":
     "Kills mobs around the target continuously. <b>EXP, drops, quest counters and equip mastery " +
     "all work normally.</b> Pair it with <b>Mob vac</b> to farm a map hands-off. <b>Switches " +
@@ -1573,12 +1538,35 @@ const STATS = [
   ["ACC", "命中"], ["EVA", "回避"], ["MHP", "最大 HP"], ["MMP", "最大 MP"],
   ["Speed", "移动速度"], ["Jump", "跳跃力"]
 ].map(([key, label]) => [key, t(label)]);
+// Written in the order the menu shows them, which follows the inventory tabs above it: everything
+// in USE, then SETUP, then ETC, then CASH. The server sends these facets biggest first, so like
+// the equip slots they are sorted back into this order before the menu is built - otherwise the
+// list rearranges itself every time the inventory or the search box changes.
 const CATEGORIES = tmap({
-  potion: "恢复药水", food: "食物 / 状态", townScroll: "返回卷轴", scroll: "装备卷轴",
-  specialScroll: "特殊卷轴（混沌/纯洁/白卷）", arrow: "箭矢", star: "飞镖", bullet: "子弹",
-  card: "怪物卡片", chair: "椅子", reagent: "制作试剂", pet: "宠物",
-  rateCoupon: "倍率券", store: "商店道具", other: "其他（用编号段或搜索）"
+  potion: "药水", food: "食物 / 状态", transform: "变身", summonBag: "召唤袋",
+  townScroll: "返回卷轴", scroll: "装备卷轴", specialScroll: "特殊卷轴（混沌/纯洁/白卷）",
+  masteryBook: "技能书", arrow: "箭矢", star: "飞镖", bullet: "子弹", card: "怪物卡片",
+  chair: "椅子", reagent: "制作试剂",
+  pet: "宠物", rateCoupon: "倍率券", store: "商店道具",
+  other: "未分类"
 });
+const CATEGORY_ORDER = Object.keys(CATEGORIES);
+const catRank = category => {
+  const at = CATEGORY_ORDER.indexOf(category);
+  return at < 0 ? CATEGORY_ORDER.length : at;      // an unknown one goes last, not first
+};
+// Which inventory each category lives in, for the menu's optgroups. "other" is deliberately absent:
+// it is the leftover of all four inventories at once, so it belongs to none of them and falls to
+// the end of the menu on its own. A category missing from here lands there too rather than
+// vanishing, which is why the menu is built from the data and not from this table.
+const CATEGORY_INV = {
+  potion: "USE", food: "USE", transform: "USE", summonBag: "USE", townScroll: "USE",
+  scroll: "USE", specialScroll: "USE", masteryBook: "USE", arrow: "USE", star: "USE",
+  bullet: "USE", card: "USE",
+  chair: "SETUP",
+  reagent: "ETC",
+  pet: "CASH", rateCoupon: "CASH", store: "CASH"
+};
 const INV_NAMES = tmap({ USE: "消耗", SETUP: "设置", ETC: "其他", CASH: "现金" });
 // String.wz's own top-level grouping of Map.img. Translated only where the group's maps make it
 // unambiguous (weddingGL is Amoria, jp is the Mushroom Shrine set); Episode1GL keeps its raw
@@ -1915,7 +1903,7 @@ $("fameSet").addEventListener("click", () => {
   applyFame($("fameSet"), new URLSearchParams({ chrId: chr.id, set: $("fameAmount").value || 0 }));
 });
 
-// -------------------------------------------------------------- 定制装备
+// -------------------------------------------------------------- 赠送装备
 
 async function loadEquips() {
   const params = new URLSearchParams({
@@ -2015,6 +2003,9 @@ function pickEquip(id) {
     </div>`).join("");
   $("eqTuc").value = pickedEquip.tuc || 0;
   $("eqRestore").disabled = false;
+  // Everything else in the card is refilled from the item just picked, so a tick left over from
+  // the last one would be the only thing on screen still describing the previous equip.
+  $("eqUntradeable").checked = false;
 
   document.querySelectorAll("#equipBody tr").forEach(tr =>
     tr.classList.toggle("sel", tr.dataset.eq === String(id)));
@@ -2073,9 +2064,6 @@ $("eqSearch").addEventListener("input", debounce(loadEquips, 250));
 
 // -------------------------------------------------------------- 赠送物品
 
-$("itCat").innerHTML = `<option value="">${t("全部")}</option>` +
-  Object.entries(CATEGORIES).map(([key, label]) => `<option value="${key}">${label}</option>`).join("");
-
 async function loadItems() {
   const params = new URLSearchParams({
     inv: $("itInv").value, category: $("itCat").value, named: $("itNamed").value,
@@ -2097,14 +2085,18 @@ async function loadItems() {
   if (keepCat && !cats.some(c => c.category === keepCat)) {
     cats.push({ category: keepCat, count: 0 });
   }
+  cats.sort((a, b) => catRank(a.category) - catRank(b.category));
+  const catOption = c => `<option value="${c.category}">${
+    tf("{0}（{1}）", CATEGORIES[c.category] || c.category, c.count)}</option>`;
   catSel.innerHTML =
     `<option value="">${tf("全部（{0}）", cats.reduce((n, c) => n + c.count, 0))}</option>` +
-    cats.map(c => `<option value="${c.category}">${
-      tf("{0}（{1}）", CATEGORIES[c.category] || c.category, c.count)}</option>`).join("");
+    Object.keys(INV_NAMES).map(inv => {
+      const inTab = cats.filter(c => CATEGORY_INV[c.category] === inv);
+      return inTab.length
+        ? `<optgroup label="${esc(INV_NAMES[inv])}">${inTab.map(catOption).join("")}</optgroup>` : "";
+    }).join("")
+    + cats.filter(c => !CATEGORY_INV[c.category]).map(catOption).join("");
   catSel.value = keepCat;
-
-  $("itemCount").textContent = tf("匹配 {0} 件，显示前 {1} 件", data.total, data.shown)
-    + (data.total > data.shown ? t("（再收窄条件可看到其余的）") : "");
 
   $("itemBody").innerHTML = itemRows.length ? itemRows.map(i => `
     <tr data-it="${i.id}"${pickedItem && pickedItem.id === i.id ? ' class="sel"' : ""}>
@@ -2178,9 +2170,7 @@ function clearBag(why) {
 function renderSell() {
   const chr = targetChr();
   $("sellLoad").disabled = !chr;
-  $("sellWho").textContent = chr
-    ? tf("目标：{0} · 身上 {1} 金币", chr.name, chr.meso.toLocaleString())
-    : t("未选中角色");
+  readout($("sellWho"), chr ? chr.name : null, t("未选中角色"));
   // A bag belongs to one character; switching targets makes the table a lie.
   if (sellFor !== null && (!chr || chr.id !== sellFor)) {
     clearBag(t("目标角色换了，重新点「读取背包」。"));
@@ -2198,18 +2188,19 @@ async function loadBag() {
   sellFor = chr.id;
   sellPicked.clear();
   renderBag();
+  // The character's own balance moved here from the row at the top: this is the line that talks
+  // about money, and it is the number a sale is about to be added to.
   $("sellStatus").textContent = sellRows.length
-    ? tf("{0} 背包里 {1} 件（空格 {2} 个），全卖掉能得 {3} 金币",
-         res.name, sellRows.length, res.free, res.worth.toLocaleString())
+    ? tf("{0} 身上 {1} 金币；背包 {2} 件（空格 {3} 个），全卖掉能得 {4} 金币",
+         res.name, chr.meso.toLocaleString(), sellRows.length, res.free,
+         res.worth.toLocaleString())
     : tf("{0} 的装备栏是空的", res.name);
 }
 
 function renderBag() {
-  const mode = $("sellSort").value;
-  const rows = sellRows.slice().sort((a, b) =>
-    mode === "price" ? b.price - a.price
-      : mode === "level" ? (a.reqLevel || 0) - (b.reqLevel || 0)
-        : a.slot - b.slot);
+  // Bag order, the same order the character sees in the game. There used to be a sort dropdown
+  // here; a slot number is the one handle that matches what is on their screen.
+  const rows = sellRows.slice().sort((a, b) => a.slot - b.slot);
 
   $("sellBody").innerHTML = rows.length ? rows.map(r => {
     const key = sellKey(r);
@@ -2254,7 +2245,6 @@ function syncSellGo() {
 }
 
 $("sellLoad").addEventListener("click", loadBag);
-$("sellSort").addEventListener("change", renderBag);
 // Worth something only. About 300 non-cash equips in the game are priced at nothing, and a shop
 // takes those for zero mesos - so one click that swept them in would be a delete button.
 $("sellAll").addEventListener("click", () => {
@@ -2296,10 +2286,10 @@ function renderVac() {
   }
   btn.classList.toggle("primary", !vac);
 
-  if (!chr) {
-    $("vacStatus").textContent = t("没有选中角色");
-  } else if (!vac) {
-    $("vacStatus").textContent = tf("未运行（目标：{0}）", chr.name);
+  // Who it would act on is the readout's job now, so the pill is left saying only whether it runs.
+  readout($("vacWho"), chr ? chr.name : null, t("未选中角色"));
+  if (!vac) {
+    $("vacStatus").textContent = t("未运行");
   } else {
     $("vacStatus").textContent = [
       t("运行中"),
