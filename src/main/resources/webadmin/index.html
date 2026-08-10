@@ -173,6 +173,7 @@
   .scroll { max-height: 420px; overflow: auto; border: 1px solid var(--line); border-radius: 8px; }
   .split { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 16px; align-items: start; }
   @media (max-width: 900px) { .split { grid-template-columns: 1fr; } }
+  button.act.small { padding: 4px 9px; font-size: 12px; }
   .statgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .statgrid input { width: 100%; }
   /* Icons are 32x32-ish but a few run larger; the box keeps every row the same height and
@@ -190,6 +191,13 @@
     background: var(--panel); border: 1px solid var(--line); border-radius: 6px;
   }
   .pickicon img { max-width: 48px; max-height: 48px; image-rendering: pixelated; }
+  /* The icon floats so the item's line of detail wraps beside it, but a float escapes its own
+     paragraph: the next block that establishes a formatting context gets pushed right and narrowed
+     by the icon's 68px instead of starting at the card's edge. These contain it, which also gives
+     the detail line and the button under it one shared column beside the picture. */
+  .pickbox, #itPickMeta { overflow: hidden; }
+  .pickbox { margin-bottom: 12px; }
+  .pickbox .note { margin-bottom: 6px; }
   /* The world map is drawn at the size the client draws it: every spot and every region
      highlight is positioned in that picture's own pixels, so scaling it would need every
      coordinate scaled with it. It scrolls instead. */
@@ -312,7 +320,7 @@
 <nav>
   <button data-tab="rates" class="on">倍率</button>
   <button data-tab="online">在线角色</button>
-  <button data-tab="equip">赠送装备</button>
+  <button data-tab="equip">定制装备</button>
   <button data-tab="item">赠送物品</button>
   <button data-tab="sell">卖装备</button>
   <button data-tab="vac">吸怪</button>
@@ -379,15 +387,10 @@
     </div>
   </section>
 
-  <!-- -------------------------------------------------------- 赠送装备 -->
+  <!-- -------------------------------------------------------- 定制装备 -->
   <section id="tab-equip">
-    <h2>赠送装备</h2>
-    <p class="note" id="equipNote" data-i18n="equip.note">
-      按职业、性别、部位过滤，选中后可以逐项改属性再送出。
-      <b>默认不显示现金装备（时装）和无名装备</b>——前者没有属性、商城里自己买就行，
-      后者名字是移植时生成的占位（<code>MISSING NAME</code> / <code>Cap 1004059</code> 这种），
-      在列表里没法有意识地挑。两个下拉都能切回来。
-    </p>
+    <h2>定制装备</h2>
+    <p class="note">按职业、性别、部位过滤。</p>
     <div class="row" style="margin-bottom:14px">
       <div><label>职业</label><select id="eqJob">
         <option value="-1">全部</option>
@@ -407,7 +410,7 @@
       <div><label>部位</label><select id="eqSlot"><option value="">全部</option></select></div>
       <div><label>武器类型</label><select id="eqWeapon"><option value="">全部</option></select></div>
       <div><label>现金装备</label><select id="eqCash">
-        <option value="hide">隐藏（时装）</option>
+        <option value="hide">隐藏</option>
         <option value="all">一起显示</option>
         <option value="only">只看时装</option>
       </select></div>
@@ -437,17 +440,13 @@
             <tbody id="equipBody"></tbody>
           </table>
         </div>
-        <p class="note" id="equipCount" style="margin-top:8px"></p>
       </div>
 
       <div class="card">
         <h2 id="eqPickName">未选中装备</h2>
-        <p class="note" id="eqPickMeta" style="margin-bottom:12px"></p>
-        <div class="row" style="margin-bottom:10px">
-          <button class="act" data-fill="base">恢复原始属性</button>
-          <button class="act" data-fill="zero">全部清零</button>
-          <div><input id="eqBulk" type="number" placeholder="值" style="width:70px"></div>
-          <button class="act" data-fill="bulk">全部设为</button>
+        <div class="pickbox">
+          <p class="note" id="eqPickMeta"></p>
+          <button class="act small" id="eqRestore" disabled>恢复原始值</button>
         </div>
         <div class="statgrid" id="eqStats"></div>
         <div style="margin-top:10px">
@@ -884,7 +883,7 @@ const EN = {
   "刷新中…": "Refreshing…",
   "倍率": "Rates",
   "在线角色": "Online",
-  "赠送装备": "Give equip",
+  "定制装备": "Custom equip",
   "赠送物品": "Give item",
   "卖装备": "Sell equips",
   "吸怪": "Mob vac",
@@ -1008,7 +1007,7 @@ const EN = {
   "断开前会先存档，数据不会丢。": "Saves before disconnecting, so nothing is lost.",
   "把 {0} 踢下线？会先存档。": "Disconnect {0}? It is saved first.",
 
-  // -- 赠送装备
+  // -- 定制装备
   "无职业需求": "No job requirement",
   "剑士": "Warrior",
   "法师": "Magician",
@@ -1023,7 +1022,8 @@ const EN = {
   "武器类型": "Weapon type",
   "现金装备": "Cash equips",
   "无名装备": "No-name equips",
-  "隐藏（时装）": "Hide (cosmetics)",
+  "按职业、性别、部位过滤。": "Filter by job, gender and slot.",
+  "恢复原始值": "Restore original",
   "只看时装": "Cosmetics only",
   "等级从低到高": "Level, low to high",
   "等级从高到低": "Level, high to low",
@@ -1034,10 +1034,6 @@ const EN = {
   "只看该职业专属": "Job-exclusive only",
   "跟随目标角色性别": "Match the target's gender",
   "未选中装备": "No equip selected",
-  "恢复原始属性": "Restore original stats",
-  "全部清零": "Zero everything",
-  "值": "value",
-  "全部设为": "Set all to",
   "可升级次数（卷轴孔）": "Upgrade slots (scroll slots)",
   "标记为不可交易": "Mark as untradeable",
   "赠送给目标角色": "Give to the target character",
@@ -1079,7 +1075,6 @@ const EN = {
   "裤/裙": "Bottom",
   "鞋": "Shoes",
   "手套": "Gloves",
-  "手套(现金)": "Gloves (cash)",
   "披风": "Cape",
   "盾牌": "Shield",
   "武器": "Weapon",
@@ -1091,16 +1086,15 @@ const EN = {
   "腰带": "Belt",
   "徽章": "Badge",
   "宠物装备 / 无部位": "Pet equip / no slot",
-  // weapon classes
-  "单手剑": "One-handed sword",
-  "单手斧": "One-handed axe",
-  "单手钝器": "One-handed blunt",
+  // weapon classes - the one-handed / two-handed qualifier lives on the optgroup, not the name
+  "单手": "One-handed",
+  "双手": "Two-handed",
+  "剑": "Sword",
+  "斧": "Axe",
+  "钝器": "Blunt weapon",
   "短剑": "Dagger",
   "短杖": "Wand",
   "长杖": "Staff",
-  "双手剑": "Two-handed sword",
-  "双手斧": "Two-handed axe",
-  "双手钝器": "Two-handed blunt",
   "枪": "Spear",
   "矛": "Polearm",
   "弓": "Bow",
@@ -1108,7 +1102,7 @@ const EN = {
   "拳套": "Claw",
   "指虎": "Knuckler",
   "火枪": "Gun",
-  "现金武器（时装）": "Cash weapon (cosmetic)",
+  "现金武器": "Cash weapon",
 
   // -- 赠送物品
   "背包类型": "Inventory",
@@ -1392,13 +1386,6 @@ const EN_HTML = {
     "Range <b>±30,000</b>; values past that clamp. Does not affect the daily player-to-player " +
     "fame limit.",
 
-  "equip.note":
-    "Filter by job, gender and slot, then edit stats before sending. <b>Cash equips (cosmetics) " +
-    "and no-name equips are hidden by default.</b> Cash equips have no stats and are buyable in " +
-    "the shop; no-name equips only carry a placeholder generated during the port " +
-    "(<code>MISSING NAME</code>, <code>Cap 1004059</code>), so there is no way to pick one " +
-    "deliberately. Either dropdown unhides them.",
-
   "item.note":
     "Items have no job or gender, so the filters differ: <b>inventory</b> (the four in-game " +
     "tabs) → <b>use</b> → name search. Use any one alone or stack them. The <b>description</b> " +
@@ -1531,25 +1518,52 @@ applyLang();
 const SLOT_NAMES = tmap({
   "Cp": "帽子", "HrCp": "特殊帽子", "Af": "脸饰", "Ay": "眼饰", "Ae": "耳环",
   "Ma": "上衣", "MaPn": "套服", "Pn": "裤/裙", "So": "鞋", "GlGw": "手套",
-  "Gv": "手套(现金)", "Sr": "披风", "Si": "盾牌", "Wp": "武器",
+  // Gv is named after the cash glove slot, but this wz files every glove there: GlGw holds nothing
+  // at all, while Gv holds 201 ordinary gloves (Work Gloves, Juno) alongside 153 cash ones. Calling
+  // it "cash" would have mislabelled the majority and left the real gloves entry never showing.
+  "Gv": "手套", "Sr": "披风", "Si": "盾牌", "Wp": "武器",
   "Ri": "戒指", "Pe": "项链", "Tm": "骑宠", "Sd": "鞍具",
   "Me": "勋章", "Be": "腰带", "Ba": "徽章", "": "宠物装备 / 无部位"
 });
-// WpSi and WpSp used to be listed here as separate slots. They are not: the server puts all three
+// WpSi and WpSp used to be listed above as separate slots. They are not: the server puts all three
 // weapon spellings in the same inventory position, and the split does not track "takes a shield"
 // either - the server decides that from the id band, which disagrees with the islot for claws,
 // knuckles, guns, spears and polearms. The server now folds them before the page sees them.
+//
+// The keys are in the order constants.inventory.EquipSlot declares them, which is the order the
+// equip window itself runs in - head, face, body, feet, then what hangs off the character. The slot
+// menu is sorted by that rather than by how many items each slot happens to hold, so it reads like
+// the doll and stops moving about. Anything the server names but this table does not goes to the
+// end instead of to the front, which is where indexOf's -1 would have put it.
+const SLOT_ORDER = Object.keys(SLOT_NAMES);
+const slotRank = slot => {
+  const at = SLOT_ORDER.indexOf(slot);
+  return at < 0 ? SLOT_ORDER.length : at;
+};
 // Weapon class by id band. Each label was checked against the actual item names in that band
 // rather than taken on faith - e.g. 133 holds the Zamadars, which are daggers.
 // 134/135/136 hold nothing and 139 holds one no-name item (1392000), so none of them gets a label.
 // 170 is entirely cash weapons (769 items, zero non-cash).
 const WEAPON_NAMES = tmap({
-  130: "单手剑", 131: "单手斧", 132: "单手钝器", 133: "短剑",
+  130: "剑", 131: "斧", 132: "钝器", 133: "短剑",
   137: "短杖", 138: "长杖",
-  140: "双手剑", 141: "双手斧", 142: "双手钝器", 143: "枪", 144: "矛",
+  140: "剑", 141: "斧", 142: "钝器", 143: "枪", 144: "矛",
   145: "弓", 146: "弩", 147: "拳套", 148: "指虎", 149: "火枪",
-  170: "现金武器（时装）"
+  170: "现金武器"
 });
+// The bands are already the game's own sorting: 13x is everything held in one hand, 14x everything
+// that needs both, and the one thing an operator picking a weapon actually wants to know - whether
+// a shield can go with it - is exactly that line. Left as bare numbers the boundary is invisible,
+// so it is drawn with optgroups, and the names above lose the qualifier the group now carries.
+// Sorting these alphabetically instead would file the Bow between the axes and separate the
+// one-handed sword from the two-handed one, in whichever order the current language produced.
+//
+// Cash weapons are in neither group and fall through to the end on their own: they are not a third
+// kind of grip, they are the same weapons with the stats taken out.
+const WEAPON_GROUPS = [
+  [t("单手"), 130, 139],
+  [t("双手"), 140, 149]
+];
 const JOB_BITS = [[1, "剑士"], [2, "法师"], [4, "弓箭手"], [8, "飞侠"], [16, "海盗"]]
   .map(([bit, name]) => [bit, t(name)]);
 const GENDERS = ["男", "女", "通用"].map(name => t(name));
@@ -1901,7 +1915,7 @@ $("fameSet").addEventListener("click", () => {
   applyFame($("fameSet"), new URLSearchParams({ chrId: chr.id, set: $("fameAmount").value || 0 }));
 });
 
-// -------------------------------------------------------------- 赠送装备
+// -------------------------------------------------------------- 定制装备
 
 async function loadEquips() {
   const params = new URLSearchParams({
@@ -1924,12 +1938,18 @@ async function loadEquips() {
 
   // Rebuilt every load: the counts are computed under the other filters, so they move when the
   // job / gender / level / search change. Keep the current pick even if it now counts zero.
+  //
+  // The order does not come from those counts, though. The server hands the facets over biggest
+  // first, which would reshuffle the list every time any other filter moved - the hat you were
+  // reaching for slides somewhere else while you are reaching. Both menus are put back into the
+  // order the game itself uses, which nothing on this page can disturb.
   const slotSel = $("eqSlot");
   const keepSlot = slotSel.value;
   const slots = data.slots || [];
   if (keepSlot && !slots.some(s => s.slot === keepSlot)) {
     slots.push({ slot: keepSlot, count: 0 });
   }
+  slots.sort((a, b) => slotRank(a.slot) - slotRank(b.slot));
   const slotTotal = slots.reduce((n, s) => n + s.count, 0);
   slotSel.innerHTML = `<option value="">${tf("全部（{0}）", slotTotal)}</option>` +
     slots.map(s => `<option value="${esc(s.slot)}">${
@@ -1943,14 +1963,21 @@ async function loadEquips() {
   if (keepWeapon && !weapons.some(w => String(w.weapon) === keepWeapon)) {
     weapons.push({ weapon: Number(keepWeapon), count: 0 });
   }
+  weapons.sort((a, b) => a.weapon - b.weapon);
+  const option = w => `<option value="${w.weapon}">${
+    tf("{0}（{1}）", WEAPON_NAMES[w.weapon] || (w.weapon + "xxxx"), w.count)}</option>`;
   wpSel.innerHTML =
     `<option value="">${tf("全部武器（{0}）", weapons.reduce((n, w) => n + w.count, 0))}</option>` +
-    weapons.map(w => `<option value="${w.weapon}">${
-      tf("{0}（{1}）", WEAPON_NAMES[w.weapon] || (w.weapon + "xxxx"), w.count)}</option>`).join("");
+    WEAPON_GROUPS.map(([label, from, to]) => {
+      const inBand = weapons.filter(w => w.weapon >= from && w.weapon <= to);
+      return inBand.length
+        ? `<optgroup label="${esc(label)}">${inBand.map(option).join("")}</optgroup>` : "";
+    }).join("")
+    // A band outside every group would otherwise disappear from the menu entirely, which is a
+    // worse failure than an unlabelled entry.
+    + weapons.filter(w => !WEAPON_GROUPS.some(([, from, to]) => w.weapon >= from && w.weapon <= to))
+        .map(option).join("");
   wpSel.value = keepWeapon;
-
-  $("equipCount").textContent = tf("匹配 {0} 件，显示前 {1} 件", data.total, data.shown)
-    + (data.total > data.shown ? t("（再收窄条件可看到其余的）") : "");
 
   $("equipBody").innerHTML = equipRows.length ? equipRows.map(e => `
     <tr data-eq="${e.id}"${pickedEquip && pickedEquip.id === e.id ? ' class="sel"' : ""}>
@@ -1987,22 +2014,22 @@ function pickEquip(id) {
       <input data-stat="${key}" type="number" min="0" max="32767" value="${pickedEquip.stats[key] || 0}">
     </div>`).join("");
   $("eqTuc").value = pickedEquip.tuc || 0;
+  $("eqRestore").disabled = false;
 
   document.querySelectorAll("#equipBody tr").forEach(tr =>
     tr.classList.toggle("sel", tr.dataset.eq === String(id)));
   syncGiftButtons();
 }
 
-document.querySelectorAll("[data-fill]").forEach(btn => btn.addEventListener("click", () => {
+// Puts the item back the way it was found - every stat and the slot count, which is the pair
+// pickEquip filled in. Whatever is typed over them is only in the form until the item is sent.
+$("eqRestore").addEventListener("click", () => {
   if (!pickedEquip) return;
-  const mode = btn.dataset.fill;
   document.querySelectorAll("#eqStats input[data-stat]").forEach(input => {
-    if (mode === "base") input.value = pickedEquip.stats[input.dataset.stat] || 0;
-    else if (mode === "zero") input.value = 0;
-    else input.value = $("eqBulk").value || 0;
+    input.value = pickedEquip.stats[input.dataset.stat] || 0;
   });
-  if (mode === "base") $("eqTuc").value = pickedEquip.tuc || 0;
-}));
+  $("eqTuc").value = pickedEquip.tuc || 0;
+});
 
 $("eqSyncGender").addEventListener("click", () => {
   const chr = targetChr();
