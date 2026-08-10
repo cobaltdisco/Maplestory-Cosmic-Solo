@@ -79,8 +79,70 @@
   }
   /* Set while a request is in flight, so a slow round trip still reads as "it registered". */
   button.busy { cursor: progress; }
-  .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  /* 180, not 160: the longest rate label needs 143px of the 12px face and 160 leaves only 136,
+     so the English labels sat a few pixels from wrapping - close enough that a different Segoe UI
+     version or a display scale above 100% tipped them over. */
+  .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
   .card { background: var(--panel2); border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
+  /* Extra room only buys margin; it does not stop a label wrapping at some width or font. The
+     cards in a row are already stretched to the same height, so pinning the control to the bottom
+     of the card lines every input up whether its label took one line or two. Scoped to .grid
+     because the tab cards - the equip picker, the codex detail - are laid out top-down. */
+  .grid .card { display: flex; flex-direction: column; position: relative; }
+  .grid .card > input, .grid .card > select { margin-top: auto; }
+
+  /* A caveat about one rate belongs on that rate, not in a block of prose under the form: the
+     note that the travel rate divides is only ever wanted while looking at that box. */
+  .hint {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 14px; height: 14px; margin-left: 5px;
+    /* Measured, not guessed: at the label's 12px against a 14px circle this is the offset that
+       puts the circle's centre on the centre of the text, in both the Latin and the CJK face.
+       It also keeps the line box the same height as a label with no icon - a lower value pokes
+       below the descender and stretches the row. Retune if either size changes. */
+    vertical-align: 1px;
+    border: 1px solid var(--line); border-radius: 50%; background: var(--panel);
+    color: var(--dim); font-size: 10px; font-weight: 700; line-height: 1;
+    cursor: help; transition: background .12s, color .12s, border-color .12s;
+  }
+  .hint:hover, .hint:focus-visible { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .hint:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--ring); }
+  /* Anchored to the card rather than to the icon: a box centred on the icon would hang past the
+     page edge in the last column and put a horizontal scrollbar on the whole document. Pinned to
+     both card edges it is exactly as wide as the card, wherever the card happens to sit. */
+  .hintbox {
+    position: absolute; left: 0; right: 0; top: calc(100% + 6px);
+    padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px;
+    background: var(--panel); color: var(--text);
+    box-shadow: 0 4px 16px rgba(20, 26, 40, .16);
+    font-size: 12px; font-weight: 400; line-height: 1.5; text-align: left;
+    opacity: 0; visibility: hidden; transition: opacity .12s; z-index: 20; pointer-events: none;
+  }
+  .hint:hover .hintbox, .hint:focus-visible .hintbox { opacity: 1; visibility: visible; }
+
+  /* A field another control switches off entirely cannot rely on a tooltip to say so: the person
+     who needs to know is the one who typed a number, pressed Apply, got "applied", and saw nothing
+     happen. But saying it inside the card grows the card, and the row jumps every time the switch
+     moves. So the card only changes colour - the glyph is a pseudo-element precisely so swapping
+     it costs no layout - and the sentence lives next to Apply, in space that already exists. */
+  .hint::before { content: "i"; }
+  .card.gated .hint { border-color: var(--warn); color: var(--warn); }
+  .card.gated .hint::before { content: "!"; }
+  .card.gated .hint:hover, .card.gated .hint:focus-visible {
+    background: var(--warn); border-color: var(--warn); color: #fff;
+  }
+  .card.gated > input { opacity: .5; }
+
+  /* Sits in the Apply row: the moment the change is committed, and a flex row already tall enough
+     for a button, so showing and hiding this moves nothing. */
+  .gatebar { display: none; align-items: center; font-size: 12px; color: var(--warn); }
+  .gatebar.on { display: inline-flex; }
+  .gatebar button {
+    border: 0; background: none; padding: 0; margin-left: 6px;
+    color: var(--accent); font: inherit; text-decoration: underline; cursor: pointer;
+  }
+  .gatebar button:hover { color: var(--accent-hover); }
+  .gatebar button:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--ring); border-radius: 3px; }
   /* Without this a number input keeps its default intrinsic width and its spinner arrows
      stick out past the card's right edge. */
   .card input, .card select { width: 100%; }
@@ -250,10 +312,10 @@
 <main>
   <!-- ------------------------------------------------------------ 倍率 -->
   <section id="tab-rates" class="on">
-    <h2>世界倍率（立即生效）</h2>
+    <h2>世界倍率</h2>
     <p class="note" data-i18n="rates.world">
-      改动会马上作用到在线玩家身上。<b>注意：</b>这些改动只存在内存里，
-      不会写回 <code>config.yaml</code>，重启后恢复文件里的值。
+      改动会马上作用到在线玩家身上（不会写回 <code>config.yaml</code>）。重启服务端后恢复原值。
+      <br>实际倍率 = 世界倍率 × 个人倍率 × 倍率券，此处只调整世界倍率。
     </p>
     <div class="row" style="margin-bottom:14px">
       <div><label>世界</label><select id="worldSel"></select></div>
@@ -261,21 +323,14 @@
     <div class="grid" id="rateGrid"></div>
 
     <h2 style="margin-top:28px">全服倍率</h2>
-    <p class="note">这四项不分世界，是全服共用的配置项，同样即时生效。</p>
+    <p class="note">全服共用，不分世界，同样即时生效。</p>
     <div class="grid" id="globalGrid"></div>
 
     <div class="row" style="margin-top:20px">
       <button class="act primary" id="saveRates">应用</button>
+      <span class="gatebar" id="questGateBar">「任务倍率开关」未开启，任务倍率不会生效<button
+        type="button" id="questGateOn">开启</button></span>
     </div>
-
-    <h2 style="margin-top:28px">几个会踩到的坑</h2>
-    <ul class="note" style="margin:0; padding-left:20px" data-i18n="rates.traps">
-      <li><b>BOSS 掉落倍率会覆盖普通掉落倍率</b>，对 BOSS 只按 BOSS 那一项算。</li>
-      <li><b>任务倍率要先打开「任务倍率开关」才生效</b>（<code>USE_QUEST_RATE</code>）。
-          关着的时候任务经验/金币走的是玩家自己的倍率，填多少都没用。</li>
-      <li>移动倍率是「除以」：填 10 表示船/车只要原来 1/10 的时间。</li>
-      <li>玩家实际倍率 = 世界倍率 × 个人倍率 × 倍率券，面板只改世界这一层。</li>
-    </ul>
   </section>
 
   <!-- -------------------------------------------------------- 在线角色 -->
@@ -889,19 +944,30 @@ const EN = {
   "图标 {0} 张": "{0} icons",
 
   // -- 倍率
-  "世界倍率（立即生效）": "World rates (live)",
+  "世界倍率": "World rates",
   "世界": "World",
   "全服倍率": "Server-wide rates",
-  "这四项不分世界，是全服共用的配置项，同样即时生效。":
-    "These four are not per-world - they are shared server-wide. Also immediate.",
+  "全服共用，不分世界，同样即时生效。": "Shared server-wide, not per-world. Also immediate.",
   "应用": "Apply",
   "应用失败": "Apply failed",
-  "几个会踩到的坑": "Gotchas",
+  // field hints
+  "BOSS 不走这一项，改用「BOSS 掉落倍率」。": "Bosses ignore this one - they use Boss drop rate.",
+  "BOSS 掉落只按这一项算，不与普通掉落倍率叠加。":
+    "Boss drops use this rate only; it does not stack with Drop rate.",
+  "需先开启「任务倍率开关」，否则填多少都不生效。":
+    "Requires Quest rate switch to be on; otherwise this value is ignored.",
+  "这一项是除数：填 10 表示船 / 车耗时变为 1/10。":
+    "This one divides: 10 means boats and taxis take 1/10 the time.",
+  "关闭时，任务经验和金币走玩家自己的倍率，「任务倍率」不生效。":
+    "While off, quest EXP and mesos follow the player's own rate and Quest rate does nothing.",
   "服务端没有世界在跑。": "No world is running on the server.",
   "倍率已应用：": "Rates applied: ",
   "（在线 {0}）": " ({0} online)",
   "开": "On",
   "关": "Off",
+  "「任务倍率开关」未开启，任务倍率不会生效":
+    "Quest rate switch is off - the quest rate will not take effect",
+  "开启": "Turn on",
   "经验倍率": "EXP rate",
   "金钱倍率": "Meso rate",
   "掉落倍率": "Drop rate",
@@ -1306,18 +1372,10 @@ const EN_HTML = {
   "fame.amount": "Amount",
 
   "rates.world":
-    "Applies to online players immediately. <b>Note:</b> memory only - nothing is written back " +
-    "to <code>config.yaml</code>, so a restart reverts to the file.",
-
-  "rates.traps":
-    "<li><b>Boss drop rate overrides the normal drop rate.</b> For bosses, only the boss value " +
-    "is used.</li>" +
-    "<li><b>Quest rate does nothing unless the quest rate switch is on</b> " +
-    "(<code>USE_QUEST_RATE</code>). While off, quest EXP and mesos use the player's own rate " +
-    "and this field is ignored.</li>" +
-    "<li>Travel rate divides: 10 = boats and taxis take 1/10 the time.</li>" +
-    "<li>Effective rate = world rate × personal rate × rate coupon. This panel sets the world " +
-    "layer only.</li>",
+    "Applies to online players immediately (never written to <code>config.yaml</code>). " +
+    "Reverts on server restart." +
+    "<br>Effective rate = world rate × personal rate × rate coupon; this panel sets the world " +
+    "rate only.",
 
   "fame.note":
     "Sets fame on the <b>target character</b> (picked at the top right). Applies immediately. " +
@@ -1523,6 +1581,15 @@ const GLOBAL_RATES = [
   ["partyBonusExp", "组队经验加成倍率", "number"],
   ["useQuestRate", "任务倍率开关", "bool"]
 ].map(([key, label, kind]) => [key, t(label), kind]);
+// The caveats that used to sit in a list under the form, moved onto the fields they are about.
+// Only the rates that have one appear here; the rest get no icon rather than an empty tooltip.
+const RATE_HINTS = tmap({
+  drop: "BOSS 不走这一项，改用「BOSS 掉落倍率」。",
+  bossDrop: "BOSS 掉落只按这一项算，不与普通掉落倍率叠加。",
+  quest: "需先开启「任务倍率开关」，否则填多少都不生效。",
+  travel: "这一项是除数：填 10 表示船 / 车耗时变为 1/10。",
+  useQuestRate: "关闭时，任务经验和金币走玩家自己的倍率，「任务倍率」不生效。"
+});
 
 let state = null;
 let equipRows = [], itemRows = [];
@@ -1655,6 +1722,14 @@ function syncGiftButtons() {
 
 let ratesRenderedFor = null;
 
+// tabindex so the hint is reachable without a mouse, and the box opens on focus as well as hover.
+// The glyph is drawn by CSS, so the element holds no text of its own - hence the aria-label.
+function rateHint(key) {
+  const text = RATE_HINTS[key];
+  return text ? `<span class="hint" tabindex="0" aria-label="${esc(text)}">` +
+    `<span class="hintbox">${esc(text)}</span></span>` : "";
+}
+
 // The panel polls every 5s; rebuilding these inputs on every poll would wipe out whatever the
 // user is halfway through typing. Only rebuild when the world changes or after an apply.
 function renderRates(force) {
@@ -1675,24 +1750,48 @@ function renderRates(force) {
   $("rateGrid").innerHTML = !world
     ? `<p class="note">${t("服务端没有世界在跑。")}</p>`
     : WORLD_RATES.map(([key, label]) => `
-    <div class="card">
-      <label>${label}</label>
+    <div class="card" data-key="${key}">
+      <label>${label}${rateHint(key)}</label>
       <input data-rate="${key}" type="number" min="1" max="10000" value="${world[key]}">
     </div>`).join("");
 
   $("globalGrid").innerHTML = GLOBAL_RATES.map(([key, label, kind]) => kind === "bool" ? `
     <div class="card">
-      <label>${label}</label>
+      <label>${label}${rateHint(key)}</label>
       <select data-global="${key}">
         <option value="true"${state.global[key] ? " selected" : ""}>${t("开")}</option>
         <option value="false"${state.global[key] ? "" : " selected"}>${t("关")}</option>
       </select>
     </div>` : `
     <div class="card">
-      <label>${label}</label>
+      <label>${label}${rateHint(key)}</label>
       <input data-global="${key}" type="number" step="0.1" min="0" value="${state.global[key]}">
     </div>`).join("");
+
+  // The switch itself is rebuilt with the grid, so its listener goes back on with it.
+  syncQuestGate();
+  questSwitch().addEventListener("change", syncQuestGate);
 }
+
+const questSwitch = () => document.querySelector('[data-global="useQuestRate"]');
+
+// Follows the dropdown rather than the applied server state: someone who has just switched the
+// gate on and not yet pressed Apply is about to be right, and a warning that outlived the fix
+// would read as the panel not having noticed.
+function syncQuestGate() {
+  const off = questSwitch() && questSwitch().value !== "true";
+  const card = document.querySelector('#rateGrid .card[data-key="quest"]');
+  if (card) {
+    card.classList.toggle("gated", off);
+  }
+  $("questGateBar").classList.toggle("on", !!off);
+}
+
+// Lives in the static markup, so this is wired once rather than on every rebuild.
+$("questGateOn").addEventListener("click", () => {
+  questSwitch().value = "true";
+  syncQuestGate();
+});
 
 $("worldSel").addEventListener("change", () => renderRates(true));
 
