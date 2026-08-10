@@ -54,6 +54,20 @@
   input:hover, select:hover { border-color: #b9c2d1; }
   select { cursor: pointer; }
 
+  /* A value the panel worked out, standing where an input would. It carries an input's metrics so
+     it lines up with the controls it belongs to, and an input's border so it reads as part of the
+     same row - but it is filled, not white, because there is nothing to type into it. */
+  .readout {
+    box-sizing: border-box; padding: 7px 10px;
+    border: 1px solid var(--line); border-radius: 6px;
+    background: var(--panel2); color: var(--text); font-size: 13.5px;
+    /* The page's own line-height would make this 3px taller than the inputs beside it; 18px is
+       what the browser gives a text input at this font size, so the two end up the same box. */
+    line-height: 18px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .readout.none { color: var(--dim); }
+
   /* Buttons need three visibly different states: at rest, "you can click this", and "you are
      clicking it right now". The press state moves the button 1px down and darkens it, so the
      click lands as a physical event rather than something you have to infer from the result. */
@@ -336,7 +350,7 @@
   <!-- -------------------------------------------------------- 在线角色 -->
   <section id="tab-online">
     <h2>当前在线</h2>
-    <p class="note">每 5 秒自动刷新。点一行即可把它设为赠送目标。</p>
+    <p class="note">每 5 秒自动刷新。点一行把它设为目标角色。</p>
     <div class="scroll">
       <table>
         <thead><tr>
@@ -348,23 +362,19 @@
     </div>
 
     <h2 style="margin-top:28px">改人气</h2>
-    <p class="note" data-i18n="fame.note">
-      改<b>目标角色</b>（右上角选的那个）的人气，立刻生效。上下限 <b>±30,000</b>，超出会停在边界。
-      不影响玩家之间送人气的每日额度。
-    </p>
+    <p class="note" data-i18n="fame.note">上下限 <b>±30,000</b>，超出会停在边界。不影响玩家之间送人气的每日额度。</p>
     <div class="row" style="margin-bottom:14px">
-      <span class="pill" id="fameNow">未选中角色</span>
+      <div><label>目标角色</label><div class="readout" id="fameWho" style="min-width:160px">未选中角色</div></div>
+      <div><label>当前人气</label><div class="readout" id="fameNow" style="min-width:70px">—</div></div>
       <div><label data-i18n="fame.amount">数量</label><input id="fameAmount" type="number" value="10" style="width:120px"></div>
       <button class="act primary" id="fameAdd" disabled>增加</button>
       <button class="act" id="fameSet" disabled>设为这个值</button>
     </div>
 
     <h2 style="margin-top:28px">踢下线</h2>
-    <p class="note" data-i18n="kick.note">
-      把目标角色断开连接，<b>断开前会先存档</b>，数据不会丢。
-      会话卡死（人已经不在了但列表里还挂着）时用这个，<b>不用重启服务端</b>。
-    </p>
+    <p class="note">断开前会先存档，数据不会丢。</p>
     <div class="row">
+      <div><label>目标角色</label><div class="readout" id="kickWho" style="min-width:160px">未选中角色</div></div>
       <button class="act" id="kickBtn" disabled>踢下线</button>
     </div>
   </section>
@@ -982,8 +992,8 @@ const EN = {
 
   // -- 在线角色 / 人气 / 踢下线
   "当前在线": "Online now",
-  "每 5 秒自动刷新。点一行即可把它设为赠送目标。":
-    "Refreshes every 5s. Click a row to set that character as the target.",
+  "每 5 秒自动刷新。点一行把它设为目标角色。":
+    "Refreshes every 5s. Click a row to make that character the target.",
   "角色": "Character",
   "世界/频道": "World / channel",
   "金币": "Mesos",
@@ -991,11 +1001,12 @@ const EN = {
   "空格位（装备/消耗/其他/现金）": "Free slots (equip / use / etc / cash)",
   "当前没有角色在线": "No characters online",
   "改人气": "Change fame",
+  "当前人气": "Current fame",
   "增加": "Add",
   "设为这个值": "Set to this",
   "踢下线": "Disconnect",
-  "{0} 当前人气 {1}": "{0} · fame {1}",
-  "把 {0} 踢下线？断开前会先存档。": "Disconnect {0}? The character is saved first.",
+  "断开前会先存档，数据不会丢。": "Saves before disconnecting, so nothing is lost.",
+  "把 {0} 踢下线？会先存档。": "Disconnect {0}? It is saved first.",
 
   // -- 赠送装备
   "无职业需求": "No job requirement",
@@ -1378,14 +1389,8 @@ const EN_HTML = {
     "rate only.",
 
   "fame.note":
-    "Sets fame on the <b>target character</b> (picked at the top right). Applies immediately. " +
-    "Range is <b>±30,000</b>; values past that clamp. Does not touch the daily player-to-player " +
+    "Range <b>±30,000</b>; values past that clamp. Does not affect the daily player-to-player " +
     "fame limit.",
-
-  "kick.note":
-    "Disconnects the target character. <b>Saves before disconnecting</b>, so no data is lost. " +
-    "Use it on stuck sessions - player gone but still listed - <b>instead of restarting the " +
-    "server</b>.",
 
   "equip.note":
     "Filter by job, gender and slot, then edit stats before sending. <b>Cash equips (cosmetics) " +
@@ -1846,9 +1851,20 @@ function renderOnline() {
 
 // ------------------------------------------------------------------ 人气
 
+// Fills a .readout, dimming it when there is nothing to show. 0 is a value, not a blank - fame
+// legitimately sits at 0, so only null and undefined count as empty.
+function readout(el, value, blank) {
+  const empty = value === null || value === undefined;
+  el.textContent = empty ? blank : String(value);
+  el.classList.toggle("none", empty);
+}
+
 function renderFame() {
   const chr = targetChr();
-  $("fameNow").textContent = chr ? tf("{0} 当前人气 {1}", chr.name, chr.fame) : t("未选中角色");
+  const name = chr ? chr.name : null;
+  readout($("fameWho"), name, t("未选中角色"));
+  readout($("kickWho"), name, t("未选中角色"));
+  readout($("fameNow"), chr ? chr.fame : null, "—");
   $("fameAdd").disabled = !chr;
   $("fameSet").disabled = !chr;
   $("kickBtn").disabled = !chr;
@@ -1856,7 +1872,7 @@ function renderFame() {
 
 $("kickBtn").addEventListener("click", async () => {
   const chr = targetChr();
-  if (!chr || !confirm(tf("把 {0} 踢下线？断开前会先存档。", chr.name))) return;
+  if (!chr || !confirm(tf("把 {0} 踢下线？会先存档。", chr.name))) return;
   const body = new URLSearchParams({ chrId: chr.id });
   // The server waits to see whether the disconnect actually took, so this round trip is slow
   // on purpose - the label says so rather than looking hung.
