@@ -8,7 +8,9 @@
   :root {
     --bg: #f4f6f9; --panel: #ffffff; --panel2: #f2f4f8; --line: #dde2ea;
     --text: #1e2330; --dim: #62697a; --accent: #2563eb; --ok: #15803d;
-    --warn: #b45309; --bad: #d33b3b; --sel: #e3edff;
+    /* --bad reads at 4.71:1 as text on the light surfaces; the fill is darkened to 5.73:1 so
+       white on a solid danger button keeps the margin the accent fill has. */
+    --warn: #b45309; --bad: #d33b3b; --bad-fill: #bf2f2f; --bad-press: #a02727; --sel: #e3edff;
     --accent-hover: #1d4fd7; --accent-press: #1740b0; --press: #e2e7f0;
     --ring: rgba(37, 99, 235, .25);
   }
@@ -28,7 +30,13 @@
     padding: 3px 10px; border-radius: 999px; background: var(--panel2);
     color: var(--dim); font-size: 12px; border: 1px solid var(--line);
   }
-  nav { display: flex; gap: 4px; padding: 10px 20px 0; flex-wrap: wrap; }
+  /* Sticks under the header rather than at 0: the header's own height is not a constant - it grows
+     a row when the window is narrow enough to wrap it - so the offset is measured and written to
+     --headerH instead of guessed. Needs its own background, or tab content scrolls through it. */
+  nav {
+    display: flex; gap: 4px; padding: 10px 20px 0; flex-wrap: wrap;
+    position: sticky; top: var(--headerH, 0px); z-index: 9; background: var(--bg);
+  }
   nav button {
     background: none; border: 1px solid transparent; border-bottom: none;
     color: var(--dim); padding: 8px 16px; border-radius: 8px 8px 0 0;
@@ -41,9 +49,23 @@
   main { padding: 0 20px 40px; }
   section { display: none; background: var(--panel); border: 1px solid var(--line); border-radius: 0 10px 10px 10px; padding: 20px; }
   section.on { display: block; }
-  h2 { font-size: 15px; margin: 0 0 4px; }
-  .note { color: var(--dim); font-size: 12.5px; margin: 0 0 16px; }
+  /* One vertical scale for the whole panel, so the spacing says what belongs to what:
+       4px  a caption to the heading it explains
+      10px  a heading to the controls under it
+      14px  one block to the next inside a section
+      28px  one section to the next
+     The 10 used to be 4 as well, which was right while every heading had a caption under it and
+     far too tight once most of those went: a line of grey text can sit against a heading, a row of
+     34px boxes cannot. */
+  h2 { font-size: 15px; margin: 28px 0 10px; }
+  section > h2:first-child, .card h2 { margin-top: 0; }
+  h2:has(+ .note) { margin-bottom: 4px; }
+  .note { color: var(--dim); font-size: 12.5px; margin: 0 0 14px; }
   .note b { color: var(--warn); font-weight: 600; }
+  /* flex-end is what lines every control in a row up on one bottom edge, whatever height its own
+     label gives it. A button therefore needs no label of its own to sit level with the inputs
+     beside it - there used to be 23 &nbsp; labels doing that job, and in a row of nothing but
+     buttons each one was 23px of blank above the only thing in the row. */
   .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
   label { display: block; font-size: 12px; color: var(--dim); margin-bottom: 4px; }
   input, select, button.act {
@@ -82,6 +104,16 @@
   button.primary { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
   button.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: #fff; box-shadow: 0 2px 6px var(--ring); }
   button.primary:active { background: var(--accent-press); border-color: var(--accent-press); box-shadow: inset 0 2px 4px rgba(0, 0, 0, .22); transform: translateY(1px); }
+  /* Two actions in the panel take something away that cannot be handed back: a session, and a bag
+     of equips. They are the only ones wearing this. Giving is not dangerous, and a red Give would
+     spend the colour on something recoverable - after which nobody reads the red. */
+  button.act.danger { border-color: var(--bad); color: var(--bad); }
+  button.act.danger:hover { background: #fff; border-color: var(--bad); color: var(--bad); box-shadow: 0 1px 3px rgba(211, 59, 59, .2); }
+  button.act.danger:focus-visible { box-shadow: 0 0 0 3px rgba(211, 59, 59, .25); }
+  button.act.danger.primary { background: var(--bad-fill); border-color: var(--bad-fill); color: #fff; }
+  button.act.danger.primary:hover { background: var(--bad); border-color: var(--bad); color: #fff; box-shadow: 0 2px 6px rgba(211, 59, 59, .3); }
+  button.act.danger.primary:active { background: var(--bad-press); border-color: var(--bad-press); }
+
   button.primary:disabled, button.act:disabled { opacity: .45; cursor: not-allowed; }
   /* Disabled must not react at all, or a dead button still looks live. */
   button:disabled:hover, button:disabled:active {
@@ -172,7 +204,10 @@
   tbody tr.sel td:first-child { box-shadow: inset 3px 0 0 var(--accent); }
   .scroll { max-height: 420px; overflow: auto; border: 1px solid var(--line); border-radius: 8px; }
   .split { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 16px; align-items: start; }
-  @media (max-width: 900px) { .split { grid-template-columns: 1fr; } }
+  /* minmax(0, …), not a bare 1fr: a bare fr floors at the track's min-content, so the nowrap table
+     inside refuses to shrink and pushes a scrollbar onto the document instead of scrolling inside
+     its own .scroll box. The other three splits below already say it. */
+  @media (max-width: 900px) { .split { grid-template-columns: minmax(0, 1fr); } }
   button.act.small { padding: 4px 9px; font-size: 12px; }
   .statgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .statgrid input { width: 100%; }
@@ -324,7 +359,7 @@
   <button data-tab="item">赠送物品</button>
   <button data-tab="sell">卖装备</button>
   <button data-tab="vac">吸怪</button>
-  <button data-tab="auto">挂机（攻击 / 喝药 / 捡取 / Buff）</button>
+  <button data-tab="auto">挂机</button>
   <button data-tab="codex">图鉴</button>
   <button data-tab="teleport">传送</button>
   <button data-tab="jq">跳跳</button>
@@ -344,11 +379,11 @@
     </div>
     <div class="grid" id="rateGrid"></div>
 
-    <h2 style="margin-top:28px">全服倍率</h2>
+    <h2>全服倍率</h2>
     <p class="note">全服共用，不分世界，同样即时生效。</p>
     <div class="grid" id="globalGrid"></div>
 
-    <div class="row" style="margin-top:20px">
+    <div class="row" style="margin-top:14px">
       <button class="act primary" id="saveRates">应用</button>
       <span class="gatebar" id="questGateBar">「任务倍率开关」未开启，任务倍率不会生效<button
         type="button" id="questGateOn">开启</button></span>
@@ -369,21 +404,19 @@
       </table>
     </div>
 
-    <h2 style="margin-top:28px">改人气</h2>
+    <h2>改人气</h2>
     <p class="note" data-i18n="fame.note">上下限 <b>±30,000</b>，超出会停在边界。不影响玩家之间送人气的每日额度。</p>
     <div class="row" style="margin-bottom:14px">
-      <div><label>目标角色</label><div class="readout" id="fameWho" style="min-width:160px">未选中角色</div></div>
       <div><label>当前人气</label><div class="readout" id="fameNow" style="min-width:70px">—</div></div>
       <div><label data-i18n="fame.amount">数量</label><input id="fameAmount" type="number" value="10" style="width:120px"></div>
       <button class="act primary" id="fameAdd" disabled>增加</button>
       <button class="act" id="fameSet" disabled>设为这个值</button>
     </div>
 
-    <h2 style="margin-top:28px">踢下线</h2>
+    <h2>踢下线</h2>
     <p class="note">断开前会先存档，数据不会丢。</p>
     <div class="row">
-      <div><label>目标角色</label><div class="readout" id="kickWho" style="min-width:160px">未选中角色</div></div>
-      <button class="act" id="kickBtn" disabled>踢下线</button>
+      <button class="act danger" id="kickBtn" disabled>踢下线</button>
     </div>
   </section>
 
@@ -425,7 +458,7 @@
         <option value="name">按名称</option>
       </select></div>
       <div><label>等级上限</label><input id="eqLevel" type="number" min="0" max="200" placeholder="不限" style="width:90px"></div>
-      <div><label>&nbsp;</label><label style="display:flex; gap:6px; align-items:center; color:var(--text); margin:0; padding:7px 0">
+      <div><label style="display:flex; gap:6px; align-items:center; color:var(--text); margin:0; padding:7px 0">
         <input type="checkbox" id="eqJobStrict" style="width:auto"> 只看该职业专属
       </label></div>
       <div style="flex:1; min-width:180px"><label>名称 / 编号</label><input id="eqSearch" placeholder="输入即过滤" style="width:100%"></div>
@@ -512,10 +545,9 @@
   <section id="tab-sell">
     <h2>卖掉背包里的装备</h2>
     <div class="row" style="margin-bottom:14px">
-      <div><label>目标角色</label><div class="readout" id="sellWho" style="min-width:160px">未选中角色</div></div>
-      <div><label>&nbsp;</label><button class="act" id="sellLoad" disabled>读取背包</button></div>
-      <div><label>&nbsp;</label><button class="act" id="sellAll">全选有价的</button></div>
-      <div><label>&nbsp;</label><button class="act" id="sellNone">取消全选</button></div>
+      <div><button class="act" id="sellLoad" disabled>读取背包</button></div>
+      <div><button class="act" id="sellAll">全选有价的</button></div>
+      <div><button class="act" id="sellNone">取消全选</button></div>
     </div>
 
     <div class="scroll" style="max-height:60vh">
@@ -529,7 +561,7 @@
     </div>
 
     <div class="row" style="margin-top:14px">
-      <button class="act primary" id="sellGo" disabled>卖掉选中的</button>
+      <button class="act primary danger" id="sellGo" disabled>卖掉选中的</button>
       <span class="pill" id="sellStatus">还没读取</span>
     </div>
   </section>
@@ -541,16 +573,15 @@
 
     <div class="row" style="margin-bottom:14px">
       <div><label>距离（像素）</label><input id="vacDistance" type="number" min="0" max="1000" value="80" style="width:110px"></div>
-      <div><label>生效范围（像素，0 = 整张地图）</label><input id="vacRadius" type="number" min="0" max="100000" value="0" style="width:150px"></div>
+      <div><label>生效范围（像素，0 = 整张地图）</label><input id="vacRadius" type="number" min="0" max="100000" value="0" style="width:160px"></div>
       <div><label>间隔（毫秒）</label><input id="vacInterval" type="number" min="300" max="10000" step="100" value="800" style="width:110px"></div>
-      <div><label>&nbsp;</label><label style="display:flex; gap:6px; align-items:center; color:var(--text); margin:0; padding:7px 0">
+      <div><label style="display:flex; gap:6px; align-items:center; color:var(--text); margin:0; padding:7px 0">
         <input type="checkbox" id="vacBosses" style="width:auto"> 连 BOSS 一起吸
       </label></div>
     </div>
 
     <div class="row">
-      <div><label>目标角色</label><div class="readout" id="vacWho" style="min-width:160px">未选中角色</div></div>
-      <div><label>&nbsp;</label><button class="act primary" id="vacToggle" disabled>开始吸怪</button></div>
+      <div><button class="act primary" id="vacToggle" disabled>开始吸怪</button></div>
       <span class="pill" id="vacStatus">未运行</span>
     </div>
 
@@ -559,11 +590,7 @@
   <!-- ------------------------------------------------------------ 自动攻击 -->
   <section id="tab-auto">
     <h2>自动攻击</h2>
-    <p class="note" data-i18n="attack.note">
-      开着的时候，目标角色周围的怪会被不断打掉。<b>经验、掉落、任务计数、装备熟练度全都正常</b>。
-      配合<b>吸怪</b>一起开就是挂机刷图。<b>角色一下线就自动关掉</b>，死亡或进商城会暂停。
-      <br><b>注意：没有挥刀动画</b>——怪会正常掉血、正常死，但看不到人挥武器、也不飘伤害数字。
-    </p>
+    <p class="note" data-i18n="attack.note">不断打掉目标角色周围的怪。<b>没有攻击动画。</b></p>
 
     <div class="row" style="margin-bottom:14px">
       <div><label>方式</label><select id="atkMode">
@@ -578,24 +605,21 @@
       <div><label>生效范围（像素，0 = 整张地图）</label><input id="atkRadius" type="number" min="0" max="100000" value="400" style="width:160px"></div>
       <div><label>间隔（毫秒）</label><input id="atkInterval" type="number" min="300" max="10000" step="100" value="800" style="width:110px"></div>
       <div><label>每轮最多打几只</label><input id="atkMax" type="number" min="1" max="200" value="20" style="width:130px"></div>
-      <div><label>&nbsp;</label><label style="display:flex; gap:6px; align-items:center; color:var(--text); margin:0; padding:7px 0">
+      <div><label style="display:flex; gap:6px; align-items:center; color:var(--text); margin:0; padding:7px 0">
         <input type="checkbox" id="atkBosses" style="width:auto"> 连 BOSS 一起打
       </label></div>
     </div>
 
     <div class="row">
-      <button class="act primary" id="atkToggle" disabled>开始自动攻击</button>
+      <div><button class="act primary" id="atkToggle" disabled>开始自动攻击</button></div>
       <span class="pill" id="atkStatus">未运行</span>
     </div>
 
 
-    <hr style="border:none; border-top:1px solid var(--line); margin:30px 0">
+    <hr style="border:none; border-top:1px solid var(--line); margin:28px 0">
 
     <h2>自动喝药</h2>
-    <p class="note" data-i18n="pot.note">
-      血量或蓝量掉到设定的百分比以下，就自动喝你选的药。
-      <b>百分比填 0 = 关掉那一半</b>。药从<b>目标角色自己的消耗背包</b>里选，喝完了会在状态栏说明。
-    </p>
+    <p class="note">血量或蓝量掉到设定的百分比以下，就自动喝你选的药。</p>
     <div class="row" style="margin-bottom:14px">
       <div><label>血量低于（%）</label><input id="potHpPct" type="number" min="0" max="99" value="50" style="width:120px"></div>
       <div style="min-width:260px"><label>喝这个（HP）</label><select id="potHpItem" style="width:100%"></select></div>
@@ -604,26 +628,22 @@
       <div><label>间隔（毫秒）</label><input id="potInterval" type="number" min="300" max="10000" step="100" value="800" style="width:110px"></div>
     </div>
     <div class="row">
-      <button class="act primary" id="potToggle" disabled>开始自动喝药</button>
+      <div><button class="act primary" id="potToggle" disabled>开始自动喝药</button></div>
+      <div><button class="act" id="potRefresh">读取背包里的药</button></div>
       <span class="pill" id="potStatus">未运行</span>
-      <button class="act" id="potRefresh">重新读取背包里的药</button>
     </div>
 
-    <hr style="border:none; border-top:1px solid var(--line); margin:30px 0">
+    <hr style="border:none; border-top:1px solid var(--line); margin:28px 0">
 
-    <h2>全屏捡取</h2>
-    <p class="note" data-i18n="loot.note">
-      把地图上的掉落<b>全部捡起来</b>，不管掉在多远。范围填 0 = 整张地图（比一屏还大）。
-      <b>不加物品筛选就是全捡</b>；加了就只捡列表里的那几样。
-    </p>
+    <h2>自动捡取</h2>
 
     <div class="row" style="margin-bottom:10px">
-      <div style="flex:1; min-width:240px"><label>只捡这些（搜名称或编号，点结果加进来）</label>
+      <div style="flex:1; min-width:240px">
         <input id="lootSearch" placeholder="留空 = 全捡" style="width:100%"></div>
-      <div><label>&nbsp;</label><label style="display:flex; gap:6px; align-items:center; color:var(--text); margin:0; padding:7px 0">
+      <div><label style="display:flex; gap:6px; align-items:center; color:var(--text); margin:0; padding:7px 0">
         <input type="checkbox" id="lootMesos" checked style="width:auto"> 金币也捡
       </label></div>
-      <div><label>&nbsp;</label><button class="act" id="lootClear">清空筛选</button></div>
+      <div><button class="act" id="lootClear">清空筛选</button></div>
     </div>
     <div id="lootFound" class="scroll" style="max-height:180px; display:none; margin-bottom:10px">
       <table><tbody id="lootFoundBody"></tbody></table>
@@ -631,30 +651,23 @@
     <div id="lootChips" style="margin-bottom:14px"></div>
 
     <div class="row" style="margin-bottom:14px">
-      <div><label>范围（像素，0 = 整张地图）</label><input id="lootRadius" type="number" min="0" max="100000" value="0" style="width:170px"></div>
+      <div><label>范围（像素，0 = 整张地图）</label><input id="lootRadius" type="number" min="0" max="100000" value="0" style="width:160px"></div>
       <div><label>间隔（毫秒）</label><input id="lootInterval" type="number" min="300" max="10000" step="100" value="800" style="width:110px"></div>
       <div><label>每轮最多捡几件</label><input id="lootMax" type="number" min="1" max="200" value="50" style="width:130px"></div>
     </div>
     <div class="row">
-      <button class="act primary" id="lootToggle" disabled>开始全屏捡取</button>
+      <div><button class="act primary" id="lootToggle" disabled>开始自动捡取</button></div>
       <span class="pill" id="lootStatus">未运行</span>
     </div>
 
-    <hr style="border:none; border-top:1px solid var(--line); margin:30px 0">
+    <hr style="border:none; border-top:1px solid var(--line); margin:28px 0">
 
     <h2>自动 Buff</h2>
-    <p class="note" data-i18n="buff.note">
-      勾中的 buff <b>快到期就提前续上</b>，中间不会断；被怪驱散掉的也会立刻补回来。
-      可以勾多个。<b>会有施法光效</b>，图标、时间条、属性加成和自己放的一模一样。
-      列表只列<b>这个角色真的学过</b>的 buff 技能。
-      <br>提前的秒数<b>最多只用到这个 buff 一半的时长</b>——不然像轻功（12 秒）那种短 buff 会被反复重放。
-      填 0 = 不提前，掉了再补。
-    </p>
 
-    <div class="row" style="margin-bottom:10px">
-      <button class="act" id="buffLoad" disabled>读取角色的 Buff 技能</button>
-      <div><label>&nbsp;</label><button class="act" id="buffAll">全选（不含带提醒的）</button></div>
-      <div><label>&nbsp;</label><button class="act" id="buffNone">取消全选</button></div>
+    <div class="row" style="margin-bottom:14px">
+      <div><button class="act" id="buffLoad" disabled>读取角色的 Buff 技能</button></div>
+      <div><button class="act" id="buffAll">全选（不含带提醒的）</button></div>
+      <div><button class="act" id="buffNone">取消全选</button></div>
       <div><label>提前几秒续（0 = 不提前）</label><input id="buffLead" type="number" min="0" max="120" value="10" style="width:150px"></div>
       <div><label>间隔（毫秒）</label><input id="buffInterval" type="number" min="500" max="10000" step="100" value="1000" style="width:110px"></div>
     </div>
@@ -670,7 +683,7 @@
     </div>
 
     <div class="row" style="margin-top:14px">
-      <button class="act primary" id="buffToggle" disabled>开始自动 Buff</button>
+      <div><button class="act primary" id="buffToggle" disabled>开始自动 Buff</button></div>
       <span class="pill" id="buffStatus">未运行</span>
     </div>
 
@@ -679,10 +692,7 @@
   <!-- ------------------------------------------------------------ 图鉴 -->
   <section id="tab-codex">
     <h2>图鉴</h2>
-    <p class="note" data-i18n="codex.note">
-      两个方向都能查：<b>找怪物</b>看它爆什么、在哪些地图出现；<b>找地图</b>看上面有哪些怪、各几只。
-      两边的结果里都能互相点过去。爆率是<b>原始爆率</b>，没有乘服务端的掉落倍率。
-    </p>
+    <p class="note">爆率是原始爆率，没有乘服务端的掉落倍率。</p>
 
     <div class="row" style="margin-bottom:14px">
       <div style="flex:1; min-width:200px"><label>找怪物（名称或编号）</label>
@@ -698,7 +708,7 @@
         <div class="scroll" style="max-height:420px">
           <table><thead><tr id="cxListHead"></tr></thead><tbody id="cxListBody"></tbody></table>
         </div>
-        <p class="note" id="cxListCount" style="margin-top:8px">在上面搜怪物或地图。</p>
+        <p class="note" id="cxListCount" style="margin-top:8px">在上面搜怪物、地图或物品。</p>
       </div>
       <div class="card" id="cxDetail">
         <p class="note" style="margin:0">点左边的一行看详情。</p>
@@ -708,35 +718,29 @@
 
   <!-- ------------------------------------------------------------ 传送 -->
   <section id="tab-teleport">
-    <h2>传送目标角色</h2>
-    <p class="note" data-i18n="tp.note">
-      两种选地图的方式：直接填 Map ID，或者在游戏自己的世界地图上点。
-      <b>只列真的能传过去的 5262 张地图</b>，其中 1379 张没有名字，显示为「（无名）」，照样能传。
-      传送前会存下原来的位置，玩家自己的回城卷轴不受影响。
-    </p>
-    <div class="row" style="margin-bottom:18px">
-      <span class="pill" id="tpWhere">未选中角色</span>
+    <h2>传送</h2>
+    <div class="row" style="margin-bottom:14px">
+      <div><label>当前地图</label><div class="readout" id="tpWhere" style="min-width:220px">—</div></div>
     </div>
 
-    <h2>方法一：直接输入 Map ID</h2>
+    <h2>直接输入 Map ID</h2>
     <div class="row" style="margin-bottom:6px">
       <div><label>Map ID</label><input id="tpId" type="number" placeholder="例如 100000000" style="width:170px"></div>
-      <div><label>&nbsp;</label><button class="act primary" id="tpGo">传送</button></div>
-      <div style="flex:1; min-width:200px"><label>这是哪张图</label>
-        <div class="pill" id="tpIdName" style="display:inline-block">还没填</div></div>
+      <div><button class="act primary" id="tpGo">传送</button></div>
+      <!-- Sized to what it is holding, not to whatever is left of the row: flex:1 made a 917px
+           bar to show a dash. The floor keeps the empty state looking like a field, the ceiling
+           stops a long "name · street · region" from pushing the row around - .readout clips with
+           an ellipsis past it, and the full text is on the row you searched for anyway. -->
+      <div style="min-width:130px; max-width:460px"><label>地图名称</label>
+        <div class="readout" id="tpIdName">—</div></div>
     </div>
 
-    <h2 style="margin-top:30px">方法二：从地图上找</h2>
-    <p class="note" data-i18n="tp.mapnote">
-      <b>鼠标移到圆点上</b>就会在右边列出它是哪些地图，点一下钉住。
-      淡淡浮着一层色块的地方是能钻进去的大陆，鼠标移上去会变亮。
-      原图只有 640×470 这一个尺寸，放大是按整数倍来的；默认自动挑装得下的最大倍数。
-    </p>
+    <h2>从世界地图上找</h2>
     <div class="crumbs" id="tpCrumbs"></div>
     <div class="row" style="margin-bottom:10px">
       <div><label>放大</label><select id="tpZoom">
-        <option value="auto" selected>自动（撑满可用宽度）</option>
-        <option value="1">1×（原始 640×470）</option>
+        <option value="auto">自动（撑满可用宽度）</option>
+        <option value="1" selected>1×（原始 640×470）</option>
         <option value="2">2×</option>
         <option value="3">3×</option>
       </select></div>
@@ -746,11 +750,7 @@
       <div id="tpSpotPanel"></div>
     </div>
 
-    <h2 style="margin-top:30px">全部地图</h2>
-    <p class="note" data-i18n="tp.allnote">
-      世界地图只标了游戏想让玩家看到的那些点，副本内部、活动图、测试图都不在上面。
-      这份列表是全的，按游戏自己的分区分组。
-    </p>
+    <h2>全部地图</h2>
     <div class="row" style="margin-bottom:14px">
       <div><label>分区</label><select id="tpRegion"><option value="">全部</option></select></div>
       <div style="flex:1; min-width:200px"><label>名称 / 街道 / 编号</label>
@@ -762,28 +762,23 @@
         <tbody id="tpMapBody"></tbody>
       </table>
     </div>
-    <p class="note" id="tpMapCount" style="margin-top:8px"></p>
   </section>
 
   <!-- ------------------------------------------------------------ 跳跳 -->
   <section id="tab-jq">
-    <h2>同图移动（跳跳）</h2>
-    <p class="note" data-i18n="jq.note">
-      跳跳的难点是<b>在同一张图里往上爬</b>，而「传送」页签是图与图之间的，只会把你放回起点。
-      这里是<b>在当前这张图里换个位置</b>：点传送门列表里的「站过去」，或者直接点左边的图。
-      <br>点空中会<b>落到下面那块平台上</b>。会走一次换图流程，所以画面会闪一下重载。
-    </p>
+    <h2>同图移动</h2>
 
-    <div class="row" style="margin-bottom:12px">
-      <span class="pill" id="jqWhere">未选中角色</span>
-      <button class="act" id="jqLoad" disabled>读取当前地图</button>
+    <div class="row" style="margin-bottom:14px">
+      <div><label>当前地图</label><div class="readout" id="jqWhere" style="min-width:220px">—</div></div>
+      <div><label>当前坐标</label><div class="readout" id="jqAt" style="min-width:110px">—</div></div>
+      <div><button class="act" id="jqLoad" disabled>读取当前地图</button></div>
       <div><label>放大</label><select id="jqZoom">
-        <option value="auto" selected>自动（撑满宽度，上下滚动）</option>
+        <option value="auto" selected>自动（撑满宽度）</option>
         <option value="0.25">0.25×</option>
         <option value="0.5">0.5×</option>
         <option value="1">1×（原始坐标）</option>
       </select></div>
-      <div><label>&nbsp;</label><label style="display:flex; gap:6px; align-items:center; color:var(--text); margin:0; padding:7px 0">
+      <div><label style="display:flex; gap:6px; align-items:center; color:var(--text); margin:0; padding:7px 0">
         <input type="checkbox" id="jqNames" checked style="width:auto"> 标出传送门名字
       </label></div>
     </div>
@@ -791,12 +786,12 @@
     <div class="jqsplit">
       <div class="jqbox" id="jqBox"><p class="empty">先选一个在线角色，再点「读取当前地图」。</p></div>
       <div>
-        <div class="card" style="margin-bottom:12px">
-          <h2 style="margin-top:0">直接填坐标</h2>
+        <div class="card" style="margin-bottom:14px">
+          <h2>直接填坐标</h2>
           <div class="row">
             <div><label>x</label><input id="jqX" type="number" style="width:110px"></div>
             <div><label>y</label><input id="jqY" type="number" style="width:110px"></div>
-            <div><label>&nbsp;</label><button class="act primary" id="jqGo" disabled>站过去</button></div>
+            <div><button class="act primary" id="jqGo" disabled>站过去</button></div>
           </div>
         </div>
         <div class="scroll" style="max-height:46vh">
@@ -813,14 +808,9 @@
   <!-- ------------------------------------------------------------ 砸卷 -->
   <section id="tab-scroll">
     <h2>砸卷必成</h2>
-    <p class="note" data-i18n="scroll.note">
-      开着的时候，目标角色砸卷<b>必定成功</b>。只改成功判定这一件事，其余照旧：
-      <b>孔照扣</b>、没孔了还是砸不了、卷轴照消耗。也就是「必中，但不是无限」。
-      <b>角色一下线就自动关掉</b>，重启也不留。
-    </p>
 
     <div class="row">
-      <button class="act primary" id="scrollToggle" disabled>开启必成</button>
+      <div><button class="act primary" id="scrollToggle" disabled>开启必成</button></div>
       <span class="pill" id="scrollStatus">未运行</span>
     </div>
 
@@ -867,8 +857,11 @@ const EN = {
   "赠送物品": "Give items",
   "卖装备": "Sell equips",
   "吸怪": "Mob vac",
-  "挂机（攻击 / 喝药 / 捡取 / Buff）": "Auto (attack / potion / loot / buff)",
-  "图鉴": "Codex",
+  "挂机": "Auto",
+  // Not "Codex": this is not a bestiary but a three-way lookup over mobs, maps and items, and v83
+  // already has something called the Monster Book. 图鉴 carries all of that in Chinese; the
+  // nearest English word that does is the plain one.
+  "图鉴": "Lookup",
   "传送": "Teleport",
   "跳跳": "Jump quest",
   "砸卷": "Scrolling",
@@ -893,9 +886,33 @@ const EN = {
   "输入即过滤": "Type to filter",
   "间隔（毫秒）": "Interval (ms)",
   "生效范围（像素，0 = 整张地图）": "Range (px, 0 = whole map)",
-  "未选中角色": "No character selected",
-  "没有选中角色": "No character selected",
   "（没有人在线）": "(nobody online)",
+  "（未选择目标）": "(no target picked)",
+  "（目标已下线）": "(target went offline)",
+
+  // Buttons that name the character they act on. The plain form beside each is what shows while
+  // nothing is picked, when the button is disabled anyway.
+  "给 {0} 增加": "Add to {0}",
+  "把 {0} 设为这个值": "Set {0} to this",
+  "把 {0} 踢下线": "Disconnect {0}",
+  "送给 {0}": "Give to {0}",
+  "读取 {0} 的背包": "Load {0}'s bag",
+  "对 {0} 开始吸怪": "Start the vac on {0}",
+  "对 {0} 停止吸怪": "Stop the vac on {0}",
+  "对 {0} 开始自动攻击": "Start auto attack on {0}",
+  "对 {0} 停止自动攻击": "Stop auto attack on {0}",
+  "对 {0} 开始自动喝药": "Start auto potion on {0}",
+  "对 {0} 停止自动喝药": "Stop auto potion on {0}",
+  "对 {0} 开始自动捡取": "Start auto pick-up on {0}",
+  "对 {0} 停止自动捡取": "Stop auto pick-up on {0}",
+  "读取 {0} 的 Buff 技能": "Load {0}'s buff skills",
+  "对 {0} 开始自动 Buff": "Start auto buff on {0}",
+  "对 {0} 开始自动 Buff（{1} 个）": "Start auto buff on {0} ({1} skills)",
+  "对 {0} 停止自动 Buff": "Stop auto buff on {0}",
+  "传送 {0}": "Teleport {0}",
+  "把 {0} 放到这里": "Place {0} here",
+  "为 {0} 开启必成": "Turn it on for {0}",
+  "为 {0} 关闭必成": "Turn it off for {0}",
   "未运行": "Not running",
   "运行中": "Running",
   "还没读取": "Not loaded yet",
@@ -912,20 +929,20 @@ const EN = {
   "关闭中…": "Stopping…",
   "赠送中…": "Sending…",
   "处理中…": "Working…",
-  "传送中…": "Warping…",
+  "传送中…": "Teleporting…",
   "卖出中…": "Selling…",
   "断开中…": "Disconnecting…",
   "应用中…": "Applying…",
   "、": ", ",
   "{0}（{1}）": "{0} ({1})",
   "全部（{0}）": "All ({0})",
-  "未运行（目标：{0}）": "Not running (target: {0})",
   "（再收窄条件可看到其余的）": " (narrow the filters to see the rest)",
   "图标目录是空的：跑 tools-local 的 IconDump 从客户端 wz 里导出":
     "Icon folder is empty - run tools-local IconDump to extract them from the client wz",
 
   // -- status pill
   "在线 {0} 人": "{0} online",
+  "在线 {0} 人 · 索引建立中": "{0} online · building indexes",
   "装备索引 {0} 件": "{0} equips indexed",
   "装备索引建立中 {0}": "indexing equips, {0} so far",
   "物品 {0} 件": "{0} items",
@@ -1169,7 +1186,7 @@ const EN = {
   "技能": "Skill",
   "每下伤害": "Damage per hit",
   "每轮最多打几只": "Max mobs per pass",
-  "连 BOSS 一起打": "Attack bosses too",
+  "连 BOSS 一起打": "Attack bosses",
   "开始自动攻击": "Start auto attack",
   "停止自动攻击": "Stop auto attack",
   "这个角色还没有会造成伤害的技能": "This character has no damaging skills",
@@ -1183,28 +1200,28 @@ const EN = {
 
   // -- 自动喝药
   "自动喝药": "Auto potion",
+  "血量或蓝量掉到设定的百分比以下，就自动喝你选的药。":
+    "Drinks the chosen potion when HP or MP drops below the set percentage.",
   "血量低于（%）": "HP below (%)",
   "喝这个（HP）": "Drink this (HP)",
   "蓝量低于（%）": "MP below (%)",
   "喝这个（MP）": "Drink this (MP)",
   "开始自动喝药": "Start auto potion",
   "停止自动喝药": "Stop auto potion",
-  "重新读取背包里的药": "Re-read the potions in the bag",
+  "读取背包里的药": "Load potions from the bag",
   "读取失败，服务端日志里有原因": "Load failed - see the server log",
   "消耗背包里没有回血/回蓝的药": "No HP or MP potions in the Use inventory",
   "已喝 {0} 次": "{0} drinks so far",
 
-  // -- 全屏捡取
-  "全屏捡取": "Pick up everything",
-  "只捡这些（搜名称或编号，点结果加进来）":
-    "Only these (search by name or id, click a result to add it)",
+  // -- 自动捡取
+  "自动捡取": "Auto pick-up",
   "留空 = 全捡": "leave empty to take everything",
-  "金币也捡": "Mesos too",
+  "金币也捡": "Mesos",
   "清空筛选": "Clear the filter",
   "范围（像素，0 = 整张地图）": "Range (px, 0 = whole map)",
   "每轮最多捡几件": "Max pickups per pass",
-  "开始全屏捡取": "Start picking up",
-  "停止全屏捡取": "Stop picking up",
+  "开始自动捡取": "Start auto pick-up",
+  "停止自动捡取": "Stop auto pick-up",
   "移除": "Remove",
   "没有筛选，掉什么捡什么。": "No filter - everything gets picked up.",
   "编号 {0}": "id {0}",
@@ -1220,23 +1237,23 @@ const EN = {
 
   // -- 自动 Buff
   "自动 Buff": "Auto buff",
-  "读取角色的 Buff 技能": "Load the character's buff skills",
+  "读取角色的 Buff 技能": "Load buff skills",
   "全选（不含带提醒的）": "Select all (except flagged)",
   "提前几秒续（0 = 不提前）": "Recast N seconds early (0 = off)",
   "持续": "Duration",
   "冷却": "Cooldown",
-  "现在": "Now",
+  // Table columns: 现在 holds an "Active · 40s left" tag, 提醒 a red caveat on that skill.
+  "现在": "Active",
   "提前": "Lead",
-  "提醒": "Heads-up",
+  "提醒": "Warning",
   "先选一个在线角色，再点「读取角色的 Buff 技能」。":
-    "Pick an online character, then press “Load the character's buff skills”.",
+    "Pick an online character, then press “Load buff skills”.",
   "这个角色没有学过任何 buff 技能。": "This character has not learnt any buff skills.",
   "{0} 秒": "{0}s",
   "在身上": "Active",
   "剩 {0} 秒": "{0}s left",
   "{0} 秒（按一半封顶）": "{0}s (capped at half)",
   "开始自动 Buff": "Start auto buff",
-  "开始自动 Buff（{0} 个）": "Start auto buff ({0})",
   "停止自动 Buff": "Stop auto buff",
   "{0} 个技能": "{0} skills",
   "提前 {0} 秒续": "renewing {0}s early",
@@ -1244,13 +1261,15 @@ const EN = {
   "累计放了 {0} 次（其中 {1} 次是提前续的）": "{0} casts so far ({1} of them early renewals)",
 
   // -- 图鉴
+  "爆率是原始爆率，没有乘服务端的掉落倍率。":
+    "Drop rates are raw - the server's drop multiplier is not applied.",
   "找怪物（名称或编号）": "Find a mob (name or id)",
   "找地图（名称或编号）": "Find a map (name or id)",
   "找物品（反查谁会爆）": "Find an item (who drops it)",
   "例如 Snail 或 100100": "e.g. Snail or 100100",
   "例如 Henesys 或 104040000": "e.g. Henesys or 104040000",
   "例如 Snail Shell 或 4000019": "e.g. Snail Shell or 4000019",
-  "在上面搜怪物或地图。": "Search for a mob or map above.",
+  "在上面搜怪物、地图或物品。": "Search for a mob, map or item above.",
   "点左边的一行看详情。": "Click a row on the left for details.",
   "必掉": "always",
   "怪物索引还在建立…": "Still building the mob index…",
@@ -1274,31 +1293,28 @@ const EN = {
   "没有地图刷这只怪": "No map spawns this mob",
   "{0} 种怪 · 共 {1} 只": "{0} kinds of mob · {1} in total",
   "这张地图上没有怪": "No mobs on this map",
-  "传送目标角色到这里": "Warp the target character here",
+  "传送到这里": "Teleport here",
 
   // -- 传送
-  "传送目标角色": "Teleport the target character",
-  "方法一：直接输入 Map ID": "Option one: type a Map ID",
+  "直接输入 Map ID": "By Map ID",
   "例如 100000000": "e.g. 100000000",
-  "这是哪张图": "Which map that is",
-  "还没填": "nothing typed yet",
-  "方法二：从地图上找": "Option two: find it on the map",
+  "地图名称": "Map name",
+  "从世界地图上找": "From the world map",
+  "当前地图": "Current map",
   "放大": "Zoom",
   "自动（撑满可用宽度）": "Auto (fill the available width)",
   "1×（原始 640×470）": "1× (original 640×470)",
   "世界地图加载中…": "Loading the world map…",
   "全部地图": "Every map",
   "名称 / 街道 / 编号": "Name / street / id",
-  "{0} 现在在 {1}（{2}）": "{0} is on {1} ({2})",
   "先填一个 Map ID": "Type a Map ID first",
   "Map.wz 里找不到这张地图": "No such map in Map.wz",
   "地图索引建立中…": "Building the map index…",
-  "匹配 {0} 张，显示前 {1} 张": "{0} matches, showing the first {1}",
   "没有符合条件的地图": "No maps match",
   "（无名 {0}）": "(no name {0})",
   "…还有 {0} 张": "…and {0} more",
-  "鼠标移到地图上的圆点上，这里就会列出它是哪些地图； 点一下钉住，钉住之后移开鼠标也不会变。":
-    "Hover a dot on the map to list its maps here. Click to pin - a pinned dot stays after the pointer leaves.",
+  "鼠标移到圆点上看它是哪些地图，点一下钉住。":
+    "Hover a dot to see its maps. Click to pin.",
   "这个标记": "This marker",
   "{0} 张地图": "{0} maps",
   "{0} 张隐藏地图": "{0} hidden maps",
@@ -1321,9 +1337,10 @@ const EN = {
   "没有名字的地图": "Maps with no name",
 
   // -- 跳跳
-  "同图移动（跳跳）": "Move within one map (jump quests)",
+  "同图移动": "Move within one map",
+  "当前坐标": "Standing at",
   "读取当前地图": "Load the current map",
-  "自动（撑满宽度，上下滚动）": "Auto (fill the width, scroll vertically)",
+  "自动（撑满宽度）": "Auto (fill the width)",
   "1×（原始坐标）": "1× (original coordinates)",
   "标出传送门名字": "Label the portals",
   "先选一个在线角色，再点「读取当前地图」。":
@@ -1337,7 +1354,6 @@ const EN = {
   "这张图没有传送门": "This map has no portals",
   "换地图了，重新点「读取当前地图」。":
     "The character changed map - press “Load the current map” again.",
-  "{0} · {1}（{2}） · 站在 ({3}, {4})": "{0} · {1} ({2}) · standing at ({3}, {4})",
   "出生点": "Spawn",
   "图内": "In-map",
   "出口": "Exit",
@@ -1349,8 +1365,7 @@ const EN = {
   // -- 砸卷
   "砸卷必成": "Guaranteed scrolling",
   "开启必成": "Turn it on",
-  "关闭必成": "Turn it off",
-  "{0} 砸卷必成": "{0} cannot fail a scroll"
+  "关闭必成": "Turn it off"
 };
 
 // Whole blocks of markup, keyed by hand. Splitting these at their <b> and <code> tags would
@@ -1369,60 +1384,7 @@ const EN_HTML = {
     "fame limit.",
 
   "attack.note":
-    "Kills mobs around the target continuously. <b>EXP, drops, quest counters and equip mastery " +
-    "all work normally.</b> Pair it with <b>Mob vac</b> to farm a map hands-off. <b>Switches " +
-    "off on logout</b>; pauses on death and in the Cash Shop." +
-    "<br><b>No swing animation.</b> Mobs take damage and die normally, but no weapon swing is " +
-    "shown and no damage numbers appear.",
-
-  "pot.note":
-    "Drinks the chosen potion when HP or MP drops below the set percentage. <b>0% disables that " +
-    "half.</b> Potions are listed from <b>the target's own Use inventory</b>; running out is " +
-    "reported in the status line.",
-
-  "loot.note":
-    "Picks up <b>everything</b> on the map at any distance. Range 0 = whole map (larger than one " +
-    "screen). <b>No filter = pick up everything</b>; add one and only listed items are taken.",
-
-  "buff.note":
-    "Ticked buffs are <b>recast shortly before they expire</b>, so they never lapse; dispelled " +
-    "buffs are restored immediately. Tick as many as you want. <b>The cast animation plays</b> - " +
-    "icon, timer bar and stat bonuses are identical to a manual cast. Only buff skills " +
-    "<b>this character has learnt</b> are listed." +
-    "<br>Lead time is <b>capped at half the buff's duration</b>, or short buffs like Nimble Feet " +
-    "(12s) would be recast constantly. 0 = recast only after the buff drops.",
-
-  "codex.note":
-    "Works both ways: <b>search a mob</b> for its drops and spawn maps; <b>search a map</b> for " +
-    "its mobs and spawn counts. Results cross-link. Drop rates are <b>raw rates</b> - the " +
-    "server's drop multiplier is not applied.",
-
-  "tp.note":
-    "Two ways to pick a map: type a Map ID, or click the in-game world map. <b>Only the 5262 " +
-    "reachable maps are listed</b>; 1379 have no name and show as “(no name)” but warp fine. " +
-    "The old position is saved first, so the player's own return scroll still works.",
-
-  "tp.mapnote":
-    "<b>Hover a dot</b> to list its maps on the right; click to pin. Faintly tinted areas are " +
-    "continents you can drill into - they light up on hover. The artwork only exists at " +
-    "640×470, so zoom is whole steps; the default picks the largest step that fits.",
-
-  "tp.allnote":
-    "The world map only marks what the game shows players - instance interiors, event maps and " +
-    "test maps are not on it. This list is complete, grouped by the game's own regions.",
-
-  "jq.note":
-    "Jump quests are about <b>climbing within one map</b>, but the Teleport tab works between " +
-    "maps and would drop you back at the start. This moves the character <b>to another spot on " +
-    "the current map</b>: press “Place here” in the portal list, or click the drawing." +
-    "<br>Clicking mid-air <b>drops to the platform below</b>. It runs a map change internally, " +
-    "so the screen blinks and reloads.",
-
-  "scroll.note":
-    "Every scroll the target uses <b>succeeds</b>. Only the success roll changes - <b>a slot is " +
-    "still spent</b>, equips with no slots left still cannot be scrolled, and the scroll is " +
-    "still consumed. Guaranteed, not unlimited. <b>Switches off on logout</b> and does not " +
-    "survive a restart."
+    "Kills mobs around the target continuously. <b>No attack animation.</b>"
 };
 
 const t = (s, ctx) => LANG !== "en" ? s : ((ctx && EN[ctx + "|" + s]) ?? EN[s] ?? s);
@@ -1479,6 +1441,17 @@ function applyLang() {
 }
 
 applyLang();
+
+// nav sticks below the header, and the header's height is not a constant - it grows a row when the
+// window is narrow enough to wrap it. So it is measured, not guessed, and re-measured on the two
+// things that move it: the window's width, and the header's own contents (loadState calls this
+// after writing the status pill, which gains a word while an index is still building).
+function syncStickyOffset() {
+  document.documentElement.style.setProperty(
+    "--headerH", document.querySelector("header").getBoundingClientRect().height + "px");
+}
+syncStickyOffset();
+window.addEventListener("resize", syncStickyOffset);
 
 const SLOT_NAMES = tmap({
   "Cp": "帽子", "HrCp": "特殊帽子", "Af": "脸饰", "Ay": "眼饰", "Ae": "耳环",
@@ -1674,16 +1647,21 @@ async function loadState() {
   }
   const idx = state.index;
   const online = state.players.length;
-  $("statusPill").textContent = [
-    tf("在线 {0} 人", online),
-    idx.equipStatus === "ready"
-      ? tf("装备索引 {0} 件", idx.equipCount) : tf("装备索引建立中 {0}", idx.equipCount),
+  // The four index sizes used to sit in the pill, which made it 396px wide and wrapped the sticky
+  // header onto a second row below about 1130px - 50px of every scroll, spent on diagnostics.
+  // Only the two facts that change what you can do right now stay visible; the sizes move to the
+  // hover text, where they were always going to be enough.
+  const building = idx.equipStatus !== "ready";
+  $("statusPill").textContent = building
+    ? tf("在线 {0} 人 · 索引建立中", online) : tf("在线 {0} 人", online);
+  $("statusPill").title = [
+    building ? tf("装备索引建立中 {0}", idx.equipCount) : tf("装备索引 {0} 件", idx.equipCount),
     tf("物品 {0} 件", idx.itemCount),
     tf("地图 {0} 张", idx.mapCount),
-    tf("图标 {0} 张", idx.iconCount)
-  ].join(" · ");
-  $("statusPill").title = idx.iconCount
-    ? "" : t("图标目录是空的：跑 tools-local 的 IconDump 从客户端 wz 里导出");
+    tf("图标 {0} 张", idx.iconCount),
+    idx.iconCount ? "" : t("图标目录是空的：跑 tools-local 的 IconDump 从客户端 wz 里导出")
+  ].filter(Boolean).join("\n");
+  syncStickyOffset();
   renderTarget();
   renderRates(false);
   renderOnline();
@@ -1708,21 +1686,43 @@ function targetChr() {
   return state ? state.players.find(p => p.id === id) : null;
 }
 
+// Sticky across polls: without it the placeholder below would say "no target" on the very next
+// tick, and the reason the target went away would be lost after five seconds.
+let targetLost = false;
+
+/**
+ * Rebuilding the option list used to drop a target that had logged off, and a select whose value
+ * no longer matches any option falls back to the first one. Half the tabs do not notice - the vac,
+ * auto attack, potion, loot and scrolling toggles all stayed enabled - so the next click landed on
+ * whoever happened to be first in the list, with nothing on screen having said so.
+ *
+ * Now anything that is not a character currently online resolves to the empty value, which
+ * targetChr() cannot match, which disables every action until someone is picked again.
+ */
 function renderTarget() {
   const sel = $("target");
   const keep = sel.value;
-  sel.innerHTML = state.players.length
-    ? state.players.map(p =>
-        `<option value="${p.id}">${esc(p.name)} · Lv.${p.level} · ${esc(p.jobName)}</option>`).join("")
-    : `<option value="">${t("（没有人在线）")}</option>`;
-  if (keep && state.players.some(p => String(p.id) === keep)) sel.value = keep;
+  const online = state.players.some(p => String(p.id) === keep);
+  if (online) {
+    targetLost = false;
+  } else if (keep) {
+    targetLost = true;
+  }
+  sel.innerHTML =
+    (online ? "" : `<option value="">${t(
+      targetLost ? "（目标已下线）" : state.players.length ? "（未选择目标）" : "（没有人在线）")}</option>`)
+    + state.players.map(p =>
+        `<option value="${p.id}">${esc(p.name)} · Lv.${p.level} · ${esc(p.jobName)}</option>`).join("");
+  sel.value = online ? keep : "";
   syncGiftButtons();
 }
 
 function syncGiftButtons() {
-  const has = !!targetChr();
-  $("giftEquip").disabled = !has || !pickedEquip;
-  $("giftItem").disabled = !has || !pickedItem;
+  const chr = targetChr();
+  nameButton($("giftEquip"), chr, "送给 {0}", "赠送给目标角色");
+  nameButton($("giftItem"), chr, "送给 {0}", "赠送给目标角色");
+  $("giftEquip").disabled = !chr || !pickedEquip;
+  $("giftItem").disabled = !chr || !pickedItem;
 }
 
 // ------------------------------------------------------------------ 倍率
@@ -1853,6 +1853,24 @@ function renderOnline() {
 
 // ------------------------------------------------------------------ 人气
 
+/**
+ * Writes the target's name into the button that acts on them.
+ * <p>
+ * Every tab used to carry a "Target character" readout beside its buttons, which restated a name
+ * the sticky header already shows and never lets scroll away. What those boxes were really for was
+ * proximity - the button you press should say whose character it is about - and the button itself
+ * is as close as that gets. So the boxes are gone and the name lives on the trigger.
+ * <p>
+ * Skipped while a request is in flight: withBusy owns the label until it resolves, and puts back
+ * whatever was there when it took over.
+ */
+function nameButton(button, chr, named, plain) {
+  if (button.classList.contains("busy")) {
+    return;
+  }
+  button.textContent = chr ? tf(named, chr.name) : t(plain);
+}
+
 // Fills a .readout, dimming it when there is nothing to show. 0 is a value, not a blank - fame
 // legitimately sits at 0, so only null and undefined count as empty.
 function readout(el, value, blank) {
@@ -1863,10 +1881,10 @@ function readout(el, value, blank) {
 
 function renderFame() {
   const chr = targetChr();
-  const name = chr ? chr.name : null;
-  readout($("fameWho"), name, t("未选中角色"));
-  readout($("kickWho"), name, t("未选中角色"));
   readout($("fameNow"), chr ? chr.fame : null, "—");
+  nameButton($("fameAdd"), chr, "给 {0} 增加", "增加");
+  nameButton($("fameSet"), chr, "把 {0} 设为这个值", "设为这个值");
+  nameButton($("kickBtn"), chr, "把 {0} 踢下线", "踢下线");
   $("fameAdd").disabled = !chr;
   $("fameSet").disabled = !chr;
   $("kickBtn").disabled = !chr;
@@ -2170,7 +2188,7 @@ function clearBag(why) {
 function renderSell() {
   const chr = targetChr();
   $("sellLoad").disabled = !chr;
-  readout($("sellWho"), chr ? chr.name : null, t("未选中角色"));
+  nameButton($("sellLoad"), chr, "读取 {0} 的背包", "读取背包");
   // A bag belongs to one character; switching targets makes the table a lie.
   if (sellFor !== null && (!chr || chr.id !== sellFor)) {
     clearBag(t("目标角色换了，重新点「读取背包」。"));
@@ -2280,14 +2298,11 @@ function renderVac() {
   const vac = activeVac();
   const btn = $("vacToggle");
   btn.disabled = !chr;
-  // Never touch the label while a request is in flight - withBusy owns it until it resolves.
-  if (!btn.classList.contains("busy")) {
-    btn.textContent = vac ? t("停止吸怪") : t("开始吸怪");
-  }
+  nameButton(btn, chr, vac ? "对 {0} 停止吸怪" : "对 {0} 开始吸怪",
+             vac ? "停止吸怪" : "开始吸怪");
   btn.classList.toggle("primary", !vac);
 
-  // Who it would act on is the readout's job now, so the pill is left saying only whether it runs.
-  readout($("vacWho"), chr ? chr.name : null, t("未选中角色"));
+  // Who it acts on is the button's job now, so the pill is left saying only whether it runs.
   if (!vac) {
     $("vacStatus").textContent = t("未运行");
   } else {
@@ -2398,12 +2413,10 @@ function renderAssist() {
 
   const potBtn = $("potToggle");
   potBtn.disabled = !chr;
-  if (!potBtn.classList.contains("busy")) {
-    potBtn.textContent = pot ? t("停止自动喝药") : t("开始自动喝药");
-  }
+  nameButton(potBtn, chr, pot ? "对 {0} 停止自动喝药" : "对 {0} 开始自动喝药",
+             pot ? "停止自动喝药" : "开始自动喝药");
   potBtn.classList.toggle("primary", !pot);
-  $("potStatus").textContent = !chr ? t("没有选中角色")
-    : !pot ? tf("未运行（目标：{0}）", chr.name)
+  $("potStatus").textContent = !pot ? t("未运行")
     : (pot.note ? t("运行中") + " · " + pot.note : t("运行中"))
       + " · " + tf("已喝 {0} 次", pot.drank);
   if (pot) {
@@ -2414,12 +2427,10 @@ function renderAssist() {
 
   const lootBtn = $("lootToggle");
   lootBtn.disabled = !chr;
-  if (!lootBtn.classList.contains("busy")) {
-    lootBtn.textContent = loot ? t("停止全屏捡取") : t("开始全屏捡取");
-  }
+  nameButton(lootBtn, chr, loot ? "对 {0} 停止自动捡取" : "对 {0} 开始自动捡取",
+             loot ? "停止自动捡取" : "开始自动捡取");
   lootBtn.classList.toggle("primary", !loot);
-  $("lootStatus").textContent = !chr ? t("没有选中角色")
-    : !loot ? tf("未运行（目标：{0}）", chr.name)
+  $("lootStatus").textContent = !loot ? t("未运行")
     : loot.note
       ? [t("运行中"), loot.note, tf("累计 {0} 件", loot.totalPicked)].join(" · ")
     // Every reason an item is still on the ground gets its own number, so "it missed some" turns
@@ -2610,9 +2621,9 @@ function renderJq() {
   const chr = targetChr();
   $("jqLoad").disabled = !chr;
   $("jqGo").disabled = !chr;
-  $("jqWhere").textContent = !chr ? t("未选中角色")
-    : tf("{0} · {1}（{2}） · 站在 ({3}, {4})",
-         chr.name, chr.mapName || chr.mapId, chr.mapId, chr.x, chr.y);
+  nameButton($("jqGo"), chr, "把 {0} 放到这里", "站过去");
+  readout($("jqWhere"), chr ? tf("{0}（{1}）", chr.mapName || chr.mapId, chr.mapId) : null, "—");
+  readout($("jqAt"), chr ? `${chr.x}, ${chr.y}` : null, "—");
   // The drawing belongs to one map; walking into the next stage makes it a lie.
   if (jqFor !== null && (!chr || chr.mapId !== jqFor)) {
     jqShape = null;
@@ -2708,9 +2719,14 @@ function syncBuffGo() {
   const running = activeBuff();
   const btn = $("buffToggle");
   btn.disabled = !chr || (!running && !buffPicked.size);
+  // The only toggle whose "start" label already carried a number, so the name goes in alongside it
+  // rather than replacing it - how many skills are armed is the thing you check before starting.
   if (!btn.classList.contains("busy")) {
-    btn.textContent = running ? t("停止自动 Buff")
-      : buffPicked.size ? tf("开始自动 Buff（{0} 个）", buffPicked.size) : t("开始自动 Buff");
+    btn.textContent = !chr
+      ? (running ? t("停止自动 Buff") : t("开始自动 Buff"))
+      : running ? tf("对 {0} 停止自动 Buff", chr.name)
+      : buffPicked.size ? tf("对 {0} 开始自动 Buff（{1} 个）", chr.name, buffPicked.size)
+      : tf("对 {0} 开始自动 Buff", chr.name);
   }
   btn.classList.toggle("primary", !running);
 }
@@ -2725,8 +2741,8 @@ function renderBuff() {
     buffPicked.clear();
     renderBuffList();
   }
-  $("buffStatus").textContent = !chr ? t("没有选中角色")
-    : !running ? tf("未运行（目标：{0}）", chr.name)
+  nameButton($("buffLoad"), chr, "读取 {0} 的 Buff 技能", "读取角色的 Buff 技能");
+  $("buffStatus").textContent = !running ? t("未运行")
     : [
         t("运行中"),
         running.note || tf("{0} 个技能", running.skills.length),
@@ -2894,20 +2910,16 @@ function renderAttack() {
   const atk = activeAttack();
   const btn = $("atkToggle");
   btn.disabled = !chr;
-  // Never touch the label while a request is in flight - withBusy owns it until it resolves.
-  if (!btn.classList.contains("busy")) {
-    btn.textContent = atk ? t("停止自动攻击") : t("开始自动攻击");
-  }
+  nameButton(btn, chr, atk ? "对 {0} 停止自动攻击" : "对 {0} 开始自动攻击",
+             atk ? "停止自动攻击" : "开始自动攻击");
   btn.classList.toggle("primary", !atk);
 
   if (chr && $("atkMode").value === "skill" && atkSkillsFor !== chr.id) {
     loadSkills();
   }
 
-  if (!chr) {
-    $("atkStatus").textContent = t("没有选中角色");
-  } else if (!atk) {
-    $("atkStatus").textContent = tf("未运行（目标：{0}）", chr.name);
+  if (!atk) {
+    $("atkStatus").textContent = t("未运行");
   } else {
     // Both numbers, so the per-tick cap is visible rather than silently swallowing targets.
     $("atkStatus").textContent = atk.note
@@ -3022,14 +3034,9 @@ function renderScroll() {
   const on = scrollOn();
   const btn = $("scrollToggle");
   btn.disabled = !chr;
-  // Never touch the label while a request is in flight - withBusy owns it until it resolves.
-  if (!btn.classList.contains("busy")) {
-    btn.textContent = on ? t("关闭必成") : t("开启必成");
-  }
+  nameButton(btn, chr, on ? "为 {0} 关闭必成" : "为 {0} 开启必成", on ? "关闭必成" : "开启必成");
   btn.classList.toggle("primary", !on);
-  $("scrollStatus").textContent = !chr ? t("没有选中角色")
-    : on ? t("运行中") + " · " + tf("{0} 砸卷必成", chr.name)
-    : tf("未运行（目标：{0}）", chr.name);
+  $("scrollStatus").textContent = on ? t("运行中") : t("未运行");
 }
 
 $("scrollToggle").addEventListener("click", async () => {
@@ -3203,12 +3210,12 @@ async function showMapMobs(mapId) {
         <td>${tf("{0} 只", m.count)}</td></tr>`).join("")
         : `<tr><td class="empty">${t("这张地图上没有怪")}</td></tr>`}
     </tbody></table></div>
-    <button class="act" style="margin-top:12px" data-warpto="${d.mapId}">${
-      t("传送目标角色到这里")}</button>`;
+    <button class="act" style="margin-top:12px" data-teleportto="${d.mapId}">${
+      t("传送到这里")}</button>`;
   $("cxDetail").querySelectorAll("[data-mob]").forEach(tr =>
     tr.addEventListener("click", () => showMob(Number(tr.dataset.mob))));
-  $("cxDetail").querySelectorAll("[data-warpto]").forEach(b =>
-    b.addEventListener("click", () => warpTo(b.dataset.warpto, b)));
+  $("cxDetail").querySelectorAll("[data-teleportto]").forEach(b =>
+    b.addEventListener("click", () => teleportTo(b.dataset.teleportto, b)));
 }
 
 $("cxMobSearch").addEventListener("input", debounce(searchMobs, 250));
@@ -3219,12 +3226,13 @@ $("cxItemSearch").addEventListener("input", debounce(searchCodexItems, 250));
 
 function renderWhere() {
   const chr = targetChr();
-  $("tpWhere").textContent = chr
-    ? tf("{0} 现在在 {1}（{2}）", chr.name, chr.mapName || "?", chr.mapId)
-    : t("未选中角色");
+  readout($("tpWhere"), chr ? tf("{0}（{1}）", chr.mapName || "?", chr.mapId) : null, "—");
+  // Only the Map ID button is named. The ~300 buttons in the map list below are about which map,
+  // not about who - naming every one of them would be noise, not confirmation.
+  nameButton($("tpGo"), chr, "传送 {0}", "传送");
 }
 
-async function warpTo(mapId, button) {
+async function teleportTo(mapId, button) {
   const chr = targetChr();
   if (!chr) return toast(t("先选一个在线角色"), false);
   const body = new URLSearchParams({ chrId: chr.id, mapId });
@@ -3239,7 +3247,7 @@ async function warpTo(mapId, button) {
 $("tpGo").addEventListener("click", () => {
   const id = $("tpId").value.trim();
   if (id === "") return toast(t("先填一个 Map ID"), false);
-  warpTo(id, $("tpGo"));
+  teleportTo(id, $("tpGo"));
 });
 $("tpId").addEventListener("keydown", e => { if (e.key === "Enter") $("tpGo").click(); });
 
@@ -3248,12 +3256,12 @@ $("tpId").addEventListener("keydown", e => { if (e.key === "Enter") $("tpGo").cl
 $("tpId").addEventListener("input", debounce(async () => {
   const raw = $("tpId").value.trim();
   const el = $("tpIdName");
-  if (raw === "") { el.textContent = t("还没填"); return; }
+  if (raw === "") { readout(el, null, "—"); return; }
   const data = await (await fetch("api/maps?limit=500&q=" + encodeURIComponent(raw))).json();
   const hit = (data.results || []).find(m => String(m.id) === raw);
-  el.textContent = hit
+  readout(el, hit
     ? `${hit.name || t("（无名）")}${hit.street ? " · " + hit.street : ""} · ${MAP_REGIONS[hit.region] ?? hit.region}`
-    : t("Map.wz 里找不到这张地图");
+    : t("Map.wz 里找不到这张地图"), "—");
 }, 250));
 
 // --- 方法二：从地图上找
@@ -3350,7 +3358,7 @@ function renderSpotPanel(index) {
   const spot = index === null || !tpWorld ? null : tpWorld.spots[index];
   if (!spot) {
     el.innerHTML = `<p class="note">${
-      t("鼠标移到地图上的圆点上，这里就会列出它是哪些地图； 点一下钉住，钉住之后移开鼠标也不会变。")}</p>`;
+      t("鼠标移到圆点上看它是哪些地图，点一下钉住。")}</p>`;
     return;
   }
 
@@ -3359,13 +3367,13 @@ function renderSpotPanel(index) {
     <tr data-map="${m.id}">
       <td>${m.id}</td>
       <td style="white-space:normal">${esc(m.name || t("（无名）"))}</td>
-      <td><button class="act" data-warp="${m.id}">${t("传送")}</button></td>
+      <td><button class="act" data-teleport="${m.id}">${t("传送")}</button></td>
     </tr>` + (m.hidden || []).map(h => `
     <tr data-map="${h.id}" class="hidden">
       <td>${h.id}</td>
       <td style="white-space:normal"><span class="tag">${t("隐藏", "tag")}</span> ${
         esc(h.name || t("（无名）"))}</td>
-      <td><button class="act" data-warp="${h.id}">${t("传送")}</button></td>
+      <td><button class="act" data-teleport="${h.id}">${t("传送")}</button></td>
     </tr>`).join("")).join("");
 
   el.innerHTML = `
@@ -3379,7 +3387,7 @@ function renderSpotPanel(index) {
     <div class="scroll"><table><tbody>${rows}</tbody></table></div>
     ${hiddenCount ? `<p class="note" style="margin-top:8px">${
       t("带「隐藏」的是世界地图上<b>不会标出来</b>的隐藏地图。挂在这里的依据是它自己的 <code>returnMap</code>——也就是从里面出来会回到哪张图。")}</p>` : ""}`;
-  bindWarpButtons(el);
+  bindTeleportButtons(el);
 }
 
 // --- 全部地图
@@ -3403,14 +3411,18 @@ async function loadMaps() {
   if (keep && !regions.some(r => r.region === keep)) {
     regions.push({ region: keep, count: 0 });
   }
+  // Sorted the way MAP_REGIONS is written - the game's own order, Maple Island outwards - rather
+  // than by the counts, which move with the search box and would rearrange the menu under you.
+  const regionOrder = Object.keys(MAP_REGIONS);
+  regions.sort((a, b) => {
+    const at = regionOrder.indexOf(a.region), bt = regionOrder.indexOf(b.region);
+    return (at < 0 ? regionOrder.length : at) - (bt < 0 ? regionOrder.length : bt);
+  });
   sel.innerHTML =
     `<option value="">${tf("全部（{0}）", regions.reduce((n, r) => n + r.count, 0))}</option>` +
     regions.map(r => `<option value="${esc(r.region)}">${
       esc(tf("{0}（{1}）", MAP_REGIONS[r.region] ?? r.region, r.count))}</option>`).join("");
   sel.value = keep;
-
-  $("tpMapCount").textContent = tf("匹配 {0} 张，显示前 {1} 张", data.total, data.shown)
-    + (data.total > data.shown ? t("（再收窄条件可看到其余的）") : "");
 
   $("tpMapBody").innerHTML = data.results.length ? data.results.map(m => `
     <tr data-map="${m.id}">
@@ -3418,17 +3430,17 @@ async function loadMaps() {
       <td>${esc(m.name || t("（无名）"))}</td>
       <td>${esc(m.street)}</td>
       <td>${esc(MAP_REGIONS[m.region] ?? m.region)}</td>
-      <td><button class="act" data-warp="${m.id}">${t("传送")}</button></td>
+      <td><button class="act" data-teleport="${m.id}">${t("传送")}</button></td>
     </tr>`).join("") : `<tr><td colspan="5" class="empty">${t("没有符合条件的地图")}</td></tr>`;
-  bindWarpButtons($("tpMapBody"));
+  bindTeleportButtons($("tpMapBody"));
 }
 
 // A row click loads the id into the Map ID box (so you can see and edit it); the button in the
 // row teleports straight away.
-function bindWarpButtons(body) {
-  body.querySelectorAll("[data-warp]").forEach(btn => btn.addEventListener("click", e => {
+function bindTeleportButtons(body) {
+  body.querySelectorAll("[data-teleport]").forEach(btn => btn.addEventListener("click", e => {
     e.stopPropagation();
-    warpTo(btn.dataset.warp, btn);
+    teleportTo(btn.dataset.teleport, btn);
   }));
   body.querySelectorAll("tr[data-map]").forEach(tr => tr.addEventListener("click", () => {
     $("tpId").value = tr.dataset.map;
