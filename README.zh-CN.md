@@ -1,6 +1,6 @@
 # Maplestory Cosmic Solo
 
-[English](README.md) | **中文（机翻）**
+[English](README.md) | **中文 (机翻)**
 
 从 **[P0nk/Cosmic](https://github.com/P0nk/Cosmic)**（冒险岛 v83 服务端）改的，改成一个人在自己
 电脑上玩。不联网，没有别人。
@@ -36,8 +36,9 @@ Docker 跑不了，服务端锁了本机，Docker 里连不上。直接运行就
 也能挂机：自动打怪、按比例自动喝药、自动捡东西（能设过滤）、自动续 buff、拉怪。还能查掉落——
 什么怪掉什么、哪张地图有什么怪。
 
-**加了 5,872 件时装。** 帽子、长袍、武器、鞋、披风、宠物装备、饰品、戒指、手套……从 MapleLegends
-客户端转过来，放进现金商店，名字和属性都填好了。顺便修了 360 个截断的道具名，下架了几件会崩的。
+**加了 5,000 多件时装。** 帽子、长袍、武器、鞋、披风、宠物装备、饰品、戒指、手套……从
+MapleLegends 客户端转过来，放进现金商店，名字和属性都填好了。顺便修了 360 个截断的道具名，
+下架了几件会崩的。
 
 **美容院加了 100 多种新发型和眼睛，** 按性别分好，实际不显示的已经剔掉，所有肤色都能选。
 
@@ -53,6 +54,72 @@ Docker 跑不了，服务端锁了本机，Docker 里连不上。直接运行就
   角色不再卡住。
 
 **存档失败会报错了，** 不再悄悄丢进度。另外堵了两个内存泄漏。
+
+---
+
+## 怎么搭
+
+需要 **Java 21**（[Amazon Corretto](https://aws.amazon.com/corretto) 就行）、一个 **MySQL 8**
+数据库、还有一个**冒险岛 v83 客户端**。大概 15 分钟。
+
+### 1. 拉代码
+
+```
+git clone https://github.com/cobaltdisco/Maplestory-Cosmic-Solo.git
+cd Maplestory-Cosmic-Solo
+```
+
+### 2. 起数据库
+
+有 Docker 的话最省事：
+
+```
+docker run -d --name cosmic-mysql -p 127.0.0.1:3306:3306 -e MYSQL_DATABASE=cosmic -e MYSQL_ALLOW_EMPTY_PASSWORD=yes mysql:8.0
+```
+
+root 密码是空的，只绑在本机——自己玩没问题，别的场合别这么干。
+
+不想用 Docker 就直接装 MySQL，建一个叫 `cosmic` 的库，记住 root 密码。
+
+### 3. 让服务端连上它
+
+打开 `config.yaml`，翻到底下的 `server:` 那一段：
+
+```yaml
+DB_HOST: "localhost"
+DB_USER: "root"
+DB_PASS: ""          # 填你的 root 密码；用上面那条 Docker 命令的话留空
+```
+
+表是服务端第一次启动时自己建的，不用管。
+
+### 4. 编译、运行
+
+```
+./mvnw.cmd clean package
+java -Xmx2048m -Dwz-path=wz -jar target/Cosmic.jar
+```
+
+（第二行 `launch.bat` 帮你跑了。）控制台出现 **"Cosmic is now online"** 就是好了。
+
+### 5. 连客户端
+
+客户端在 [P0nk/Cosmic-client](https://github.com/P0nk/Cosmic-client)，照它的 README 装。
+IP 要指向 `127.0.0.1`。
+
+用 **admin / admin** 登录——这个 fork 没有 PIN 和 PIC。建个角色就能进去了。
+
+### 6. 打开管理面板
+
+服务端跑着的时候，浏览器打开 **http://127.0.0.1:8686**。
+
+### 有一样东西开箱是用不了的
+
+那 5,000 多件时装和新发型，这个仓库里只有**服务端那一半数据**。对应的美术资源在客户端自己的
+`Character.wz` 里，那个文件约 900 MB，没有发布。所以用原版客户端的话，现金商店里能看到这些
+条目，但画不出来。
+
+想把那个文件重做出来，用下面的工具加一个 MapleLegends 客户端是可以做到的。
 
 ---
 

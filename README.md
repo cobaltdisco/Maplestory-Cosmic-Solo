@@ -1,6 +1,6 @@
 # Maplestory Cosmic Solo
 
-**English** | [中文（机翻）](README.zh-CN.md)
+**English** | [中文 (机翻)](README.zh-CN.md)
 
 A fork of **[P0nk/Cosmic](https://github.com/P0nk/Cosmic)** (a MapleStory v83 server), set up for
 playing alone on your own computer. No network, no other players.
@@ -40,7 +40,7 @@ stuck, kick the session without restarting the server.
 Auto-play is also there: auto attack, auto potion (set your threshold), auto loot (with filters),
 auto buff, and mob pulling. Plus drop lookups — what drops what, which monsters are where.
 
-**Added 5,872 cosmetic items.** Hats, robes, weapons, shoes, capes, pet gear, accessories, rings,
+**Added 5,000+ cosmetic items.** Hats, robes, weapons, shoes, capes, pet gear, accessories, rings,
 gloves and more — converted from a MapleLegends client and put in the cash shop with names and
 stats filled in. Also fixed 360 item names that were cut off and pulled a few that crashed the
 client.
@@ -61,6 +61,76 @@ render filtered out. All skin tones available.
   show when they work. Character no longer freezes on an empty pickup.
 
 **Save failures now show an error** instead of silently losing progress. Two memory leaks fixed.
+
+---
+
+## Setup
+
+You need **Java 21** ([Amazon Corretto](https://aws.amazon.com/corretto) works), a **MySQL 8**
+database, and a **MapleStory v83 client**. About 15 minutes.
+
+### 1. Get the code
+
+```
+git clone https://github.com/cobaltdisco/Maplestory-Cosmic-Solo.git
+cd Maplestory-Cosmic-Solo
+```
+
+### 2. Start a database
+
+Easiest way, if you have Docker:
+
+```
+docker run -d --name cosmic-mysql -p 127.0.0.1:3306:3306 -e MYSQL_DATABASE=cosmic -e MYSQL_ALLOW_EMPTY_PASSWORD=yes mysql:8.0
+```
+
+That's an empty root password bound to your own machine only — fine for local play, not fine for
+anything else.
+
+If you'd rather install MySQL directly, create a database named `cosmic` and note your root
+password.
+
+### 3. Point the server at it
+
+Open `config.yaml` and check the `server:` section near the bottom:
+
+```yaml
+DB_HOST: "localhost"
+DB_USER: "root"
+DB_PASS: ""          # your root password, or leave empty for the Docker command above
+```
+
+The server creates its own tables on first start.
+
+### 4. Build and run
+
+```
+./mvnw.cmd clean package
+java -Xmx2048m -Dwz-path=wz -jar target/Cosmic.jar
+```
+
+(`launch.bat` does the second line for you.) When the console says **"Cosmic is now online"**,
+it's ready.
+
+### 5. Connect the client
+
+Get the client from [P0nk/Cosmic-client](https://github.com/P0nk/Cosmic-client) and follow its
+README. It needs to point at `127.0.0.1`.
+
+Log in with **admin / admin** — there's no PIN or PIC in this fork. Create a character and you're
+in.
+
+### 6. Open the admin panel
+
+Go to **http://127.0.0.1:8686** in any browser while the server is running.
+
+### One thing that won't work out of the box
+
+The 5,000+ cosmetics and the extra hairstyles are in this repo as **server-side data only**. The
+matching artwork lives in the client's own `Character.wz`, which is ~900 MB and isn't published
+here. On a stock client the cash shop will list these items but won't draw them.
+
+Rebuilding that file is possible with the tools below and a MapleLegends client.
 
 ---
 
